@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlampTime - Бронирование домика</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --forest-dark: #0a0f0a;
+            --accent-gold: #ffd700;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --danger: #dc3545;
+            --success: #28a745;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--forest-dark);
+            color: white;
+            margin: 0;
+        }
+
+        /* Навигация */
+        .navbar {
+            background: rgba(10, 15, 10, 0.95) !important;
+            padding: 1.5rem 0;
+            width: 100%;
+            z-index: 10;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+            color: white !important;
+        }
+
+        .nav-link {
+            color: rgba(255,255,255,0.8) !important;
+            font-size: 0.9rem;
+            margin: 0 15px;
+            transition: 0.3s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--accent-gold) !important;
+        }
+
+        /* Hero секция */
+        .detail-hero {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7));
+            padding: 6rem 0 3rem;
+        }
+
+        .glamp-main-image {
+            width: 100%;
+            height: 450px;
+            object-fit: cover;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+        }
+
+        /* Галерея */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .gallery-img {
+            width: 100%;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 1px solid var(--glass-border);
+        }
+
+        .gallery-img:hover {
+            transform: scale(1.05);
+            border-color: var(--accent-gold);
+        }
+
+        /* Контент */
+        .detail-content {
+            padding: 3rem 0;
+        }
+
+        .glamp-title {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            color: var(--accent-gold);
+        }
+
+        .glamp-location {
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 1.5rem;
+        }
+
+        .glamp-description {
+            line-height: 1.8;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 2rem;
+        }
+
+        /* Характеристики */
+        .features-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-item {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 0.8rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-item i {
+            color: var(--accent-gold);
+            font-size: 1.2rem;
+        }
+
+        /* Форма бронирования */
+        .booking-sidebar {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            position: sticky;
+            top: 100px;
+        }
+
+        .price-large {
+            font-size: 2rem;
+            color: var(--accent-gold);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .price-large small {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .booking-info-detail {
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .booking-form-group {
+            margin-bottom: 1rem;
+        }
+
+        .booking-form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9rem;
+        }
+
+        .booking-form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            color: white;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .booking-form-group input:focus {
+            border-color: var(--accent-gold);
+        }
+
+        .booking-form-group input::placeholder {
+            color: rgba(255,255,255,0.4);
+        }
+
+        .date-info {
+            display: flex;
+            justify-content: space-between;
+            background: rgba(0,0,0,0.3);
+            padding: 0.8rem;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+        }
+
+        .total-price-display {
+            background: rgba(0,0,0,0.5);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .total-price-display .total-amount {
+            font-size: 1.5rem;
+            color: var(--accent-gold);
+            font-weight: bold;
+        }
+
+        .btn-book-final {
+            background: linear-gradient(135deg, #1a472a, #0d2618);
+            color: var(--accent-gold);
+            border: 1px solid var(--glass-border);
+            padding: 1rem;
+            width: 100%;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: 0.3s;
+            margin-top: 1rem;
+        }
+
+        .btn-book-final:hover {
+            background: linear-gradient(135deg, #245d38, #1a472a);
+            color: white;
+            border-color: var(--accent-gold);
+        }
+
+        .btn-back {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            transition: 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-back:hover {
+            background: rgba(255,255,255,0.1);
+            color: var(--accent-gold);
+        }
+
+        .warning-message {
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid var(--danger);
+            border-radius: 10px;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            color: #ff6b6b;
+            font-size: 0.9rem;
+        }
+
+        /* Футер */
+        footer {
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.9));
+            padding: 60px 0 30px;
+            border-top: 1px solid var(--glass-border);
+            margin-top: 2rem;
+        }
+
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 300;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .footer-text {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-gold);
+            padding-left: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .glamp-main-image { height: 250px; }
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+            .glamp-title { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="/index.html">GlampTime</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/services.html">Услуги</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/glamps.html">Проживание</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/rasvlichenia.html">Развлечения</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/contact.html">Контакты</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="detail-hero">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <img src="" alt="Главное фото" class="glamp-main-image" id="mainImage">
+                    <div class="gallery-grid" id="galleryGrid"></div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="booking-sidebar">
+                        <div class="price-large" id="glampPrice">
+                            0 ₽ <small>/ночь</small>
+                        </div>
+                        
+                        <div id="bookingInfoDetail"></div>
+                        
+                        <form id="bookingForm">
+                            <div class="booking-form-group">
+                                <label><i class="fas fa-user"></i> Ваше имя *</label>
+                                <input type="text" id="userName" placeholder="Иван Петров" required>
+                            </div>
+                            <div class="booking-form-group">
+                                <label><i class="fas fa-envelope"></i> Email *</label>
+                                <input type="email" id="userEmail" placeholder="ivan@mail.com" required>
+                            </div>
+                            <div class="booking-form-group">
+                                <label><i class="fas fa-phone"></i> Телефон *</label>
+                                <input type="tel" id="userPhone" placeholder="+7 (999) 123-45-67" required>
+                            </div>
+                            <div class="booking-form-group">
+                                <label><i class="fas fa-comment"></i> Комментарий</label>
+                                <input type="text" id="userComment" placeholder="Особые пожелания...">
+                            </div>
+                            
+                            <button type="submit" class="btn-book-final" id="confirmBookingBtn">
+                                <i class="fas fa-check-circle"></i> Оформить бронирование
+                            </button>
+                        </form>
+                        
+                        <a href="/glamps.html" class="btn-back mt-3 d-block">
+                            <i class="fas fa-arrow-left"></i> Назад к домикам
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="detail-content">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h1 class="glamp-title" id="glampTitle">Шале у леса</h1>
+                    <div class="glamp-location" id="glampLocation">
+                        <i class="fas fa-map-marker-alt"></i> Сочи, ул. Лесная
+                    </div>
+                    
+                    <div class="features-list" id="featuresList"></div>
+                    
+                    <div class="glamp-description" id="glampDescription"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4">
+                    <span class="footer-logo">GlampTime</span>
+                    <p class="footer-text">
+                        Уютные домики для идеального отдыха на природе. 
+                        Создано для тех, кто ценит комфорт и природу.
+                    </p>
+                </div>
+                <div class="col-lg-4">
+                    <h4 class="footer-title">Меню</h4>
+                    <ul class="footer-links">
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/about.html">О нас</a></li>
+                        <li><a href="/services.html">Услуги</a></li>
+                        <li><a href="/glamps.html">Проживание</a></li>
+                        <li><a href="/entertainment.html">Развлечения</a></li>
+                        <li><a href="/contact.html">Контакты</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h4 class="footer-title">Контакты</h4>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-phone"></i> +7 (123) 456-78-90</li>
+                        <li><i class="fas fa-envelope"></i> info@glamptime.ru</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Сочи, ул. Лесная, 15</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <p class="copyright">&copy; 2024 GlampTime. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Данные о домиках
+        const glampsData = [
+            {
+                id: 1,
+                name: "Шале у леса",
+                description: "Ваш уединенный уголок на отдыхе. Это шале — настоящее гармоничное место для отдыха и расслабления. Продолжайте свой путь по природе, наслаждайтесь теплым днем и холодной ночью. Красивое место, чтобы отдохнуть от суеты и насладиться тишиной и покоем.",
+                price_per_night: 8900,
+                max_guests: 2,
+                amenities: ["Камин", "Терраса", "WiFi", "Парковка"],
+                images: [
+                    "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800",
+                    "https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?w=800",
+                    "https://images.unsplash.com/photo-1542718610-a1d656d1884c?w=800",
+                    "https://images.unsplash.com/photo-1445308394109-4ec2920981b1?w=800"
+                ],
+                location: { city: "Сочи", address: "ул. Лесная, 15" },
+                type: "house"
+            },
+            {
+                id: 2,
+                name: "Сфера",
+                description: "Ваш современный уголок с разнообразием видов застекленного шара. Этот прекрасный уголок создает атмосферу спокойствия и умиротворения. Доступ к природе, а также возможность насладиться природой и необычной атмосферой.",
+                price_per_night: 12400,
+                max_guests: 3,
+                amenities: ["Панорамный вид", "Кондиционер", "WiFi", "Лежак"],
+                images: [
+                    "https://images.unsplash.com/photo-1542718610-a1d656d1884c?w=800",
+                    "https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?w=800",
+                    "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800",
+                    "https://images.unsplash.com/photo-1445308394109-4ec2920981b1?w=800"
+                ],
+                location: { city: "Сочи", address: "ул. Горная, 7" },
+                type: "tent"
+            },
+            {
+                id: 3,
+                name: "Домик у озера",
+                description: "Деревянный домик с видом на озеро. Есть мангал и рыбалка рядом. Отличное место для семейного отдыха.",
+                price_per_night: 6800,
+                max_guests: 4,
+                amenities: ["Кухня", "Мангал", "Парковка", "WiFi"],
+                images: [
+                    "https://images.unsplash.com/photo-1445308394109-4ec2920981b1?w=800",
+                    "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800",
+                    "https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?w=800",
+                    "https://images.unsplash.com/photo-1542718610-a1d656d1884c?w=800"
+                ],
+                location: { city: "Сочи", address: "ул. Озерная, 3" },
+                type: "house"
+            },
+            {
+                id: 4,
+                name: "Лодж Горный",
+                description: "Просторный лодж в горах с сауной и большой террасой. Идеален для большой компании.",
+                price_per_night: 14500,
+                max_guests: 6,
+                amenities: ["Сауна", "Бильярд", "Камин", "WiFi"],
+                images: [
+                    "https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=800",
+                    "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800",
+                    "https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?w=800",
+                    "https://images.unsplash.com/photo-1542718610-a1d656d1884c?w=800"
+                ],
+                location: { city: "Красная Поляна", address: "ул. Горная, 25" },
+                type: "lodge"
+            },
+            {
+                id: 5,
+                name: "Лесной шатер",
+                description: "Уютный шатер в сосновом лесу с панорамными окнами. Идеально для романтического отдыха.",
+                price_per_night: 5200,
+                max_guests: 2,
+                amenities: ["Терраса", "WiFi", "Мангал"],
+                images: [
+                    "https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?w=800",
+                    "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800",
+                    "https://images.unsplash.com/photo-1542718610-a1d656d1884c?w=800",
+                    "https://images.unsplash.com/photo-1445308394109-4ec2920981b1?w=800"
+                ],
+                location: { city: "Сочи", address: "Лесной проезд, 8" },
+                type: "tent"
+            },
+            {
+                id: 6,
+                name: "Избушка на опушке",
+                description: "Аутентичная русская избушка с печкой. Погружение в атмосферу деревенского уюта.",
+                price_per_night: 4800,
+                max_guests: 3,
+                amenities: ["Русская печь", "Сад", "Тишина"],
+                images: [
+                    "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800",
+                    "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800",
+                    "https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?w=800",
+                    "https://images.unsplash.com/photo-1542718610-a1d656d1884c?w=800"
+                ],
+                location: { city: "Сочи", address: "Деревня Лесная, 12" },
+                type: "house"
+            }
+        ];
+
+        let currentGlamp = null;
+        let bookingData = null;
+        let bookingNights = 0;
+
+        function getBookingDataFromStorage() {
+            const data = localStorage.getItem('glampingBooking');
+            if (data) {
+                try {
+                    return JSON.parse(data);
+                } catch(e) {
+                    return null;
+                }
+            }
+            return null;
+        }
+
+        function calculateNights(checkIn, checkOut) {
+            const start = new Date(checkIn);
+            const end = new Date(checkOut);
+            const diffTime = Math.abs(end - start);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays;
+        }
+
+        // Функция для форматирования даты
+        function formatDate(dateString) {
+            if (!dateString) return 'не выбрано';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        }
+
+        // Получаем ID из URL
+        function getGlampIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return parseInt(urlParams.get('id'));
+        }
+
+        // Отображение информации о домике
+        function displayGlampDetail() {
+            const glampId = getGlampIdFromUrl();
+            currentGlamp = glampsData.find(g => g.id === glampId);
+            
+            if (!currentGlamp) {
+                window.location.href = '/glamps.html';
+                return;
+            }
+            
+            document.getElementById('glampTitle').textContent = currentGlamp.name;
+            document.getElementById('glampDescription').textContent = currentGlamp.description;
+            document.getElementById('glampLocation').innerHTML = `<i class="fas fa-map-marker-alt"></i> ${currentGlamp.location.city}, ${currentGlamp.location.address}`;
+            document.getElementById('glampPrice').innerHTML = `${currentGlamp.price_per_night.toLocaleString()} ₽ <small>/ночь</small>`;
+            
+            document.getElementById('mainImage').src = currentGlamp.images[0];
+            document.getElementById('mainImage').alt = currentGlamp.name;
+            
+            const galleryGrid = document.getElementById('galleryGrid');
+            galleryGrid.innerHTML = currentGlamp.images.map((img, index) => `
+                <img src="${img}" class="gallery-img" alt="Фото ${index + 1}" onclick="changeMainImage('${img}')">
+            `).join('');
+            
+            const featuresList = document.getElementById('featuresList');
+            featuresList.innerHTML = currentGlamp.amenities.map(amenity => `
+                <div class="feature-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>${amenity}</span>
+                </div>
+            `).join('');
+        }
+
+        function changeMainImage(imgSrc) {
+            document.getElementById('mainImage').src = imgSrc;
+        }
+
+        // Отображение информации о выбранных датах
+        function displayBookingInfo() {
+            bookingData = getBookingDataFromStorage();
+            const bookingInfoDiv = document.getElementById('bookingInfoDetail');
+            
+            if (bookingData && bookingData.checkIn && bookingData.checkOut) {
+                bookingNights = calculateNights(bookingData.checkIn, bookingData.checkOut);
+                
+                if (bookingData.guests > currentGlamp.max_guests) {
+                    bookingInfoDiv.innerHTML = `
+                        <div class="warning-message">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong>Внимание!</strong> Этот домик рассчитан максимум на ${currentGlamp.max_guests} гостей.<br>
+                            Вы выбрали ${bookingData.guests} гостей.
+                        </div>
+                    `;
+                    document.getElementById('confirmBookingBtn').disabled = true;
+                    document.getElementById('confirmBookingBtn').style.opacity = '0.5';
+                    return;
+                }
+                
+                const totalPrice = currentGlamp.price_per_night * bookingNights;
+                bookingInfoDiv.innerHTML = `
+                    <div class="date-info">
+                        <span><i class="fas fa-calendar-check"></i> Заезд:</span>
+                        <strong>${formatDate(bookingData.checkIn)}</strong>
+                    </div>
+                    <div class="date-info">
+                        <span><i class="fas fa-calendar-times"></i> Выезд:</span>
+                        <strong>${formatDate(bookingData.checkOut)}</strong>
+                    </div>
+                    <div class="date-info">
+                        <span><i class="fas fa-users"></i> Гостей:</span>
+                        <strong>${bookingData.guests}</strong>
+                    </div>
+                    <div class="date-info">
+                        <span><i class="fas fa-moon"></i> Ночей:</span>
+                        <strong>${bookingNights}</strong>
+                    </div>
+                    <div class="total-price-display">
+                        <div>Общая стоимость</div>
+                        <div class="total-amount">${totalPrice.toLocaleString()} ₽</div>
+                    </div>
+                `;
+                document.getElementById('confirmBookingBtn').disabled = false;
+                document.getElementById('confirmBookingBtn').style.opacity = '1';
+            } else {
+                bookingInfoDiv.innerHTML = `
+                    <div class="warning-message">
+                        <i class="fas fa-info-circle"></i> Для бронирования выберите даты на главной странице.
+                    </div>
+                `;
+            }
+        }
+
+        // Сохранение бронирования
+        function saveBookingToLocalStorage(booking) {
+            let bookings = JSON.parse(localStorage.getItem('admin_bookings') || '[]');
+            bookings.push(booking);
+            localStorage.setItem('admin_bookings', JSON.stringify(bookings));
+        }
+
+        // Обработка отправки формы
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!bookingData || !bookingData.checkIn || !bookingData.checkOut) {
+                alert('Пожалуйста, сначала выберите даты на главной странице');
+                window.location.href = '/';
+                return;
+            }
+            
+            if (bookingData.guests > currentGlamp.max_guests) {
+                alert(`Этот домик рассчитан максимум на ${currentGlamp.max_guests} гостей. Вы выбрали ${bookingData.guests}. Пожалуйста, выберите другой домик.`);
+                window.location.href = '/glamps.html';
+                return;
+            }
+            
+            const userName = document.getElementById('userName').value.trim();
+            const userEmail = document.getElementById('userEmail').value.trim();
+            const userPhone = document.getElementById('userPhone').value.trim();
+            const userComment = document.getElementById('userComment').value.trim();
+            
+            if (!userName || !userEmail || !userPhone) {
+                alert('Пожалуйста, заполните все обязательные поля');
+                return;
+            }
+            
+            if (!userEmail.includes('@')) {
+                alert('Введите корректный email');
+                return;
+            }
+            
+            const totalPrice = currentGlamp.price_per_night * bookingNights;
+            
+            const newBooking = {
+                id: Date.now(),
+                glamp_id: currentGlamp.id,
+                glamp_name: currentGlamp.name,
+                user_name: userName,
+                user_email: userEmail,
+                user_phone: userPhone,
+                user_comment: userComment,
+                check_in: bookingData.checkIn,
+                check_out: bookingData.checkOut,
+                guests: bookingData.guests,
+                nights: bookingNights,
+                price_per_night: currentGlamp.price_per_night,
+                total_price: totalPrice,
+                status: 'pending',
+                created_at: new Date().toISOString().split('T')[0]
+            };
+            
+            saveBookingToLocalStorage(newBooking);
+            
+            const message = ` БРОНИРОВАНИЕ ОФОРМЛЕНО!\n\n` +
+                ` Домик: ${currentGlamp.name}\n` +
+                ` Адрес: ${currentGlamp.location.city}, ${currentGlamp.location.address}\n` +
+                ` Даты: ${formatDate(bookingData.checkIn)} — ${formatDate(bookingData.checkOut)}\n` +
+                ` Гостей: ${bookingData.guests}\n` +
+                ` Ночей: ${bookingNights}\n` +
+                `Сумма: ${totalPrice.toLocaleString()} ₽\n\n` +
+                ` Данные гостя:\n` +
+                `   Имя: ${userName}\n` +
+                `   Email: ${userEmail}\n` +
+                `   Телефон: ${userPhone}\n` +
+                `${userComment ? `   Комментарий: ${userComment}\n` : ''}\n` +
+                `Статус: Ожидает подтверждения\n\n` +
+                `Спасибо за бронирование! Мы свяжемся с вами в ближайшее время.`;
+            
+            alert(message);
+            
+            localStorage.removeItem('glampingBooking');
+            
+            window.location.href = '/';
+        });
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', function() {
+            displayGlampDetail();
+            displayBookingInfo();
+        });
+        
+        window.changeMainImage = changeMainImage;
+    </script>
+</body>
+</html>

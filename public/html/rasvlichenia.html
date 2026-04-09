@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+</head>
+
+<style>
+.entertainment-hero {
+    height: 480px;
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                url('https://unsplash.com');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.hero-title-container {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-title-container h1 {
+    color: white;
+    font-size: 56px;
+    font-weight: 300;
+    letter-spacing: 3px;
+}
+
+/* Тонкая зеленая линия-разделитель */
+.style-divider {
+    height: 6px;
+    background-color: #0d2b05; 
+    width: 100%;
+    border-bottom: 2px solid #1a472a; 
+}
+
+/* Нижний блок с текстом */
+.entertainment-intro {
+    background-color: #061108; 
+    padding: 100px 0;
+    text-align: center;
+    color: white;
+}
+
+.intro-text-block {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.intro-text-block p {
+    font-size: 28px;
+    font-weight: 300;
+    line-height: 1.4;
+    margin-bottom: 5px;
+    letter-spacing: 0.5px;
+}
+
+/* Навигация  */
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 30px 6%;
+}
+
+.logo { 
+    color: white;
+    font-size: 22px;
+    font-weight: 300;
+}
+
+.nav-links { 
+    display: flex;
+    list-style: none;
+    gap: 30px; 
+}
+
+.nav-links a {
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    font-size: 14px; 
+}
+
+.nav-links a.active { 
+    color: white;
+ }
+
+@media (max-width: 768px) {
+    .hero-title-container h1 { font-size: 36px; }
+    .intro-text-block p { font-size: 20px; }
+}
+
+.activities-section {
+    background-color: #061108; 
+    padding: 80px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.activities-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; 
+    grid-template-rows: 250px 250px;   
+    gap: 30px;
+    width: 90%;
+    max-width: 1200px;
+}
+
+.grid-item {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Настройка сетки: кто где стоит */
+.text-block   { grid-column: 1; grid-row: 1; }
+.tall-card    { grid-column: 2; grid-row: 1 / span 2; } 
+.card:nth-of-type(3) { grid-column: 3; grid-row: 1; } 
+.card:nth-of-type(4) { grid-column: 1; grid-row: 2; } 
+.action-block { grid-column: 3; grid-row: 2; align-self: end; }
+
+/* Текстовый вводный блок */
+.text-block p {
+    color: white;
+    font-size: 24px;
+    line-height: 1.3;
+    font-weight: 300;
+    margin: 0;
+}
+
+/* Карточки с картинками */
+.card {
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center; 
+    padding-left: 20px;
+}
+
+/* Затемнение картинок для читаемости текста */
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    transition: 0.3s;
+}
+
+.card:hover::before {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.card-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+}
+
+.card h4 {
+    color: white;
+    font-size: 18px;
+    font-weight: 300;
+    margin: 0 0 10px 0;
+}
+
+.white-line {
+    width: 80%;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* Кнопка "О отдыхе" */
+.btn-rest {
+    display: block;
+    background-color: #0d2b05;
+    color: white;
+    text-decoration: none;
+    padding: 15px;
+    text-align: center;
+    font-weight: 300;
+    border-radius: 4px;
+    transition: 0.3s;
+}
+
+.btn-rest:hover {
+    background-color: #1a472a;
+    color: white;
+}
+
+/* Адаптив для мобилок */
+@media (max-width: 992px) {
+    .activities-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+    }
+    .tall-card { grid-row: auto; height: 300px; }
+    .action-block { grid-column: 1; }
+}
+
+
+.water-section {
+    background-color: #050a06; 
+    padding: 80px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.water-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1.2fr;
+    gap: 25px;
+    width: 95%;
+    max-width: 1400px;
+}
+
+.water-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.water-card {
+    height: 550px; 
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    align-items: flex-end; 
+    padding: 0 20px 60px 20px; 
+}
+
+/* Затемнение фото как на макете */
+.water-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5); 
+}
+
+.card-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+}
+
+.card-title {
+    color: white;
+    font-size: 22px;
+    font-weight: 300;
+    margin-bottom: 8px;
+}
+
+.card-line {
+    width: 100%;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Текст в четвертой колонке */
+.side-promo-text {
+    color: white;
+    font-size: 26px;
+    font-weight: 300;
+    line-height: 1.3;
+    padding-top: 5px; /* Выравнивание по верху карточек */
+}
+
+/* Адаптив для планшетов */
+@media (max-width: 1100px) {
+    .water-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .side-promo-text {
+        grid-column: span 3;
+        text-align: center;
+        margin-top: 30px;
+    }
+}
+
+/* Адаптив для мобильных */
+@media (max-width: 768px) {
+    .water-container { grid-template-columns: 1fr; }
+    .side-promo-text { grid-column: span 1; }
+    .water-card { height: 400px; }
+}
+
+</style>
+
+
+<body>
+    
+
+<header class="entertainment-hero">
+    <nav class="top-nav">
+        <div class="logo"  href="/index.html">GlampTime <i class="fa-regular fa-clock"></i></div>
+        <ul class="nav-links">
+            <li><a href="/services">Услуги</a></li>
+            <li><a href="/rooms">Проживание</a></li>
+            <li><a href="/entertainment" class="active">Развлечения</a></li>
+            <li><a href="/contact.html">Контакты</a></li>
+        </ul>
+    </nav>
+
+    <div class="hero-title-container">
+        <h1>Развлечения</h1>
+    </div>
+
+    <div class="style-divider"></div>
+</header>
+
+<section class="entertainment-intro">
+    <div class="container">
+        <div class="intro-text-block">
+            <p>Смените ритм мегаполиса на ритм приключений!</p>
+            <p>Активный отдых в GlampTime — это заряд энергии</p>
+            <p>и незабываемые впечатления.</p>
+        </div>
+    </div>
+</section>
+
+<section class="activities-section">
+    <div class="activities-grid">
+        <div class="grid-item text-block">
+            <p>Подберите развлечение себе по душе. С нашими захватывающими активностями</p>
+        </div>
+
+        <div class="grid-item card tall-card" style="background-image: url('https://unsplash.com');">
+            <div class="card-content">
+                <h4>Велопрокат</h4>
+                <div class="white-line"></div>
+            </div>
+        </div>
+
+        <div class="grid-item card" style="background-image: url('https://unsplash.com');">
+            <div class="card-content">
+                <h4>Очки виртуальной реальности</h4>
+                <div class="white-line"></div>
+            </div>
+        </div>
+        <div class="grid-item card" style="background-image: url('https://unsplash.com');">
+            <div class="card-content">
+                <h4>Настольный теннис</h4>
+                <div class="white-line"></div>
+            </div>
+        </div>
+
+        <div class="grid-item action-block">
+            <a href="#" class="btn-rest">О отдыхе</a>
+        </div>
+
+
+        <div class="grid-item card tall-card" style="background-image: url('https://unsplash.com');">
+            <div class="card-content">
+                <h4>Велопрокат</h4>
+                <div class="white-line"></div>
+            </div>
+        </div>
+
+        <div class="grid-item card tall-card" style="background-image: url('https://unsplash.com');">
+            <div class="card-content">
+                <h4>Велопрокат</h4>
+                <div class="white-line"></div>
+            </div>
+        </div>
+
+        <div class="grid-item card tall-card" style="background-image: url('https://unsplash.com');">
+            <div class="card-content">
+                <h4>Велопрокат</h4>
+                <div class="white-line"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+</body>
+</html>

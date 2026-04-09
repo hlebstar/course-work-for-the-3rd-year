@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlampTime - Контакты</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --forest-dark: #0a0f0a;
+            --accent-gold: #0a4d08;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #051901;
+            color: white;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* Навигация */
+        .navbar {
+            background: transparent !important;
+            padding: 2rem 0;
+            position: absolute;
+            width: 100%;
+            z-index: 10;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+            color: white !important;
+        }
+
+        .nav-link {
+            color: rgba(255,255,255,0.8) !important;
+            font-size: 0.9rem;
+            margin: 0 15px;
+            transition: 0.3s;
+        }
+
+        .nav-link:hover {
+            color: white !important;
+        }
+
+        /* Hero секция */
+        .contacts-header {
+            height: 450px;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/images/photo_2026-04-07_15-18-07.jpg');
+            background-size: cover;
+            background-position: center 30%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero-content {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-content h1 {
+            color: white;
+            font-size: 48px;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .green-divider {
+            height: 4px;
+            background-color: #1a472a;
+            width: 100%;
+            border-bottom: 2px solid #2d5a27;
+        }
+
+        /* Промо блок с елками */
+        .promo-black-bg {
+            width: 100%;
+            background-color: #2bff0081;
+        }
+
+        .green-banner-fluid {
+            width: 100%;
+            background-color: #051901;
+            height: 350px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .side-tree {
+            position: absolute;
+            top: 0;
+            height: 100%;
+        }
+
+        .side-tree svg {
+            height: 100%;
+            width: auto;
+        }
+
+        .tree-left-edge {
+            left: 0;
+        }
+
+        .tree-right-edge {
+            right: 0;
+        }
+
+        .promo-centered-text {
+            text-align: center;
+            color: white;
+            z-index: 10;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+
+        .promo-centered-text h3 {
+            font-size: 24px;
+            font-weight: 300;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .promo-centered-text p {
+            font-size: 18px;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        /* Контакты секция */
+        .contacts-info-section {
+            width: 100%;
+            background-color: #050a06;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .contacts-flex-container {
+            display: flex;
+            width: 100%;
+            min-height: 450px;
+        }
+
+        .contacts-text-block {
+            flex: 1;
+            background-color: #051901;
+            padding: 60px 8%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: white;
+        }
+
+        .contacts-text-block h2 {
+            font-size: 28px;
+            font-weight: 300;
+            margin-bottom: 40px;
+            letter-spacing: 1px;
+        }
+
+        .contact-item {
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .contact-item .label {
+            font-weight: 300;
+            margin-right: 10px;
+        }
+
+        .contact-item .value {
+            color: white;
+            text-decoration: none;
+            font-weight: 300;
+            opacity: 0.9;
+            transition: 0.3s;
+        }
+
+        .contact-item .value:hover {
+            opacity: 1;
+            color: #a3b899;
+        }
+
+        .social-circles {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .circle-btn {
+            width: 45px;
+            height: 45px;
+            border: 1px solid rgba(255,255,255,0.6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: 0.3s;
+            font-size: 18px;
+        }
+
+        .circle-btn:hover {
+            background-color: rgba(255,255,255,0.1);
+            border-color: white;
+            transform: translateY(-3px);
+        }
+
+        .contacts-map-block {
+            flex: 1;
+            position: relative;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 100%;
+            filter: grayscale(0.3) contrast(1.1);
+        }
+
+        /* Отзывы */
+        .reviews-section {
+            padding: 4rem 0;
+            background: #0a1a0a;
+        }
+
+        .reviews-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .reviews-title h2 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: #ffd700;
+        }
+
+        .reviews-title p {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .reviews-stats {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .reviews-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+        }
+
+        .review-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,215,0,0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            width: 320px;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .review-name {
+            font-weight: bold;
+        }
+
+        .review-rating {
+            color: #ffd700;
+        }
+
+        .review-text {
+            color: rgba(255,255,255,0.8);
+        }
+
+        .review-date {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.4);
+            margin-top: 0.5rem;
+        }
+
+        .btn-review {
+            background: #ffd700;
+            color: #0a0f0a;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-review:hover {
+            background: #e6c200;
+            transform: translateY(-2px);
+        }
+
+        /* Модальное окно */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #1a2a1a;
+            border: 2px solid #ffd700;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            padding: 2rem;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h3 {
+            color: #ffd700;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,215,0,0.3);
+            border-radius: 10px;
+            color: white;
+        }
+
+        .rating-stars {
+            display: flex;
+            gap: 0.5rem;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        .rating-stars span {
+            color: white;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background: #ffd700;
+            color: #0a0f0a;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Футер */
+        .main-footer {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/images/photo_2026-04-07_18-07-30.jpg');
+            padding: 80px 0;
+            color: #ffffff;
+        }
+
+        .footer-container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .footer-col {
+            flex: 1;
+            padding: 0 40px;
+        }
+
+        .footer-col + .footer-col {
+            border-left: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .footer-logo {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 38px;
+            font-weight: 400;
+            margin-bottom: 25px;
+        }
+
+        .footer-description {
+            font-size: 14px;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 30px;
+            max-width: 280px;
+        }
+
+        .footer-copy {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .footer-heading {
+            font-size: 18px;
+            font-weight: 400;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+
+        .footer-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-list li {
+            margin-bottom: 15px;
+        }
+
+        .footer-list a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+
+        .footer-list a:hover {
+            color: #ffffff;
+            opacity: 0.7;
+        }
+
+        .search-box input {
+            width: 100%;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 4px;
+            padding: 10px 15px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        @media (max-width: 1024px) {
+            .footer-container { flex-wrap: wrap; }
+            .footer-col { flex: 50% 0 0; border-left: none !important; margin-bottom: 40px; }
+            .contacts-flex-container { flex-direction: column; }
+            .contacts-map-block { height: 350px; }
+        }
+
+        @media (max-width: 600px) {
+            .footer-col { flex: 100% 0 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Навигация такая же как в index.html -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="/">GlampTime <i class="fa-regular fa-clock"></i></a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/services.html">Услуги</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/glamps.html">Проживание</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/rasvlichenia.html">Развлечения</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/contact.html">Контакты</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero секция -->
+    <header class="contacts-header">
+        <div class="hero-content">
+            <h1>Контактные данные</h1>
+        </div>
+        <div class="green-divider"></div>
+    </header>
+
+    <!-- Промо блок с елками -->
+    <section class="full-width-promo">
+        <div class="promo-black-bg">
+            <div class="green-banner-fluid">
+                <div class="side-tree tree-left-edge">
+                    <svg width="180" height="432" viewBox="0 0 180 432" fill="none" xmlns="http://w3.org">
+                        <path d="M9.73405 6.98781C8.7211 5.14252 7.34357 3.62663 5.72375 2.57466C4.10394 1.52269 2.29193 0.967181 0.448511 0.957437C-1.3949 0.947692 -3.2127 1.48401 -4.84354 2.5188C-6.47439 3.55358 -7.86785 5.05483 -8.90025 6.88931L-76.7304 127.44C-77.8633 129.457 -78.5195 131.804 -78.6291 134.23C-78.7387 136.657 -78.2977 139.073 -77.3529 141.22C-76.4081 143.367 -74.995 145.166 -73.2641 146.424C-71.5331 147.682 -69.5492 148.353 -67.5236 148.365L-65.3287 148.377L-111.075 235.055C-112.145 237.083 -112.744 239.417 -112.809 241.814C-112.874 244.211 -112.403 246.583 -111.445 248.686C-110.487 250.789 -109.077 252.544 -107.361 253.77C-105.645 254.996 -103.686 255.649 -101.687 255.659L-97.4094 255.682L-134.561 343.507C-135.427 345.551 -135.844 347.825 -135.772 350.114C-135.699 352.403 -135.14 354.631 -134.147 356.586C-133.154 358.54 -131.76 360.157 -130.099 361.282C-128.437 362.407 -126.562 363.002 -124.652 363.013L-23.8658 363.545L-24.2209 430.715L20.5731 430.952L20.9282 363.782L121.715 364.315C123.624 364.325 125.505 363.749 127.179 362.642C128.853 361.534 130.263 359.933 131.277 357.989C132.29 356.045 132.873 353.823 132.97 351.535C133.066 349.247 132.674 346.968 131.829 344.915L95.6304 256.702L99.9082 256.725C101.907 256.736 103.873 256.104 105.602 254.896C107.331 253.688 108.759 251.947 109.739 249.855C110.72 247.763 111.216 245.395 111.176 242.998C111.136 240.6 110.562 238.26 109.513 236.221L64.6635 149.064L66.8584 149.076C68.8841 149.085 70.875 148.435 72.6191 147.195C74.3632 145.955 75.7953 144.172 76.7627 142.035C77.7301 139.898 78.1967 137.487 78.1127 135.059C78.0288 132.631 77.3974 130.278 76.2859 128.249L9.73405 6.98781Z" fill="#000000" />
+                    </svg>
+                </div>
+
+                <div class="promo-centered-text">
+                    <h3>Мы всегда на связи!</h3>
+                    <p>Хотите первыми увидеть новые фото и узнать об акциях?<br>
+                    Подписывайтесь на нас в соцсетях — там самая свежая<br>
+                    атмосфера и оперативные ответы на вопросы.</p>
+                </div>
+
+                <div class="side-tree tree-right-edge">
+                    <svg width="180" height="432" viewBox="0 0 180 432" fill="none" xmlns="http://w3.org" style="transform: scaleX(-1);">
+                        <path d="M9.73405 6.98781C8.7211 5.14252 7.34357 3.62663 5.72375 2.57466C4.10394 1.52269 2.29193 0.967181 0.448511 0.957437C-1.3949 0.947692 -3.2127 1.48401 -4.84354 2.5188C-6.47439 3.55358 -7.86785 5.05483 -8.90025 6.88931L-76.7304 127.44C-77.8633 129.457 -78.5195 131.804 -78.6291 134.23C-78.7387 136.657 -78.2977 139.073 -77.3529 141.22C-76.4081 143.367 -74.995 145.166 -73.2641 146.424C-71.5331 147.682 -69.5492 148.353 -67.5236 148.365L-65.3287 148.377L-111.075 235.055C-112.145 237.083 -112.744 239.417 -112.809 241.814C-112.874 244.211 -112.403 246.583 -111.445 248.686C-110.487 250.789 -109.077 252.544 -107.361 253.77C-105.645 254.996 -103.686 255.649 -101.687 255.659L-97.4094 255.682L-134.561 343.507C-135.427 345.551 -135.844 347.825 -135.772 350.114C-135.699 352.403 -135.14 354.631 -134.147 356.586C-133.154 358.54 -131.76 360.157 -130.099 361.282C-128.437 362.407 -126.562 363.002 -124.652 363.013L-23.8658 363.545L-24.2209 430.715L20.5731 430.952L20.9282 363.782L121.715 364.315C123.624 364.325 125.505 363.749 127.179 362.642C128.853 361.534 130.263 359.933 131.277 357.989C132.29 356.045 132.873 353.823 132.97 351.535C133.066 349.247 132.674 346.968 131.829 344.915L95.6304 256.702L99.9082 256.725C101.907 256.736 103.873 256.104 105.602 254.896C107.331 253.688 108.759 251.947 109.739 249.855C110.72 247.763 111.216 245.395 111.176 242.998C111.136 240.6 110.562 238.26 109.513 236.221L64.6635 149.064L66.8584 149.076C68.8841 149.085 70.875 148.435 72.6191 147.195C74.3632 145.955 75.7953 144.172 76.7627 142.035C77.7301 139.898 78.1967 137.487 78.1127 135.059C78.0288 132.631 77.3974 130.278 76.2859 128.249L9.73405 6.98781Z" fill="#000000" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="green-divider"></div>
+
+    <!-- Контакты секция -->
+    <section class="contacts-info-section">
+        <div class="contacts-flex-container">
+            <div class="contacts-text-block">
+                <h2>Свяжитесь с нами через:</h2>
+                <div class="contact-item">
+                    <span class="label">Email:</span>
+                    <a href="mailto:glamptime@gmail.com" class="value">glamptime@gmail.com</a>
+                </div>
+                <div class="contact-item">
+                    <span class="label">Phone:</span>
+                    <a href="tel:+79999999999" class="value">+79999999999</a>
+                </div>
+                
+                <div class="social-circles">
+                    <a href="#" class="circle-btn"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="circle-btn"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="circle-btn"><i class="fab fa-telegram"></i></a>
+                    <a href="#" class="circle-btn"><i class="fab fa-facebook-f"></i></a>
+                </div>
+            </div>
+
+            <div class="contacts-map-block">
+                <div id="map" class="map-container">
+                    <script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A935c0c4adc1764c4114e0fe6a35724481d0698b41465a39c9cda0e2e8e214692&amp;width=100%&amp;height=100%&amp;lang=ru_RU&amp;scroll=true"></script>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="green-divider"></div>
+
+    <section class="reviews-section">
+        <div class="container">
+            <div class="reviews-title">
+                <h2>Отзывы гостей</h2>
+                <p>Что говорят о нас</p>
+            </div>
+            
+            <div id="reviewsStats" class="reviews-stats"></div>
+            
+            <div id="reviewsList" class="reviews-list"></div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <button onclick="openReviewForm()" class="btn-review">
+                    <i class="fas fa-star"></i> Оставить отзыв
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <div id="reviewModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Оставить отзыв</h3>
+                <button onclick="closeReviewForm()" class="close-modal">&times;</button>
+            </div>
+            
+            <form id="reviewForm">
+                <div class="form-group">
+                    <label>Ваше имя *</label>
+                    <input type="text" id="revName" required>
+                </div>
+                <div class="form-group">
+                    <label>Email *</label>
+                    <input type="email" id="revEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Оценка *</label>
+                    <div id="ratingStars" class="rating-stars">
+                        <span data-rating="1" onclick="setRating(1)">☆</span>
+                        <span data-rating="2" onclick="setRating(2)">☆</span>
+                        <span data-rating="3" onclick="setRating(3)">☆</span>
+                        <span data-rating="4" onclick="setRating(4)">☆</span>
+                        <span data-rating="5" onclick="setRating(5)">☆</span>
+                    </div>
+                    <input type="hidden" id="revRating" required>
+                </div>
+                <div class="form-group">
+                    <label>Ваш отзыв *</label>
+                    <textarea id="revText" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Отправить отзыв</button>
+            </form>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-col info-col">
+                <h2 class="footer-logo">GlampTime</h2>
+                <p class="footer-description">
+                    У нас вас ждут уютные шатры с комфортабельными кроватями, своей террасой и всем необходимым для расслабляющего отдыха.
+                </p>
+                <div class="footer-copy">@2025 Все права защищены.</div>
+            </div>
+
+            <div class="footer-col links-col">
+                <h4 class="footer-heading">-MENU</h4>
+                <ul class="footer-list">
+                    <li><a href="/about.html">О нас</a></li>
+                    <li><a href="/services.html">Услуги</a></li>
+                    <li><a href="/glamps.html">Проживание</a></li>
+                    <li><a href="/rasvlichenia.html">Развлечения</a></li>
+                    <li><a href="/contact.html">Контактные данные</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col links-col">
+                <h4 class="footer-heading">-Follow us</h4>
+                <ul class="footer-list">
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">Telegram</a></li>
+                    <li><a href="#">Facebook</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col subscribe-col">
+                <h4 class="footer-heading">-Оставьте свою почту, для связи с нами:</h4>
+                <div class="search-box">
+                    <input type="text" placeholder="Ваш email...">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let selectedRating = 0;
+        
+        function setRating(rating) {
+            selectedRating = rating;
+            document.getElementById('revRating').value = rating;
+            const stars = document.querySelectorAll('#ratingStars span');
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.innerHTML = '★';
+                    star.style.color = '#ffd700';
+                } else {
+                    star.innerHTML = '☆';
+                    star.style.color = 'white';
+                }
+            });
+        }
+        
+        async function loadReviews() {
+            try {
+                const statsRes = await fetch('/api/reviews/stats');
+                const stats = await statsRes.json();
+                
+                if (stats.success) {
+                    document.getElementById('reviewsStats').innerHTML = `
+                        <div style="display: inline-flex; gap: 2rem; background: rgba(255,255,255,0.05); padding: 1rem 2rem; border-radius: 50px;">
+                            <span><strong style="color: #ffd700; font-size: 1.5rem;">${stats.data.avgRating}</strong> ★ средняя оценка</span>
+                            <span><strong style="color: #ffd700; font-size: 1.5rem;">${stats.data.total}</strong> отзывов</span>
+                        </div>
+                    `;
+                }
+                
+                const res = await fetch('/api/reviews');
+                const result = await res.json();
+                
+                if (result.success && result.data.length > 0) {
+                    document.getElementById('reviewsList').innerHTML = result.data.map(review => `
+                        <div class="review-card">
+                            <div class="review-header">
+                                <strong class="review-name">${escapeHtml(review.user_name)}</strong>
+                                <span class="review-rating">${'★'.repeat(review.rating)}${'☆'.repeat(5-review.rating)}</span>
+                            </div>
+                            <p class="review-text">${escapeHtml(review.review_text)}</p>
+                            <div class="review-date">${new Date(review.created_at).toLocaleDateString('ru-RU')}</div>
+                        </div>
+                    `).join('');
+                } else {
+                    document.getElementById('reviewsList').innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.5);">Пока нет отзывов. Будьте первым!</p>';
+                }
+            } catch (error) {
+                console.error('Ошибка:', error);
+            }
+        }
+        
+        function openReviewForm() {
+            document.getElementById('reviewModal').style.display = 'flex';
+        }
+        
+        function closeReviewForm() {
+            document.getElementById('reviewModal').style.display = 'none';
+            document.getElementById('reviewForm').reset();
+            selectedRating = 0;
+            document.getElementById('revRating').value = '';
+            const stars = document.querySelectorAll('#ratingStars span');
+            stars.forEach(star => {
+                star.innerHTML = '☆';
+                star.style.color = 'white';
+            });
+        }
+        
+        document.getElementById('reviewForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const rating = parseInt(document.getElementById('revRating').value);
+            if (!rating) {
+                alert('Поставьте оценку звездами!');
+                return;
+            }
+            
+            const reviewData = {
+                user_name: document.getElementById('revName').value,
+                user_email: document.getElementById('revEmail').value,
+                rating: rating,
+                review_text: document.getElementById('revText').value,
+                glamp_id: null
+            };
+            
+            try {
+                const res = await fetch('/api/reviews', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(reviewData)
+                });
+                const result = await res.json();
+                
+                if (result.success) {
+                    alert(result.message);
+                    closeReviewForm();
+                    loadReviews();
+                } else {
+                    alert('Ошибка: ' + result.error);
+                }
+            } catch (error) {
+                alert('Ошибка при отправке');
+            }
+        });
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        loadReviews();
+    </script>
+</body>
+</html>

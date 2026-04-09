@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlampTime Admin - Панель управления</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background: #0a0f0a;
+            color: #fff;
+        }
+
+        /* Анимации */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Боковая панель */
+        .admin-sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(135deg, #0a1a0a 0%, #0d2618 100%);
+            border-right: 1px solid rgba(255,215,0,0.2);
+            padding: 2rem 1rem;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .admin-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,215,0,0.3);
+        }
+
+        .admin-logo h2 {
+            font-size: 1.5rem;
+            color: #ffd700;
+        }
+
+        .admin-logo p {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .admin-menu {
+            list-style: none;
+            padding: 0;
+        }
+
+        .admin-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .admin-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .admin-menu a i {
+            width: 24px;
+            font-size: 1.2rem;
+        }
+
+        .admin-menu a:hover, .admin-menu a.active {
+            background: rgba(255,215,0,0.15);
+            color: #ffd700;
+        }
+
+        /* Основной контент */
+        .admin-content {
+            margin-left: 280px;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        /* Хедер */
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,215,0,0.2);
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 300;
+        }
+
+        .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(255,255,255,0.05);
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+        }
+
+        /* Карточки статистики */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,215,0,0.2);
+            border-radius: 20px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: #ffd700;
+            background: rgba(255,215,0,0.05);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255,215,0,0.1);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #ffd700;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+        }
+
+        .stat-change {
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .stat-change.positive { color: #28a745; }
+        .stat-change.negative { color: #dc3545; }
+
+        /* Графики */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,215,0,0.2);
+            border-radius: 20px;
+            padding: 1.5rem;
+        }
+
+        .chart-title {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: #ffd700;
+        }
+
+        canvas {
+            max-height: 300px;
+        }
+
+        /* Таблицы */
+        .data-table {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,215,0,0.2);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .data-table table {
+            width: 100%;
+            color: #fff;
+        }
+
+        .data-table th {
+            padding: 1rem;
+            background: rgba(255,215,0,0.1);
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .data-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .data-table tr:hover {
+            background: rgba(255,215,0,0.05);
+        }
+
+        /* Бейджи статусов */
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .badge-pending { background: #ffc107; color: #000; }
+        .badge-confirmed { background: #28a745; color: #fff; }
+        .badge-cancelled { background: #dc3545; color: #fff; }
+        .badge-completed { background: #17a2b8; color: #fff; }
+
+        /* Кнопки */
+        .btn-action {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            margin: 0 3px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-edit {
+            background: #ffc107;
+            color: #000;
+            border: none;
+        }
+
+        .btn-delete {
+            background: #dc3545;
+            color: #fff;
+            border: none;
+        }
+
+        .btn-view {
+            background: #17a2b8;
+            color: #fff;
+            border: none;
+        }
+
+        /* Модальное окно */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a2a1a, #0d2618);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255,215,0,0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,215,0,0.2);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,215,0,0.3);
+            border-radius: 10px;
+            color: #fff;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #ffd700;
+        }
+
+        /* Уведомления */
+        .toast-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #28a745;
+            color: #fff;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            z-index: 1100;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            .admin-sidebar.open {
+                transform: translateX(0);
+            }
+            .admin-content {
+                margin-left: 0;
+            }
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-sidebar" id="sidebar">
+        <div class="admin-logo">
+            <h2><i class="fas fa-crown"></i> GlampTime</h2>
+            <p>Административная панель</p>
+        </div>
+        <ul class="admin-menu">
+            <li><a href="#" data-tab="dashboard" class="active"><i class="fas fa-tachometer-alt"></i> Дашборд</a></li>
+            <li><a href="#" data-tab="glamps"><i class="fas fa-home"></i> Домики</a></li>
+            <li><a href="#" data-tab="bookings"><i class="fas fa-calendar-check"></i> Бронирования</a></li>
+            <li><a href="#" data-tab="users"><i class="fas fa-users"></i> Пользователи</a></li>
+            <li><a href="#" data-tab="settings"><i class="fas fa-cog"></i> Настройки</a></li>
+            <li><a href="/"><i class="fas fa-sign-out-alt"></i> Выход</a></li>
+            <li><a href="#" data-tab="reviews"><i class="fas fa-star"></i> Отзывы</a></li>
+        </ul>
+    </div>
+
+    <div class="admin-content">
+        <div class="admin-header">
+            <h1 class="page-title" id="pageTitle">Панель управления</h1>
+            <div class="admin-user">
+                <i class="fas fa-user-circle"></i>
+                <span>Администратор</span>
+            </div>
+        </div>
+
+        <!-- Дашборд -->
+        <div id="dashboardTab" class="tab-content fade-in">
+            <div class="stats-grid" id="statsGrid"></div>
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <div class="chart-title"><i class="fas fa-chart-line"></i> Бронирования по месяцам</div>
+                    <canvas id="bookingsChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title"><i class="fas fa-chart-pie"></i> Популярность домиков</div>
+                    <canvas id="popularityChart"></canvas>
+                </div>
+            </div>
+            <div class="data-table">
+                <h4 style="padding: 1rem; margin: 0;">Последние бронирования</h4>
+                <div id="recentBookings"></div>
+            </div>
+        </div>
+
+        <!-- Домики -->
+        <div id="glampsTab" class="tab-content fade-in" style="display: none;">
+            <div style="margin-bottom: 1rem; text-align: right;">
+                <button class="btn-action btn-edit" onclick="openGlampModal()"><i class="fas fa-plus"></i> Добавить домик</button>
+            </div>
+            <div class="data-table">
+                <div id="glampsTable"></div>
+            </div>
+        </div>
+
+        <!-- Бронирования -->
+        <div id="bookingsTab" class="tab-content fade-in" style="display: none;">
+            <div class="data-table">
+                <div id="bookingsTable"></div>
+            </div>
+        </div>
+
+        <!-- Пользователи -->
+        <div id="usersTab" class="tab-content fade-in" style="display: none;">
+            <div class="data-table">
+                <div id="usersTable"></div>
+            </div>
+        </div>
+
+        <!-- Настройки -->
+        <div id="settingsTab" class="tab-content fade-in" style="display: none;">
+            <div class="data-table" style="padding: 2rem;">
+                <h3>Настройки системы</h3>
+                <div class="form-group">
+                    <label>Название сайта</label>
+                    <input type="text" id="siteName" value="GlampTime">
+                </div>
+                <div class="form-group">
+                    <label>Email для уведомлений</label>
+                    <input type="email" id="adminEmail" value="admin@glamptime.ru">
+                </div>
+                <div class="form-group">
+                    <label>Телефон</label>
+                    <input type="text" id="adminPhone" value="+7 (123) 456-78-90">
+                </div>
+                <button class="btn-action btn-edit" onclick="saveSettings()">Сохранить настройки</button>
+            </div>
+        </div>
+    </div>
+<div id="reviewsTab" class="tab-content fade-in" style="display: none;">
+    <div class="data-table">
+        <div id="reviewsTable"></div>
+    </div>
+</div>
+    <!-- Модальное окно для домиков -->
+    <div id="glampModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Добавить домик</h3>
+                <button class="btn-action btn-delete" onclick="closeModal()">✕</button>
+            </div>
+            <form id="glampForm">
+                <input type="hidden" id="glampId">
+                <div class="form-group">
+                    <label>Название</label>
+                    <input type="text" id="glampName" required>
+                </div>
+                <div class="form-group">
+                    <label>Описание</label>
+                    <textarea id="glampDescription" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Цена за ночь (₽)</label>
+                    <input type="number" id="glampPrice" required>
+                </div>
+                <div class="form-group">
+                    <label>Макс. гостей</label>
+                    <input type="number" id="glampMaxGuests" required>
+                </div>
+                <div class="form-group">
+                    <label>Удобства (через запятую)</label>
+                    <input type="text" id="glampAmenities" placeholder="WiFi, Парковка, Кухня">
+                </div>
+                <div class="form-group">
+                    <label>Город</label>
+                    <input type="text" id="glampCity" required>
+                </div>
+                <div class="form-group">
+                    <label>Адрес</label>
+                    <input type="text" id="glampAddress" required>
+                </div>
+                <div class="form-group">
+                    <label>Тип</label>
+                    <select id="glampType">
+                        <option value="house">Домик</option>
+                        <option value="tent">Шатер</option>
+                        <option value="lodge">Лодж</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>URL фото</label>
+                    <input type="text" id="glampImage" placeholder="https://...">
+                </div>
+                <button type="submit" class="btn-action btn-edit" style="width: 100%;">Сохранить</button>
+            </form>
+        </div>
+    </div>
+
+
+    
+    <script>
+        // Данные
+        let glamps = [];
+        let bookings = [];
+        let users = [];
+        let settings = {};
+
+        let bookingsChart, popularityChart;
+
+        // Загрузка данных
+        function loadData() {
+            glamps = JSON.parse(localStorage.getItem('glamping_glamps') || JSON.stringify([
+                { id: 1, name: "Шале у леса", description: "Уютный домик в лесу", price: 8900, max_guests: 2, amenities: ["Камин", "Терраса"], city: "Сочи", address: "ул. Лесная", type: "house", image: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=600" },
+                { id: 2, name: "Сфера", description: "Современный купол", price: 12400, max_guests: 3, amenities: ["Панорамный вид"], city: "Сочи", address: "ул. Горная", type: "tent", image: "https://images.unsplash.com/photo-1542718610-a1d656d1884c?w=600" },
+                { id: 3, name: "Домик у озера", description: "Вид на озеро", price: 6800, max_guests: 4, amenities: ["Кухня", "Мангал"], city: "Сочи", address: "ул. Озерная", type: "house", image: "https://images.unsplash.com/photo-1445308394109-4ec2920981b1?w=600" },
+                { id: 4, name: "Лодж Горный", description: "Просторный лодж", price: 14500, max_guests: 6, amenities: ["Сауна", "Бильярд"], city: "Красная Поляна", address: "ул. Горная", type: "lodge", image: "https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=600" }
+            ]));
+            
+            bookings = JSON.parse(localStorage.getItem('glamping_bookings') || JSON.stringify([
+                { id: 1, glamp_id: 1, user_name: "Иван Петров", user_email: "ivan@mail.com", check_in: "2025-04-10", check_out: "2025-04-12", guests: 2, total_price: 17800, status: "confirmed", created_at: "2025-04-01" },
+                { id: 2, glamp_id: 2, user_name: "Мария Смирнова", user_email: "maria@mail.com", check_in: "2025-04-15", check_out: "2025-04-17", guests: 2, total_price: 24800, status: "pending", created_at: "2025-04-02" }
+            ]));
+            
+            users = JSON.parse(localStorage.getItem('glamping_users') || JSON.stringify([
+                { id: 1, name: "Admin", email: "admin@glamptime.ru", role: "admin", created_at: "2025-01-01" }
+            ]));
+            
+            settings = JSON.parse(localStorage.getItem('glamping_settings') || JSON.stringify({
+                siteName: "GlampTime",
+                adminEmail: "admin@glamptime.ru",
+                adminPhone: "+7 (123) 456-78-90"
+            }));
+        }
+
+        function saveData() {
+            localStorage.setItem('glamping_glamps', JSON.stringify(glamps));
+            localStorage.setItem('glamping_bookings', JSON.stringify(bookings));
+            localStorage.setItem('glamping_users', JSON.stringify(users));
+        }
+
+        function showNotification(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+            toast.style.background = type === 'success' ? '#28a745' : '#dc3545';
+            toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        function updateStats() {
+            const totalGlamps = glamps.length;
+            const totalBookings = bookings.length;
+            const totalRevenue = bookings.reduce((sum, b) => sum + (b.total_price || 0), 0);
+            const pendingBookings = bookings.filter(b => b.status === 'pending').length;
+            const confirmedBookings = bookings.filter(b => b.status === 'confirmed').length;
+            
+            document.getElementById('statsGrid').innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon"><i class="fas fa-home"></i></div>
+                    </div>
+                    <div class="stat-value">${totalGlamps}</div>
+                    <div class="stat-label">Всего домиков</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+                    </div>
+                    <div class="stat-value">${totalBookings}</div>
+                    <div class="stat-label">Всего бронирований</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon"><i class="fas fa-ruble-sign"></i></div>
+                    </div>
+                    <div class="stat-value">${totalRevenue.toLocaleString()} ₽</div>
+                    <div class="stat-label">Общая выручка</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                    </div>
+                    <div class="stat-value">${pendingBookings}</div>
+                    <div class="stat-label">Ожидают подтверждения</div>
+                    <div class="stat-change positive">Подтверждено: ${confirmedBookings}</div>
+                </div>
+            `;
+        }
+
+        function initCharts() {
+            const months = ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'];
+            const monthlyBookings = new Array(12).fill(0);
+            
+            bookings.forEach(booking => {
+                const month = new Date(booking.created_at).getMonth();
+                monthlyBookings[month]++;
+            });
+            
+            if (bookingsChart) bookingsChart.destroy();
+            bookingsChart = new Chart(document.getElementById('bookingsChart'), {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: 'Бронирования',
+                        data: monthlyBookings,
+                        borderColor: '#ffd700',
+                        backgroundColor: 'rgba(255,215,0,0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: true }
+            });
+            
+            const glampBookings = {};
+            glamps.forEach(glamp => { glampBookings[glamp.name] = 0; });
+            bookings.forEach(booking => {
+                const glamp = glamps.find(g => g.id === booking.glamp_id);
+                if (glamp) glampBookings[glamp.name]++;
+            });
+            
+            if (popularityChart) popularityChart.destroy();
+            popularityChart = new Chart(document.getElementById('popularityChart'), {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(glampBookings),
+                    datasets: [{
+                        data: Object.values(glampBookings),
+                        backgroundColor: ['#ffd700', '#28a745', '#17a2b8', '#dc3545', '#ffc107', '#6f42c1']
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: true }
+            });
+        }
+
+        function renderGlampsTable() {
+            const html = `
+                <table>
+                    <thead><tr><th>ID</th><th>Название</th><th>Цена</th><th>Гости</th><th>Город</th><th>Действия</th></tr></thead>
+                    <tbody>
+                        ${glamps.map(g => `
+                            <tr>
+                                <td>${g.id}</td>
+                                <td><strong>${g.name}</strong></td>
+                                <td>${g.price.toLocaleString()} ₽</td>
+                                <td>до ${g.max_guests}</td>
+                                <td>${g.city}</td>
+                                <td>
+                                    <button class="btn-action btn-edit" onclick="editGlamp(${g.id})"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-action btn-delete" onclick="deleteGlamp(${g.id})"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            document.getElementById('glampsTable').innerHTML = html;
+        }
+
+        function renderBookingsTable() {
+            const getGlampName = (id) => glamps.find(g => g.id === id)?.name || 'Неизвестно';
+            const getStatusBadge = (status) => `<span class="badge badge-${status}">${status === 'pending' ? 'Ожидание' : status === 'confirmed' ? 'Подтверждено' : 'Отменено'}</span>`;
+            
+            const html = `
+                <table>
+                    <thead><tr><th>ID</th><th>Домик</th><th>Гость</th><th>Даты</th><th>Гости</th><th>Сумма</th><th>Статус</th><th>Действия</th></tr></thead>
+                    <tbody>
+                        ${bookings.map(b => `
+                            <tr>
+                                <td>${b.id}</td>
+                                <td><strong>${getGlampName(b.glamp_id)}</strong></td>
+                                <td>${b.user_name}<br><small>${b.user_email}</small></td>
+                                <td>${b.check_in} → ${b.check_out}</td>
+                                <td>${b.guests}</td>
+                                <td>${(b.total_price || 0).toLocaleString()} ₽</td>
+                                <td>${getStatusBadge(b.status)}</td>
+                                <td>
+                                    <select onchange="updateBookingStatus(${b.id}, this.value)" class="btn-action">
+                                        <option value="pending" ${b.status === 'pending' ? 'selected' : ''}>Ожидание</option>
+                                        <option value="confirmed" ${b.status === 'confirmed' ? 'selected' : ''}>Подтвердить</option>
+                                        <option value="cancelled" ${b.status === 'cancelled' ? 'selected' : ''}>Отменить</option>
+                                    </select>
+                                    <button class="btn-action btn-view" onclick="viewBooking(${b.id})"><i class="fas fa-eye"></i></button>
+                                    <button class="btn-action btn-delete" onclick="deleteBooking(${b.id})"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            document.getElementById('bookingsTable').innerHTML = html;
+        }
+
+        function renderUsersTable() {
+            const html = `
+                <table>
+                    <thead><tr><th>ID</th><th>Имя</th><th>Email</th><th>Роль</th><th>Дата</th><th>Действия</th></tr></thead>
+                    <tbody>
+                        ${users.map(u => `
+                            <tr>
+                                <td>${u.id}</td>
+                                <td><strong>${u.name}</strong></td>
+                                <td>${u.email}</td>
+                                <td><span class="badge badge-confirmed">${u.role === 'admin' ? 'Админ' : 'Пользователь'}</span></td>
+                                <td>${u.created_at}</td>
+                                <td>${u.role !== 'admin' ? `<button class="btn-action btn-delete" onclick="deleteUser(${u.id})"><i class="fas fa-trash"></i></button>` : '-'}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            document.getElementById('usersTable').innerHTML = html;
+        }
+
+        function renderRecentBookings() {
+            const recent = [...bookings].reverse().slice(0, 5);
+            const getGlampName = (id) => glamps.find(g => g.id === id)?.name || 'Неизвестно';
+            const html = `
+                <table>
+                    <thead><tr><th>Домик</th><th>Гость</th><th>Даты</th><th>Сумма</th><th>Статус</th></tr></thead>
+                    <tbody>
+                        ${recent.map(b => `
+                            <tr>
+                                <td>${getGlampName(b.glamp_id)}</td>
+                                <td>${b.user_name}</td>
+                                <td>${b.check_in} → ${b.check_out}</td>
+                                <td>${(b.total_price || 0).toLocaleString()} ₽</td>
+                                <td><span class="badge badge-${b.status}">${b.status === 'pending' ? 'Ожидание' : 'Подтверждено'}</span></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            document.getElementById('recentBookings').innerHTML = html;
+        }
+
+        function refreshAll() {
+            updateStats();
+            renderGlampsTable();
+            renderBookingsTable();
+            renderUsersTable();
+            renderRecentBookings();
+            initCharts();
+             loadReviewsFromDB();
+        }
+
+        function editGlamp(id) {
+            const glamp = glamps.find(g => g.id === id);
+            if (glamp) {
+                document.getElementById('modalTitle').textContent = 'Редактировать домик';
+                document.getElementById('glampId').value = glamp.id;
+                document.getElementById('glampName').value = glamp.name;
+                document.getElementById('glampDescription').value = glamp.description;
+                document.getElementById('glampPrice').value = glamp.price;
+                document.getElementById('glampMaxGuests').value = glamp.max_guests;
+                document.getElementById('glampAmenities').value = glamp.amenities.join(', ');
+                document.getElementById('glampCity').value = glamp.city;
+                document.getElementById('glampAddress').value = glamp.address;
+                document.getElementById('glampType').value = glamp.type;
+                document.getElementById('glampImage').value = glamp.image || '';
+                document.getElementById('glampModal').style.display = 'flex';
+            }
+        }
+
+        function deleteGlamp(id) {
+            if (confirm('Удалить этот домик? Все связанные бронирования также будут удалены.')) {
+                glamps = glamps.filter(g => g.id !== id);
+                bookings = bookings.filter(b => b.glamp_id !== id);
+                saveData();
+                refreshAll();
+                showNotification('Домик удален');
+            }
+        }
+
+        function deleteBooking(id) {
+            if (confirm('Удалить бронирование?')) {
+                bookings = bookings.filter(b => b.id !== id);
+                saveData();
+                refreshAll();
+                showNotification('Бронирование удалено');
+            }
+        }
+
+        function deleteUser(id) {
+            if (confirm('Удалить пользователя?')) {
+                users = users.filter(u => u.id !== id);
+                saveData();
+                refreshAll();
+                showNotification('Пользователь удален');
+            }
+        }
+
+        function updateBookingStatus(id, status) {
+            const booking = bookings.find(b => b.id === id);
+            if (booking) {
+                booking.status = status;
+                saveData();
+                refreshAll();
+                showNotification(`Статус бронирования изменен на ${status === 'confirmed' ? 'Подтверждено' : status === 'cancelled' ? 'Отменено' : 'Ожидание'}`);
+            }
+        }
+
+        function viewBooking(id) {
+            const booking = bookings.find(b => b.id === id);
+            const glamp = glamps.find(g => g.id === booking.glamp_id);
+            alert(`📋 Детали бронирования #${booking.id}\n\n` +
+                  `Домик: ${glamp?.name}\n` +
+                  `Гость: ${booking.user_name}\n` +
+                  `Email: ${booking.user_email}\n` +
+                  `Телефон: ${booking.user_phone || 'не указан'}\n` +
+                  `Даты: ${booking.check_in} — ${booking.check_out}\n` +
+                  `Гостей: ${booking.guests}\n` +
+                  `Ночей: ${booking.nights || '—'}\n` +
+                  `Сумма: ${(booking.total_price || 0).toLocaleString()} ₽\n` +
+                  `Статус: ${booking.status === 'pending' ? 'Ожидание' : 'Подтверждено'}\n` +
+                  `Создано: ${booking.created_at}`);
+        }
+
+        function openGlampModal() {
+            document.getElementById('modalTitle').textContent = 'Добавить домик';
+            document.getElementById('glampForm').reset();
+            document.getElementById('glampId').value = '';
+            document.getElementById('glampModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('glampModal').style.display = 'none';
+        }
+
+        function saveSettings() {
+            settings.siteName = document.getElementById('siteName').value;
+            settings.adminEmail = document.getElementById('adminEmail').value;
+            settings.adminPhone = document.getElementById('adminPhone').value;
+            localStorage.setItem('glamping_settings', JSON.stringify(settings));
+            showNotification('Настройки сохранены');
+        }
+
+        document.getElementById('glampForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = parseInt(document.getElementById('glampId').value);
+            const glampData = {
+                id: id || Date.now(),
+                name: document.getElementById('glampName').value,
+                description: document.getElementById('glampDescription').value,
+                price: parseInt(document.getElementById('glampPrice').value),
+                max_guests: parseInt(document.getElementById('glampMaxGuests').value),
+                amenities: document.getElementById('glampAmenities').value.split(',').map(a => a.trim()),
+                city: document.getElementById('glampCity').value,
+                address: document.getElementById('glampAddress').value,
+                type: document.getElementById('glampType').value,
+                image: document.getElementById('glampImage').value || 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=600'
+            };
+            
+            if (id) {
+                const index = glamps.findIndex(g => g.id === id);
+                glamps[index] = glampData;
+                showNotification('Домик обновлен');
+            } else {
+                glamps.push(glampData);
+                showNotification('Домик добавлен');
+            }
+            saveData();
+            refreshAll();
+            closeModal();
+        });
+document.querySelectorAll('.admin-menu a[data-tab]').forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const tab = link.getAttribute('data-tab');
+        document.querySelectorAll('.admin-menu a').forEach(a => a.classList.remove('active'));
+        link.classList.add('active');
+        document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+        document.getElementById(`${tab}Tab`).style.display = 'block';
+        const titles = { 
+            dashboard: 'Панель управления', 
+            glamps: 'Управление домиками', 
+            bookings: 'Управление бронированиями', 
+            users: 'Пользователи', 
+            settings: 'Настройки',
+            reviews: 'Управление отзывами'
+        };
+        document.getElementById('pageTitle').textContent = titles[tab];
+        if (tab === 'dashboard') initCharts();
+        if (tab === 'reviews') loadReviewsFromDB();
+    });
+});
+        loadData();
+        refreshAll();
+// Загрузить отзывы из базы данных
+async function loadReviewsFromDB() {
+    try {
+        const response = await fetch('/api/admin/reviews');
+        const result = await response.json();
+        
+        if (result.success && result.data) {
+            renderReviewsTable(result.data);
+        } else {
+            // Если API не работает, используем localStorage
+            loadReviewsFromLocal();
+        }
+    } catch (error) {
+        console.error('Ошибка загрузки отзывов:', error);
+        loadReviewsFromLocal();
+    }
+}
+
+// Загрузить отзывы из localStorage (резервный вариант)
+function loadReviewsFromLocal() {
+    let reviews = JSON.parse(localStorage.getItem('glamping_reviews') || '[]');
+    renderReviewsTable(reviews);
+}
+
+// Отобразить таблицу отзывов
+function renderReviewsTable(reviews) {
+    const getStatusBadge = (status) => {
+        switch(status) {
+            case 'approved': return '<span class="badge badge-confirmed">✓ Одобрен</span>';
+            case 'pending': return '<span class="badge badge-pending"> На модерации</span>';
+            case 'rejected': return '<span class="badge badge-cancelled">✗ Отклонен</span>';
+            default: return '<span class="badge badge-pending"> На модерации</span>';
+        }
+    };
+    
+    const getRatingStars = (rating) => {
+        return '★'.repeat(rating) + '☆'.repeat(5 - rating);
+    };
+    
+    const html = `
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Автор</th>
+                    <th>Оценка</th>
+                    <th>Отзыв</th>
+                    <th>Домик</th>
+                    <th>Дата</th>
+                    <th>Статус</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${reviews.length === 0 ? `
+                    <tr><td colspan="8" style="text-align: center;">Нет отзывов</td></tr>
+                ` : reviews.map(review => `
+                    <tr>
+                        <td>${review.id}</td>
+                        <td>
+                            <strong>${escapeHtml(review.user_name)}</strong><br>
+                            <small style="color: rgba(255,255,255,0.5);">${escapeHtml(review.user_email)}</small>
+                        </td>
+                        <td><span style="color: #ffd700;">${getRatingStars(review.rating)}</span></td>
+                        <td>${escapeHtml(review.review_text.substring(0, 100))}${review.review_text.length > 100 ? '...' : ''}</td>
+                        <td>${review.glamp_name || '—'}</td>
+                        <td>${new Date(review.created_at).toLocaleDateString('ru-RU')}</td>
+                        <td>${getStatusBadge(review.status)}</td>
+                        <td>
+                            ${review.status !== 'approved' ? `<button class="btn-action btn-edit" onclick="approveReview(${review.id})"><i class="fas fa-check"></i> Одобрить</button>` : ''}
+                            ${review.status !== 'rejected' ? `<button class="btn-action btn-view" onclick="rejectReview(${review.id})"><i class="fas fa-times"></i> Отклонить</button>` : ''}
+                            <button class="btn-action btn-delete" onclick="deleteReview(${review.id})"><i class="fas fa-trash"></i> Удалить</button>
+                        </td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
+    
+    document.getElementById('reviewsTable').innerHTML = html;
+}
+
+// Одобрить отзыв
+async function approveReview(id) {
+    try {
+        const response = await fetch(`/api/admin/reviews/${id}/status`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: 'approved' })
+        });
+        
+        if (response.ok) {
+            showNotification('Отзыв одобрен', 'success');
+            loadReviewsFromDB();
+        } else {
+            // Резервный вариант для localStorage
+            let reviews = JSON.parse(localStorage.getItem('glamping_reviews') || '[]');
+            const index = reviews.findIndex(r => r.id === id);
+            if (index !== -1) {
+                reviews[index].status = 'approved';
+                localStorage.setItem('glamping_reviews', JSON.stringify(reviews));
+                showNotification('Отзыв одобрен (локально)', 'success');
+                loadReviewsFromLocal();
+            }
+        }
+    } catch (error) {
+        console.error('Ошибка:', error);
+        showNotification('Ошибка при одобрении отзыва', 'error');
+    }
+}
+
+// Отклонить отзыв
+async function rejectReview(id) {
+    try {
+        const response = await fetch(`/api/admin/reviews/${id}/status`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: 'rejected' })
+        });
+        
+        if (response.ok) {
+            showNotification('Отзыв отклонен', 'success');
+            loadReviewsFromDB();
+        } else {
+            let reviews = JSON.parse(localStorage.getItem('glamping_reviews') || '[]');
+            const index = reviews.findIndex(r => r.id === id);
+            if (index !== -1) {
+                reviews[index].status = 'rejected';
+                localStorage.setItem('glamping_reviews', JSON.stringify(reviews));
+                showNotification('Отзыв отклонен (локально)', 'success');
+                loadReviewsFromLocal();
+            }
+        }
+    } catch (error) {
+        console.error('Ошибка:', error);
+        showNotification('Ошибка при отклонении отзыва', 'error');
+    }
+}
+
+// Удалить отзыв
+async function deleteReview(id) {
+    if (!confirm('Вы уверены, что хотите удалить этот отзыв?')) return;
+    
+    try {
+        const response = await fetch(`/api/admin/reviews/${id}`, {
+            method: 'DELETE'
+        });
+        
+        if (response.ok) {
+            showNotification('Отзыв удален', 'success');
+            loadReviewsFromDB();
+        } else {
+            let reviews = JSON.parse(localStorage.getItem('glamping_reviews') || '[]');
+            reviews = reviews.filter(r => r.id !== id);
+            localStorage.setItem('glamping_reviews', JSON.stringify(reviews));
+            showNotification('Отзыв удален (локально)', 'success');
+            loadReviewsFromLocal();
+        }
+    } catch (error) {
+        console.error('Ошибка:', error);
+        showNotification('Ошибка при удалении отзыва', 'error');
+    }
+}
+
+// Функция для экранирования HTML
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// Добавить тестовые отзывы (для отладки)
+function addTestReviews() {
+    let reviews = JSON.parse(localStorage.getItem('glamping_reviews') || '[]');
+    
+    if (reviews.length === 0) {
+        reviews = [
+            { id: 1, user_name: "Анна Иванова", user_email: "anna@mail.com", rating: 5, review_text: "Отличный глэмпинг! Шатер очень уютный, природа шикарная. Персонал вежливый. Обязательно приедем еще!", glamp_name: "Шале у леса", status: "approved", created_at: "2025-04-01" },
+            { id: 2, user_name: "Михаил Петров", user_email: "michael@mail.com", rating: 4, review_text: "Хорошее место для отдыха. Домик чистый, есть все необходимое. Немного дороговато, но впечатления того стоят.", glamp_name: "Сфера", status: "approved", created_at: "2025-04-02" },
+            { id: 3, user_name: "Елена Смирнова", user_email: "elena@mail.com", rating: 5, review_text: "Великолепно! Провели здесь выходные. Очень понравилась баня и ужин при свечах. Рекомендую всем!", glamp_name: "Шале у леса", status: "pending", created_at: "2025-04-03" },
+            { id: 4, user_name: "Дмитрий Козлов", user_email: "dmitry@mail.com", rating: 3, review_text: "В целом неплохо, но есть недочеты. Долго ждали заселение. Надеюсь, исправятся.", glamp_name: "Домик у озера", status: "pending", created_at: "2025-04-04" }
+        ];
+        localStorage.setItem('glamping_reviews', JSON.stringify(reviews));
+        showNotification('Добавлены тестовые отзывы', 'success');
+    }
+    
+    loadReviewsFromLocal();
+}
+    </script>
+</body>
+</html>
