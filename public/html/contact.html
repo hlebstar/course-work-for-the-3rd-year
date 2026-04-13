@@ -2,13 +2,12 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>GlampTime - Контакты</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --forest-dark: #0a0f0a;
             --accent-gold: #0a4d08;
             --glass-bg: rgba(255, 255, 255, 0.1);
             --glass-border: rgba(255, 255, 255, 0.2);
@@ -22,13 +21,12 @@
 
         body {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: #051901;
+            background: linear-gradient(rgba(2, 114, 15, 0.5), rgba(8, 36, 1, 0.7));
             color: white;
             margin: 0;
             overflow-x: hidden;
         }
 
-        /* Навигация */
         .navbar {
             background: transparent !important;
             padding: 2rem 0;
@@ -44,14 +42,41 @@
             color: white !important;
         }
 
-        .nav-link {
-            color: rgba(255,255,255,0.8) !important;
-            font-size: 0.9rem;
-            margin: 0 15px;
+        .burger-menu {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            z-index: 20;
+            background: none;
+            border: none;
+        }
+
+        .burger-menu span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            margin: 3px 0;
             transition: 0.3s;
         }
 
-        .nav-link:hover {
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 35px;
+            margin: 0;
+            padding: 0;
+            transition: 0.3s;
+        }
+
+        .nav-menu a {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-size: 0.9rem;
+            margin: 0 15px;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        .nav-menu a:hover {
             color: white !important;
         }
 
@@ -235,88 +260,126 @@
             filter: grayscale(0.3) contrast(1.1);
         }
 
-        /* Отзывы */
         .reviews-section {
             padding: 4rem 0;
             background: #0a1a0a;
         }
 
-        .reviews-title {
+        .reviews-header {
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
         }
 
-        .reviews-title h2 {
-            font-size: 2.5rem;
+        .reviews-header h2 {
+            font-size: 2rem;
             font-weight: 300;
-            color: #ffd700;
-        }
-
-        .reviews-title p {
-            color: rgba(255,255,255,0.7);
+            color: white;
+            margin-bottom: 0.5rem;
         }
 
         .reviews-stats {
             text-align: center;
             margin-bottom: 2rem;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.6);
         }
 
-        .reviews-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1.5rem;
-            justify-content: center;
+        .reviews-stats strong {
+            color: #459107;
+            font-size: 1.2rem;
         }
 
+        .reviews-scroll-container {
+            max-width: 900px;
+            margin: 0 auto;
+            height: 600px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 0 20px 0 30px;
+            direction: rtl;
+        }
+
+        .reviews-scroll-container .reviews-inner {
+            direction: ltr;
+        }
+
+        .reviews-scroll-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .reviews-scroll-container::-webkit-scrollbar-track {
+            background: #2a2a2a;
+            border-radius: 10px;
+        }
+
+        .reviews-scroll-container::-webkit-scrollbar-thumb {
+            background: #8dc48471;
+            border-radius: 10px;
+        }
+
+        .reviews-scroll-container::-webkit-scrollbar-thumb:hover {
+            background: #8dc484a9;
+        }
+
+        /* Карточка отзыва */
         .review-card {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,215,0,0.2);
-            border-radius: 15px;
+            background: rgba(79, 126, 79, 0.295);
+            border: 2px solid #929292;
+            border-radius: 20px;
             padding: 1.5rem;
-            width: 320px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
         }
 
-        .review-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 1rem;
+        .review-card:hover {
+            transform: translateY(-3px);
         }
 
         .review-name {
-            font-weight: bold;
-        }
-
-        .review-rating {
-            color: #ffd700;
+            color: #cecece;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
         }
 
         .review-text {
-            color: rgba(255,255,255,0.8);
+            color: #cfcfcf;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
         }
 
         .review-date {
-            font-size: 0.7rem;
-            color: rgba(255,255,255,0.4);
-            margin-top: 0.5rem;
+            color: #c9c6c6;
+            font-size: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .review-rating {
+            color: #8DC484;
+            font-size: 1rem;
+            letter-spacing: 2px;
         }
 
         .btn-review {
-            background: #ffd700;
-            color: #0a0f0a;
+            background: #7F9373;
+            color: #ffffffb9;
             border: none;
             padding: 0.8rem 2rem;
-            border-radius: 50px;
+            border-radius: 10px;
             cursor: pointer;
             font-weight: bold;
             transition: 0.3s;
+            display: block;
+            margin: 2rem auto 0;
         }
 
         .btn-review:hover {
-            background: #e6c200;
+            background: #88a575;
             transform: translateY(-2px);
         }
 
-        /* Модальное окно */
         .modal {
             display: none;
             position: fixed;
@@ -332,7 +395,6 @@
 
         .modal-content {
             background: #1a2a1a;
-            border: 2px solid #ffd700;
             border-radius: 20px;
             max-width: 500px;
             width: 90%;
@@ -346,7 +408,7 @@
         }
 
         .modal-header h3 {
-            color: #ffd700;
+            color: #a5db8f80;
         }
 
         .close-modal {
@@ -371,7 +433,7 @@
             width: 100%;
             padding: 0.8rem;
             background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,215,0,0.3);
+            border: 2px solid rgba(137, 214, 122, 0.719);
             border-radius: 10px;
             color: white;
         }
@@ -384,13 +446,13 @@
         }
 
         .rating-stars span {
-            color: white;
+            color: #05810b;
         }
 
         .submit-btn {
             width: 100%;
             padding: 0.8rem;
-            background: #ffd700;
+            background: #3e8d3e;
             color: #0a0f0a;
             border: none;
             border-radius: 10px;
@@ -398,11 +460,12 @@
             cursor: pointer;
         }
 
-        /* Футер */
         .main-footer {
             background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/images/photo_2026-04-07_18-07-30.jpg');
             padding: 80px 0;
             color: #ffffff;
+            position: relative;
+            z-index: 1;
         }
 
         .footer-container {
@@ -493,19 +556,86 @@
             .contacts-map-block { height: 350px; }
         }
 
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1.5rem 0;
+            }
+            
+            .burger-menu {
+                display: flex;
+            }
+            
+            .nav-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                background: rgba(10, 15, 10, 0.98);
+                flex-direction: column;
+                padding: 80px 30px;
+                gap: 25px;
+                transition: 0.3s;
+                z-index: 15;
+            }
+            
+            .nav-menu.active {
+                right: 0;
+            }
+            
+            .nav-menu a {
+                font-size: 18px;
+                margin: 0;
+            }
+            
+            .hero-content h1 {
+                font-size: 32px;
+            }
+            
+            .promo-centered-text h3 {
+                font-size: 20px;
+            }
+            
+            .promo-centered-text p {
+                font-size: 14px;
+            }
+            
+            .green-banner-fluid {
+                height: 280px;
+            }
+            
+            .contacts-text-block h2 {
+                font-size: 24px;
+            }
+            
+            .contact-item {
+                font-size: 16px;
+            }
+        }
+
         @media (max-width: 600px) {
             .footer-col { flex: 100% 0 0; }
+            .reviews-scroll-container { height: 500px; padding: 0 15px 0 25px; }
+            .review-card {
+                padding: 1rem;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Навигация такая же как в index.html -->
-    <nav class="navbar navbar-expand-lg">
+    <nav class="navbar">
         <div class="container">
-            <a class="navbar-brand" href="/">GlampTime <i class="fa-regular fa-clock"></i></a>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav ms-auto">
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <a class="navbar-brand" href="/">GlampTime <i class="fa-regular fa-clock"></i></a>
+                
+                <div class="burger-menu" id="burgerMenu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                
+                <ul class="nav-menu" id="navMenu">
                     <li class="nav-item"><a class="nav-link" href="/services.html">Услуги</a></li>
                     <li class="nav-item"><a class="nav-link" href="/glamps.html">Проживание</a></li>
                     <li class="nav-item"><a class="nav-link" href="/rasvlichenia.html">Развлечения</a></li>
@@ -515,7 +645,6 @@
         </div>
     </nav>
 
-    <!-- Hero секция -->
     <header class="contacts-header">
         <div class="hero-content">
             <h1>Контактные данные</h1>
@@ -523,7 +652,6 @@
         <div class="green-divider"></div>
     </header>
 
-    <!-- Промо блок с елками -->
     <section class="full-width-promo">
         <div class="promo-black-bg">
             <div class="green-banner-fluid">
@@ -551,7 +679,6 @@
 
     <div class="green-divider"></div>
 
-    <!-- Контакты секция -->
     <section class="contacts-info-section">
         <div class="contacts-flex-container">
             <div class="contacts-text-block">
@@ -585,20 +712,18 @@
 
     <section class="reviews-section">
         <div class="container">
-            <div class="reviews-title">
-                <h2>Отзывы гостей</h2>
-                <p>Что говорят о нас</p>
+            <div class="reviews-header">
+                <h2>Отзывы</h2>
+                <div id="reviewsStats" class="reviews-stats"></div>
             </div>
             
-            <div id="reviewsStats" class="reviews-stats"></div>
-            
-            <div id="reviewsList" class="reviews-list"></div>
-            
-            <div style="text-align: center; margin-top: 2rem;">
-                <button onclick="openReviewForm()" class="btn-review">
-                    <i class="fas fa-star"></i> Оставить отзыв
-                </button>
+            <div class="reviews-scroll-container" id="reviewsScrollContainer">
+                <div class="reviews-inner" id="reviewsList"></div>
             </div>
+            
+            <button onclick="openReviewForm()" class="btn-review">
+                <i class="fas fa-star"></i> Оставить отзыв
+            </button>
         </div>
     </section>
 
@@ -638,6 +763,7 @@
         </div>
     </div>
 
+    <!-- Футер -->
     <footer class="main-footer">
         <div class="footer-container">
             <div class="footer-col info-col">
@@ -645,7 +771,7 @@
                 <p class="footer-description">
                     У нас вас ждут уютные шатры с комфортабельными кроватями, своей террасой и всем необходимым для расслабляющего отдыха.
                 </p>
-                <div class="footer-copy">@2025 Все права защищены.</div>
+                <div class="footer-copy">@2026 Все права защищены.</div>
             </div>
 
             <div class="footer-col links-col">
@@ -678,120 +804,56 @@
         </div>
     </footer>
 
+    <script src="/js/main.js"></script>
+    <script src="/js/contact2.js"></script>
     <script>
-        let selectedRating = 0;
+        const burgerMenu = document.getElementById('burgerMenu');
+        const navMenu = document.getElementById('navMenu');
         
-        function setRating(rating) {
-            selectedRating = rating;
-            document.getElementById('revRating').value = rating;
-            const stars = document.querySelectorAll('#ratingStars span');
-            stars.forEach((star, index) => {
-                if (index < rating) {
-                    star.innerHTML = '★';
-                    star.style.color = '#ffd700';
+        if (burgerMenu) {
+            burgerMenu.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+                burgerMenu.classList.toggle('active');
+                
+                const spans = burgerMenu.querySelectorAll('span');
+                if (burgerMenu.classList.contains('active')) {
+                    spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+                    spans[1].style.opacity = '0';
+                    spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
                 } else {
-                    star.innerHTML = '☆';
-                    star.style.color = 'white';
+                    spans[0].style.transform = 'none';
+                    spans[1].style.opacity = '1';
+                    spans[2].style.transform = 'none';
                 }
             });
         }
         
-        async function loadReviews() {
-            try {
-                const statsRes = await fetch('/api/reviews/stats');
-                const stats = await statsRes.json();
-                
-                if (stats.success) {
-                    document.getElementById('reviewsStats').innerHTML = `
-                        <div style="display: inline-flex; gap: 2rem; background: rgba(255,255,255,0.05); padding: 1rem 2rem; border-radius: 50px;">
-                            <span><strong style="color: #ffd700; font-size: 1.5rem;">${stats.data.avgRating}</strong> ★ средняя оценка</span>
-                            <span><strong style="color: #ffd700; font-size: 1.5rem;">${stats.data.total}</strong> отзывов</span>
-                        </div>
-                    `;
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+                if (burgerMenu) burgerMenu.classList.remove('active');
+                const spans = burgerMenu.querySelectorAll('span');
+                if (spans) {
+                    spans[0].style.transform = 'none';
+                    spans[1].style.opacity = '1';
+                    spans[2].style.transform = 'none';
                 }
-                
-                const res = await fetch('/api/reviews');
-                const result = await res.json();
-                
-                if (result.success && result.data.length > 0) {
-                    document.getElementById('reviewsList').innerHTML = result.data.map(review => `
-                        <div class="review-card">
-                            <div class="review-header">
-                                <strong class="review-name">${escapeHtml(review.user_name)}</strong>
-                                <span class="review-rating">${'★'.repeat(review.rating)}${'☆'.repeat(5-review.rating)}</span>
-                            </div>
-                            <p class="review-text">${escapeHtml(review.review_text)}</p>
-                            <div class="review-date">${new Date(review.created_at).toLocaleDateString('ru-RU')}</div>
-                        </div>
-                    `).join('');
-                } else {
-                    document.getElementById('reviewsList').innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.5);">Пока нет отзывов. Будьте первым!</p>';
-                }
-            } catch (error) {
-                console.error('Ошибка:', error);
-            }
-        }
-        
-        function openReviewForm() {
-            document.getElementById('reviewModal').style.display = 'flex';
-        }
-        
-        function closeReviewForm() {
-            document.getElementById('reviewModal').style.display = 'none';
-            document.getElementById('reviewForm').reset();
-            selectedRating = 0;
-            document.getElementById('revRating').value = '';
-            const stars = document.querySelectorAll('#ratingStars span');
-            stars.forEach(star => {
-                star.innerHTML = '☆';
-                star.style.color = 'white';
             });
-        }
-        
-        document.getElementById('reviewForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const rating = parseInt(document.getElementById('revRating').value);
-            if (!rating) {
-                alert('Поставьте оценку звездами!');
-                return;
-            }
-            
-            const reviewData = {
-                user_name: document.getElementById('revName').value,
-                user_email: document.getElementById('revEmail').value,
-                rating: rating,
-                review_text: document.getElementById('revText').value,
-                glamp_id: null
-            };
-            
-            try {
-                const res = await fetch('/api/reviews', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(reviewData)
-                });
-                const result = await res.json();
-                
-                if (result.success) {
-                    alert(result.message);
-                    closeReviewForm();
-                    loadReviews();
-                } else {
-                    alert('Ошибка: ' + result.error);
-                }
-            } catch (error) {
-                alert('Ошибка при отправке');
-            }
         });
         
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-        
-        loadReviews();
+        document.addEventListener('click', function(event) {
+            const isClickInsideNav = navMenu.contains(event.target);
+            const isClickOnBurger = burgerMenu && burgerMenu.contains(event.target);
+            
+            if (!isClickInsideNav && !isClickOnBurger && navMenu.classList.contains('active')) {
+                navMenu.classList.remove('active');
+                if (burgerMenu) burgerMenu.classList.remove('active');
+                const spans = burgerMenu.querySelectorAll('span');
+                spans[0].style.transform = 'none';
+                spans[1].style.opacity = '1';
+                spans[2].style.transform = 'none';
+            }
+        });
     </script>
 </body>
 </html>

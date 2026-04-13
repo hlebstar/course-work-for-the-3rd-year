@@ -2,24 +2,30 @@ const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
 const path = require('path');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 const port = 3000;
+
+// Секретный ключ для JWT
+const JWT_SECRET = 'glamptime_secret_key_2025';
 
 // Настройка подключения к PostgreSQL
 const pool = new Pool({
     host: 'localhost',
     port: 5432,
     user: 'postgres',
-    password: 'postgres', // Замените на ваш пароль
+    password: 'postgres',
     database: 'glamptime_db',
 });
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
-// ============= ВАЖНО: РАЗДАЧА СТАТИЧЕСКИХ ФАЙЛОВ =============
-// Раздаём ВСЮ папку public (здесь лежат images, css, js)
+// Раздаём статические файлы
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Путь к папке с HTML файлами
@@ -54,9 +60,308 @@ app.get('/glamp-detail.html', (req, res) => {
     res.sendFile(path.join(htmlPath, 'glamp-detail.html'));
 });
 
-// ============= API МАРШРУТЫ =============
+app.get('/login.html', (req, res) => {
+    res.sendFile(path.join(htmlPath, 'login.html'));
+});
 
-// Получить все домики
+app.get('/account.html', (req, res) => {
+    res.sendFile(path.join(htmlPath, 'account.html'));
+});
+
+app.get('/booking.html', (req, res) => {
+    res.sendFile(path.join(htmlPath, 'booking.html'));
+});
+
+app.get('/booking-success.html', (req, res) => {
+    res.sendFile(path.join(htmlPath, 'booking-success.html'));
+});
+
+// Маршруты для JS файлов
+app.get('/js/booking.js', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'js', 'booking.js'));
+});
+
+app.get('/js/main.js', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'js', 'main.js'));
+});
+
+app.get('/js/services.js', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'js', 'services.js'));
+});
+
+//создание таблиц
+async function initTables() {
+    try {
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS users (
+                id SERIAL PRIMARY KEY,
+                username VARCHAR(50) UNIQUE NOT NULL,
+                email VARCHAR(100) UNIQUE NOT NULL,
+                password_hash VARCHAR(255) NOT NULL,
+                full_name VARCHAR(100),
+                phone VARCHAR(20),
+                role VARCHAR(20) DEFAULT 'user',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
+        console.log('Таблица users создана');
+
+        const adminCheck = await pool.query("SELECT * FROM users WHERE username = 'admin'");
+        if (adminCheck.rows.length === 0) {
+            const hashedPassword = await bcrypt.hash('admin123', 10);
+            await pool.query(
+                "INSERT INTO users (username, email, password_hash, full_name, role) VALUES ($1, $2, $3, $4, $5)",
+                ['admin', 'admin@glamptime.ru', hashedPassword, 'Администратор', 'admin']
+            );
+            console.log(' Админ создан: admin / admin123');
+        }
+
+        await pool.query(`
+            DO $$ 
+            BEGIN 
+                IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='bookings' AND column_name='user_id') THEN
+                    ALTER TABLE bookings ADD COLUMN user_id INTEGER REFERENCES users(id) ON DELETE SET NULL;
+                END IF;
+            END $$;
+        `);
+
+        await pool.query(`
+            DO $$ 
+            BEGIN 
+                IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='reviews' AND column_name='user_id') THEN
+                    ALTER TABLE reviews ADD COLUMN user_id INTEGER REFERENCES users(id) ON DELETE SET NULL;
+                END IF;
+            END $$;
+        `);
+
+    } catch (err) {
+        console.error('Ошибка создания таблиц:', err);
+    }
+}
+
+
+app.post('/api/auth/register', async (req, res) => {
+    const { username, email, password, full_name, phone } = req.body;
+
+    if (!username || !email || !password) {
+        return res.status(400).json({ success: false, error: 'Заполните все обязательные поля' });
+    }
+
+    try {
+        const existingUser = await pool.query(
+            "SELECT * FROM users WHERE username = $1 OR email = $2",
+            [username, email]
+        );
+
+        if (existingUser.rows.length > 0) {
+            return res.status(400).json({ success: false, error: 'Пользователь с таким именем или email уже существует' });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const result = await pool.query(
+            `INSERT INTO users (username, email, password_hash, full_name, phone, role) 
+             VALUES ($1, $2, $3, $4, $5, 'user') RETURNING id, username, email, full_name, role`,
+            [username, email, hashedPassword, full_name || null, phone || null]
+        );
+
+        const token = jwt.sign(
+            { id: result.rows[0].id, username: result.rows[0].username, role: result.rows[0].role },
+            JWT_SECRET,
+            { expiresIn: '7d' }
+        );
+
+        res.cookie('token', token, {
+            httpOnly: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            sameSite: 'strict'
+        });
+
+        res.json({
+            success: true,
+            message: 'Регистрация успешна',
+            user: {
+                id: result.rows[0].id,
+                username: result.rows[0].username,
+                email: result.rows[0].email,
+                full_name: result.rows[0].full_name,
+                role: result.rows[0].role
+            }
+        });
+
+    } catch (err) {
+        console.error('Ошибка регистрации:', err);
+        res.status(500).json({ success: false, error: 'Ошибка сервера' });
+    }
+});
+
+app.post('/api/auth/login', async (req, res) => {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+        return res.status(400).json({ success: false, error: 'Введите имя пользователя и пароль' });
+    }
+
+    try {
+        const result = await pool.query(
+            "SELECT * FROM users WHERE username = $1 OR email = $1",
+            [username]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(401).json({ success: false, error: 'Неверное имя пользователя или пароль' });
+        }
+
+        const user = result.rows[0];
+        const isValidPassword = await bcrypt.compare(password, user.password_hash);
+
+        if (!isValidPassword) {
+            return res.status(401).json({ success: false, error: 'Неверное имя пользователя или пароль' });
+        }
+
+        const token = jwt.sign(
+            { id: user.id, username: user.username, role: user.role },
+            JWT_SECRET,
+            { expiresIn: '7d' }
+        );
+
+        res.cookie('token', token, {
+            httpOnly: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            sameSite: 'strict'
+        });
+
+        res.json({
+            success: true,
+            message: 'Вход выполнен успешно',
+            user: {
+                id: user.id,
+                username: user.username,
+                email: user.email,
+                full_name: user.full_name,
+                phone: user.phone,
+                role: user.role
+            }
+        });
+
+    } catch (err) {
+        console.error('Ошибка входа:', err);
+        res.status(500).json({ success: false, error: 'Ошибка сервера' });
+    }
+});
+
+app.get('/api/auth/me', async (req, res) => {
+    const token = req.cookies.token;
+
+    if (!token) {
+        return res.json({ success: false, authenticated: false });
+    }
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const result = await pool.query(
+            "SELECT id, username, email, full_name, phone, role, created_at FROM users WHERE id = $1",
+            [decoded.id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.json({ success: false, authenticated: false });
+        }
+
+        res.json({
+            success: true,
+            authenticated: true,
+            user: result.rows[0]
+        });
+
+    } catch (err) {
+        res.json({ success: false, authenticated: false });
+    }
+});
+
+app.post('/api/auth/logout', (req, res) => {
+    res.clearCookie('token');
+    res.json({ success: true, message: 'Выход выполнен' });
+});
+
+app.put('/api/auth/profile', async (req, res) => {
+    const token = req.cookies.token;
+
+    if (!token) {
+        return res.status(401).json({ success: false, error: 'Не авторизован' });
+    }
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const { full_name, phone, email } = req.body;
+
+        const result = await pool.query(
+            `UPDATE users SET full_name = COALESCE($1, full_name), 
+             phone = COALESCE($2, phone), 
+             email = COALESCE($3, email),
+             updated_at = CURRENT_TIMESTAMP
+             WHERE id = $4 RETURNING id, username, email, full_name, phone, role`,
+            [full_name, phone, email, decoded.id]
+        );
+
+        res.json({
+            success: true,
+            message: 'Профиль обновлен',
+            user: result.rows[0]
+        });
+
+    } catch (err) {
+        console.error('Ошибка обновления профиля:', err);
+        res.status(500).json({ success: false, error: 'Ошибка сервера' });
+    }
+});
+
+app.get('/api/my-bookings', async (req, res) => {
+    const token = req.cookies.token;
+
+    if (!token) {
+        return res.status(401).json({ success: false, error: 'Не авторизован' });
+    }
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const result = await pool.query(`
+            SELECT b.*, g.name as glamp_name 
+            FROM bookings b 
+            LEFT JOIN glamps g ON b.glamp_id = g.id 
+            WHERE b.user_id = $1 
+            ORDER BY b.created_at DESC
+        `, [decoded.id]);
+        res.json({ success: true, data: result.rows });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+app.get('/api/my-reviews', async (req, res) => {
+    const token = req.cookies.token;
+
+    if (!token) {
+        return res.status(401).json({ success: false, error: 'Не авторизован' });
+    }
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const result = await pool.query(`
+            SELECT r.*, g.name as glamp_name 
+            FROM reviews r 
+            LEFT JOIN glamps g ON r.glamp_id = g.id 
+            WHERE r.user_id = $1 
+            ORDER BY r.created_at DESC
+        `, [decoded.id]);
+        res.json({ success: true, data: result.rows });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+
 app.get('/api/glamps', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM glamps ORDER BY id');
@@ -67,7 +372,6 @@ app.get('/api/glamps', async (req, res) => {
     }
 });
 
-// Получить домик по ID
 app.get('/api/glamps/:id', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM glamps WHERE id = $1', [req.params.id]);
@@ -80,14 +384,24 @@ app.get('/api/glamps/:id', async (req, res) => {
     }
 });
 
-// Создать бронирование домика
+
 app.post('/api/bookings', async (req, res) => {
+    const token = req.cookies.token;
+    let userId = null;
+
+    if (token) {
+        try {
+            const decoded = jwt.verify(token, JWT_SECRET);
+            userId = decoded.id;
+        } catch (err) {}
+    }
+
     const { glamp_id, user_name, user_email, user_phone, user_comment, check_in, check_out, guests, nights, total_price } = req.body;
     try {
         const result = await pool.query(
-            `INSERT INTO bookings (glamp_id, user_name, user_email, user_phone, user_comment, check_in, check_out, guests, nights, total_price, status) 
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, 'pending') RETURNING *`,
-            [glamp_id, user_name, user_email, user_phone, user_comment, check_in, check_out, guests, nights, total_price]
+            `INSERT INTO bookings (glamp_id, user_id, user_name, user_email, user_phone, user_comment, check_in, check_out, guests, nights, total_price, status) 
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, 'confirmed') RETURNING *`,
+            [glamp_id, userId, user_name, user_email, user_phone, user_comment, check_in, check_out, guests, nights, total_price]
         );
         res.json({ success: true, data: result.rows[0] });
     } catch (err) {
@@ -95,7 +409,6 @@ app.post('/api/bookings', async (req, res) => {
     }
 });
 
-// Получить все бронирования
 app.get('/api/bookings', async (req, res) => {
     try {
         const result = await pool.query(`
@@ -110,7 +423,6 @@ app.get('/api/bookings', async (req, res) => {
     }
 });
 
-// Обновить статус бронирования
 app.put('/api/bookings/:id/status', async (req, res) => {
     const { status } = req.body;
     try {
@@ -124,7 +436,7 @@ app.put('/api/bookings/:id/status', async (req, res) => {
     }
 });
 
-// Получить все услуги
+
 app.get('/api/services', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM services ORDER BY id');
@@ -134,7 +446,6 @@ app.get('/api/services', async (req, res) => {
     }
 });
 
-// Получить услугу по ID
 app.get('/api/services/:id', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM services WHERE id = $1', [req.params.id]);
@@ -147,7 +458,6 @@ app.get('/api/services/:id', async (req, res) => {
     }
 });
 
-// Создать заказ услуги
 app.post('/api/service-orders', async (req, res) => {
     const { service_id, user_name, user_email, user_phone, service_date, quantity, total_price } = req.body;
     try {
@@ -162,7 +472,6 @@ app.post('/api/service-orders', async (req, res) => {
     }
 });
 
-// Получить все заказы услуг
 app.get('/api/service-orders', async (req, res) => {
     try {
         const result = await pool.query(`
@@ -177,7 +486,7 @@ app.get('/api/service-orders', async (req, res) => {
     }
 });
 
-// Статистика
+
 app.get('/api/stats', async (req, res) => {
     try {
         const totalGlamps = await pool.query('SELECT COUNT(*) FROM glamps');
@@ -204,9 +513,7 @@ app.get('/api/stats', async (req, res) => {
     }
 });
 
-// ============= API ДЛЯ ОТЗЫВОВ =============
 
-// Получить все одобренные отзывы (для главной страницы)
 app.get('/api/reviews', async (req, res) => {
     try {
         const result = await pool.query(`
@@ -224,13 +531,29 @@ app.get('/api/reviews', async (req, res) => {
     }
 });
 
-// Добавить новый отзыв
 app.post('/api/reviews', async (req, res) => {
     console.log('Получен запрос на добавление отзыва:', req.body);
     
-    const { user_name, user_email, rating, review_text, glamp_id } = req.body;
+    const token = req.cookies.token;
+    let userId = null;
+    let userName = req.body.user_name;
+    let userEmail = req.body.user_email;
+
+    if (token) {
+        try {
+            const decoded = jwt.verify(token, JWT_SECRET);
+            userId = decoded.id;
+            const userResult = await pool.query("SELECT username, email FROM users WHERE id = $1", [userId]);
+            if (userResult.rows.length > 0) {
+                userName = userResult.rows[0].username;
+                userEmail = userResult.rows[0].email;
+            }
+        } catch (err) {}
+    }
     
-    if (!user_name || !user_email || !rating || !review_text) {
+    const { rating, review_text, glamp_id } = req.body;
+    
+    if (!userName || !userEmail || !rating || !review_text) {
         return res.status(400).json({ 
             success: false, 
             error: 'Заполните все обязательные поля' 
@@ -246,15 +569,15 @@ app.post('/api/reviews', async (req, res) => {
     
     try {
         const result = await pool.query(
-            `INSERT INTO reviews (user_name, user_email, rating, review_text, glamp_id, status) 
-             VALUES ($1, $2, $3, $4, $5, 'pending') RETURNING *`,
-            [user_name, user_email, rating, review_text, glamp_id || null]
+            `INSERT INTO reviews (user_id, user_name, user_email, rating, review_text, glamp_id, status, created_at) 
+             VALUES ($1, $2, $3, $4, $5, $6, 'approved', NOW()) RETURNING *`,
+            [userId, userName, userEmail, rating, review_text, glamp_id || null]
         );
         
         console.log('Отзыв добавлен:', result.rows[0]);
         res.json({ 
             success: true, 
-            message: 'Спасибо за отзыв! Он появится после проверки администратором.',
+            message: 'Спасибо за отзыв!',
             data: result.rows[0]
         });
     } catch (err) {
@@ -266,7 +589,6 @@ app.post('/api/reviews', async (req, res) => {
     }
 });
 
-// Получить все отзывы для админки
 app.get('/api/admin/reviews', async (req, res) => {
     try {
         const result = await pool.query(`
@@ -282,7 +604,6 @@ app.get('/api/admin/reviews', async (req, res) => {
     }
 });
 
-// Обновить статус отзыва
 app.put('/api/admin/reviews/:id/status', async (req, res) => {
     const { status } = req.body;
     try {
@@ -297,7 +618,6 @@ app.put('/api/admin/reviews/:id/status', async (req, res) => {
     }
 });
 
-// Удалить отзыв
 app.delete('/api/admin/reviews/:id', async (req, res) => {
     try {
         await pool.query('DELETE FROM reviews WHERE id = $1', [req.params.id]);
@@ -308,7 +628,6 @@ app.delete('/api/admin/reviews/:id', async (req, res) => {
     }
 });
 
-// Получить статистику отзывов
 app.get('/api/reviews/stats', async (req, res) => {
     try {
         const total = await pool.query("SELECT COUNT(*) FROM reviews WHERE status = 'approved'");
@@ -327,16 +646,21 @@ app.get('/api/reviews/stats', async (req, res) => {
     }
 });
 
-// ============= ЗАПУСК СЕРВЕРА =============
-app.listen(port, () => {
-    console.log(`\n🚀 Сервер запущен на http://localhost:${port}`);
-    console.log(`📁 Статика из папки: ${path.join(__dirname, 'public')}`);
-    console.log(`📁 HTML файлы из: ${htmlPath}`);
-    console.log(`\n📋 Доступные страницы:`);
+
+app.listen(port, async () => {
+    await initTables();
+    console.log(`\n Сервер запущен на http://localhost:${port}`);
+    console.log(` Статика из папки: ${path.join(__dirname, 'public')}`);
+    console.log(` HTML файлы из: ${htmlPath}`);
+    console.log(`\n Доступные страницы:`);
     console.log(`   http://localhost:${port}/ - главная`);
     console.log(`   http://localhost:${port}/glamps.html - домики`);
     console.log(`   http://localhost:${port}/services.html - услуги`);
     console.log(`   http://localhost:${port}/rasvlichenia.html - развлечения`);
     console.log(`   http://localhost:${port}/contact.html - контакты`);
     console.log(`   http://localhost:${port}/admin.html - админ-панель`);
+    console.log(`   http://localhost:${port}/login.html - вход/регистрация`);
+    console.log(`   http://localhost:${port}/account.html - личный кабинет`);
+    console.log(`   http://localhost:${port}/booking.html - бронирование`);
+    console.log(`   http://localhost:${port}/booking-success.html - успешное бронирование`);
 });

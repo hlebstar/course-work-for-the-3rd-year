@@ -61,7 +61,6 @@ const userController = {
                 role: role || 'user'
             });
             
-            // Убираем пароль из ответа
             user.password = undefined;
             
             res.status(201).json({
@@ -110,7 +109,6 @@ const userController = {
         }
     },
     
-    // Удалить пользователя
     async deleteUser(req, res) {
         try {
             const user = await User.findByPk(req.params.id);

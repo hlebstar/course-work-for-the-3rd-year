@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>GlampTime - Отдых на природе</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -15,51 +15,92 @@
             --glass-border: rgba(255, 255, 255, 0.2);
         }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--forest-dark);
             color: white;
             margin: 0;
+            overflow-x: hidden;
         }
 
-        /* Навигация */
-        .navbar {
-            background: transparent !important;
-            padding: 2rem 0;
+        .top-header {
             position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            z-index: 10;
+            padding: 30px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
         }
 
-        .navbar-brand {
-            font-size: 1.5rem;
+        .logo {
+            color: white;
+            font-size: 22px;
             font-weight: 300;
-            letter-spacing: 1px;
-            color: white !important;
+            text-decoration: none;
+            letter-spacing: 0.5px;
         }
 
-        .nav-link {
-            color: rgba(255,255,255,0.8) !important;
-            font-size: 0.9rem;
-            margin: 0 15px;
+        .logo i {
+            margin-left: 5px;
+            font-size: 18px;
+        }
+
+        .burger-menu {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            z-index: 20;
+        }
+
+        .burger-menu span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            margin: 3px 0;
             transition: 0.3s;
         }
 
-        .nav-link:hover {
-            color: white !important;
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 35px;
+            margin: 0;
+            padding: 0;
+            transition: 0.3s;
         }
 
-        /* Hero секция с эффектом затемнения */
+        .nav-menu a {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 400;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: white;
+        }
+
         .hero {
             background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/images/photo_2026-04-07_15-18-07.jpg');
             background-size: cover;
             background-position: center;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
+            padding-top: 100px;
         }
 
         .hero-title {
@@ -154,307 +195,366 @@
             margin-bottom: 1.5rem;
         }
 
+        .about-section {
+            background-color: #061108; 
+            padding: 100px 0;
+            color: #ffffff;
+            overflow: hidden;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: start;
+            position: relative;
+        }
+
+        .main-img-wrapper {
+            position: relative;
+        }
+
+        .main-img {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .about-content {
+            padding-top: 20px;
+        }
+
+        .about-content h2 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: #a3b899; 
+            margin-bottom: 30px;
+        }
+
+        .about-content p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #d1d1d1;
+            max-width: 500px;
+        }
+
+        .mini-gallery {
+            display: flex;
+            gap: 20px;
+            margin-top: -120px; 
+            position: relative;
+            z-index: 2;
+            padding-left: 20%; 
+        }
+
+        .mini-img {
+            width: 280px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 4px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .territory-section {
+            background-color: #061108; 
+            padding: 60px 0 100px;
+            color: white;
+            overflow: hidden;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .territory-title {
+            text-align: center;
+            font-weight: 300;
+            font-size: 24px;
+            margin-bottom: 40px;
+            letter-spacing: 2px;
+        }
+
+        .swiper-container-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        .mySwiper {
+            width: 100%;
+            height: 600px;
+        }
+
+        .swiper-slide {
+            transition: all 0.8s ease;
+            filter: brightness(0.2); 
+            transform: scale(0.9); 
+        }
+
+        .swiper-slide-active {
+            filter: brightness(1); 
+            transform: scale(1); 
+            z-index: 2;
+        }
+
+        .swiper-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60px;
+            height: 60px;
+            border: 1px solid rgba(255,255,255,0.6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            cursor: pointer;
+            background: rgba(0,0,0,0.2);
+            transition: 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.2);
+            border-color: #fff;
+        }
+
+        .btn-prev { left: 20%; }
+        .btn-next { right: 20%; }
+
+        .nav-btn svg {
+            width: 30px;
+            height: 30px;
+            fill: none;
+            stroke: white;
+            stroke-width: 1.5;
+        }
+
+        .description-section {
+            background-color: #061108;
+            padding: 80px 0;
+            color: #ffffff;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .description-content {
+            max-width: 900px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .description-content p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .first-letter {
+            font-size: 2.5rem;
+            float: left;
+            line-height: 1;
+            margin-right: 5px;
+            font-weight: 300;
+        }
+
+        footer {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/images/photo_2026-04-07_18-07-30.jpg');
+            padding: 80px 0 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+        }
+
+        .footer-column {
+            padding: 0 30px;
+            border-right: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .footer-column:last-child {
+            border-right: none;
+        }
+
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 300;
+            margin-bottom: 25px;
+            display: block;
+        }
+
+        .footer-text {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.5;
+            margin-bottom: 30px;
+        }
+
+        .footer-title {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: 0.3s;
+            font-size: 1rem;
+        }
+
+        .footer-links a:hover {
+            color: #fff;
+            padding-left: 5px;
+        }
+
+        .newsletter-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            padding: 12px 15px;
+            color: white;
+            width: 100%;
+            outline: none;
+            margin-top: 15px;
+        }
+
+        .copyright {
+            margin-top: 50px;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .green-divider {
+            height: 4px;
+            background-color: #1a472a;
+            width: 100%;
+            border-bottom: 2px solid #2d5a27;
+        }
+
+        @media (max-width: 992px) {
+            .footer-column { 
+                border-right: none; 
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1); 
+                padding: 30px 0; 
+            }
+            .about-grid { grid-template-columns: 1fr; }
+            .mini-gallery { 
+                margin-top: 20px; 
+                padding-left: 0;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .mySwiper { height: 400px; }
+            .btn-prev { left: 5%; }
+            .btn-next { right: 5%; }
+        }
+
         @media (max-width: 768px) {
             .hero-title { font-size: 3rem; }
-            .navbar { padding: 1rem 0; }
+            
+            .top-header {
+                padding: 20px 5%;
+                background: rgba(10, 15, 10, 0.8);
+                position: fixed;
+                backdrop-filter: blur(10px);
+            }
+            
+            .burger-menu {
+                display: flex;
+            }
+            
+            .nav-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                background: rgba(10, 15, 10, 0.98);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                padding: 80px 30px;
+                gap: 25px;
+                z-index: 15;
+            }
+            
+            .nav-menu.active {
+                right: 0;
+            }
+            
+            .nav-menu a {
+                font-size: 18px;
+            }
+            
+            .hero {
+                padding-top: 100px;
+                min-height: 100vh;
+            }
+            
+            .booking-container {
+                padding: 1.5rem;
+            }
+            
+            .main-img {
+                height: 300px;
+            }
+            
+            .mini-gallery {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .mini-img {
+                width: 100%;
+                max-width: 300px;
+            }
         }
 
-
-          .about-section {
-        background-color: #061108; 
-        padding: 100px 0;
-        color: #ffffff;
-        overflow: hidden;
-    }
-
-    .about-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 50px;
-        align-items: start;
-        position: relative;
-    }
-
-    /* Главное большое изображение слева */
-    .main-img-wrapper {
-        position: relative;
-    }
-
-    .main-img {
-        width: 100%;
-        height: 500px;
-        object-fit: cover;
-        border-radius: 4px;
-    }
-
-    /* Контентная часть справа */
-    .about-content {
-        padding-top: 20px;
-    }
-
-    .about-content h2 {
-        font-size: 2.5rem;
-        font-weight: 300;
-        color: #a3b899; 
-        margin-bottom: 30px;
-    }
-
-    .about-content p {
-        font-size: 1.1rem;
-        line-height: 1.6;
-        color: #d1d1d1;
-        max-width: 500px;
-    }
-
-    /* Галерея маленьких фото, наплывающих на макет */
-    .mini-gallery {
-        display: flex;
-        gap: 20px;
-        margin-top: -120px; 
-        position: relative;
-        z-index: 2;
-        padding-left: 20%; 
-    }
-
-    .mini-img {
-        width: 280px;
-        height: 180px;
-        object-fit: cover;
-        border-radius: 4px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    @media (max-width: 992px) {
-        .about-grid { grid-template-columns: 1fr; }
-        .mini-gallery { 
-            margin-top: 20px; 
-            padding-left: 0;
-            flex-wrap: wrap;
-            justify-content: center;
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .booking-container h2 {
+                font-size: 1.2rem;
+            }
         }
-    }
-
-    /*слайдер*/
-      .territory-section {
-        background-color: #061108; 
-        padding: 60px 0 100px;
-        color: white;
-        overflow: hidden;
-        font-family: 'Segoe UI', sans-serif;
-    }
-
-    .territory-title {
-        text-align: center;
-        font-weight: 300;
-        font-size: 24px;
-        margin-bottom: 40px;
-        letter-spacing: 2px;
-    }
-
-    .swiper-container-wrapper {
-        position: relative;
-        width: 100%;
-        max-width: 1800px;
-        margin: 0 auto;
-    }
-
-    .mySwiper {
-        width: 100%;
-        height: 600px;
-    }
-
-    .swiper-slide {
-        transition: all 0.8s ease;
-        filter: brightness(0.2); 
-        transform: scale(0.9); 
-    }
-
-    .swiper-slide-active {
-        filter: brightness(1); 
-        transform: scale(1); 
-        z-index: 2;
-    }
-
-    .swiper-slide img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    /* Стрелки точно как на макете */
-    .nav-btn {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 60px;
-        height: 60px;
-        border: 1px solid rgba(255,255,255,0.6);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 100;
-        cursor: pointer;
-        background: rgba(0,0,0,0.2);
-        transition: 0.3s;
-    }
-
-    .nav-btn:hover {
-        background: rgba(255,255,255,0.2);
-        border-color: #fff;
-    }
-
-    /* Позиционируем стрелки поверх стыков слайдов */
-    .btn-prev { left: 20%; }
-    .btn-next { right: 20%; }
-
-    /* SVG иконки */
-    .nav-btn svg {
-        width: 30px;
-        height: 30px;
-        fill: none;
-        stroke: white;
-        stroke-width: 1.5;
-    }
-
-    @media (max-width: 1024px) {
-        .mySwiper { height: 400px; }
-        .btn-prev { left: 5%; }
-        .btn-next { right: 5%; }
-    }
-
-
-
-     /* Секция с основным текстом */
-    .description-section {
-        background-color: #061108;
-        padding: 80px 0;
-        color: #ffffff;
-        font-family: 'Segoe UI', sans-serif;
-    }
-
-    .description-content {
-        max-width: 900px;
-        margin: 0 auto;
-        line-height: 1.6;
-    }
-
-    .description-content p {
-        font-size: 1.1rem;
-        margin-bottom: 2rem;
-        color: rgba(255, 255, 255, 0.9);
-    }
-
-    .first-letter {
-        font-size: 2.5rem;
-        float: left;
-        line-height: 1;
-        margin-right: 5px;
-        font-weight: 300;
-    }
-
-    /* Футер */
-    footer {
-         background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/images/photo_2026-04-07_18-07-30.jpg');
-        padding: 80px 0 40px;
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
-        color: #ffffff;
-    }
-
-    .footer-column {
-        padding: 0 30px;
-        border-right: 1px solid rgba(255, 255, 255, 0.3); /* Тонкие линии-разделители */
-    }
-
-    .footer-column:last-child {
-        border-right: none;
-    }
-
-    .footer-logo {
-        font-size: 1.8rem;
-        font-weight: 300;
-        margin-bottom: 25px;
-        display: block;
-    }
-
-    .footer-text {
-        font-size: 0.85rem;
-        color: rgba(255, 255, 255, 0.6);
-        line-height: 1.5;
-        margin-bottom: 30px;
-    }
-
-    .footer-title {
-        font-size: 1.2rem;
-        margin-bottom: 25px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-
-    .footer-links {
-        list-style: none;
-        padding: 0;
-    }
-
-    .footer-links li {
-        margin-bottom: 12px;
-    }
-
-    .footer-links a {
-        color: rgba(255, 255, 255, 0.8);
-        text-decoration: none;
-        transition: 0.3s;
-        font-size: 1rem;
-    }
-
-    .footer-links a:hover {
-        color: #fff;
-        padding-left: 5px;
-    }
-
-    /* Поле ввода почты */
-    .newsletter-input {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 4px;
-        padding: 12px 15px;
-        color: white;
-        width: 100%;
-        outline: none;
-        margin-top: 15px;
-    }
-
-    .copyright {
-        margin-top: 50px;
-        font-size: 0.75rem;
-        color: rgba(255, 255, 255, 0.4);
-    }
-
-    @media (max-width: 992px) {
-        .footer-column { border-right: none; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding: 30px 0; }
-    }
     </style>
 </head>
 <body>
 
-
-    <header>
- <nav class="navbar navbar-expand-lg">
-        <div class="container">
-            <a class="navbar-brand" href="#">GlampTime <i class="fa-regular fa-clock"></i></a>
-            <div class="collapse navbar-collapse">
-               <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="/services.html">Услуги</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/glamps.html">Проживание</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/rasvlichenia.html">Развлечения</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/contact.html">Контакты</a></li>
-                </ul>
-            </div>
+    <header class="top-header">
+        <a class="logo" href="/">GlampTime <i class="fa-regular fa-clock"></i></a>
+        
+        <div class="burger-menu" id="burgerMenu">
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
-    </nav>
+        
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="/services.html">Услуги</a></li>
+            <li><a href="/glamps.html">Проживание</a></li>
+            <li><a href="/rasvlichenia.html">Развлечения</a></li>
+            <li><a href="/contact.html">Контакты</a></li>
+        </ul>
     </header>
-   
 
     <section class="hero">
         <h1 class="hero-title">GlampTime</h1>
@@ -465,41 +565,43 @@
                 <div class="col-md-3">
                     <div class="form-group-custom">
                         <label>Заезд</label>
-                        <input type="date" value="2025-09-22">
+                        <input type="date" id="checkInDate" value="">
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group-custom">
                         <label>Выезд</label>
-                        <input type="date" value="2025-09-22">
+                        <input type="date" id="checkOutDate" value="">
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group-custom">
                         <label>Количество гостей</label>
-                        <select>
-                            <option>1 гость</option>
-                            <option selected>2 гостя</option>
-                            <option>3+ гостей</option>
+                        <select id="guestsSelect">
+                            <option value="1">1 гость</option>
+                            <option value="2" selected>2 гостя</option>
+                            <option value="3">3 гостя</option>
+                            <option value="4">4 гостя</option>
+                            <option value="5">5 гостей</option>
+                            <option value="6">6 гостей</option>
                         </select>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <button type="submit" class="btn-search">Показать наличие</button>
+                    <button type="button" class="btn-search" id="showAvailabilityBtn">Показать наличие</button>
                 </div>
             </form>
         </div>
     </section>
 
+    <div class="green-divider"></div>
+
     <section class="about-section">
         <div class="container">
             <div class="about-grid">
-                <!-- Левая колонка: Большое фото -->
                 <div class="main-img-wrapper">
                     <img src="/images/photo_2026-04-07_15-21-14.jpg" alt="Glamping houses" class="main-img">
                 </div>
-
-                <!-- Правая колонка: Текст -->
                 <div class="about-content">
                     <h2>О нас</h2>
                     <p>
@@ -513,8 +615,6 @@
                     </p>
                 </div>
             </div>
-
-            <!-- Нижний ряд маленьких фото с наложением -->
             <div class="mini-gallery">
                 <img src="/images/photo_2026-04-07_15-21-23.jpg" class="mini-img" alt="Interior">
                 <img src="/images/photo_2026-04-07_15-21-28.jpg" class="mini-img" alt="Tent night">
@@ -527,7 +627,6 @@
         <h2 class="territory-title">Территория</h2>
         
         <div class="swiper-container-wrapper">
-            <!-- Кнопки навигации -->
             <div class="nav-btn btn-prev" id="prevSlide">
                 <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" fill="none"/></svg>
             </div>
@@ -537,21 +636,11 @@
 
             <div class="swiper mySwiper">
                 <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <img src="/images/photo_2026-04-07_15-21-14.jpg" alt="Slide 1">
-                    </div>
-                    <div class="swiper-slide">
-                        <img src="/images/photo_2026-04-07_15-21-23.jpg" alt="Slide 2">
-                    </div>
-                    <div class="swiper-slide">
-                        <img src="/images/photo_2026-04-07_15-21-28.jpg" alt="Slide 3">
-                    </div>
-                    <div class="swiper-slide">
-                        <img src="/images/photo_2026-04-07_15-21-50.jpg" alt="Slide 4">
-                    </div>
-                    <div class="swiper-slide">
-                        <img src="/images/photo_2026-04-07_15-21-55.jpg" alt="Slide 5">
-                    </div>
+                    <div class="swiper-slide"><img src="/images/photo_2026-04-07_15-21-14.jpg" alt="Slide 1"></div>
+                    <div class="swiper-slide"><img src="/images/photo_2026-04-07_15-21-23.jpg" alt="Slide 2"></div>
+                    <div class="swiper-slide"><img src="/images/photo_2026-04-07_15-21-28.jpg" alt="Slide 3"></div>
+                    <div class="swiper-slide"><img src="/images/photo_2026-04-07_15-21-50.jpg" alt="Slide 4"></div>
+                    <div class="swiper-slide"><img src="/images/photo_2026-04-07_15-21-55.jpg" alt="Slide 5"></div>
                 </div>
             </div>
         </div>
@@ -566,20 +655,14 @@
         </div>
     </section>
 
-    <!-- Футер -->
     <footer>
         <div class="container">
             <div class="row">
-                <!-- Колонна 1 -->
                 <div class="col-lg-3 footer-column">
                     <span class="footer-logo">GlampTime</span>
-                    <p class="footer-text">
-                        У нас вас ждут уютные шатры с комфортабельными кроватями, своей террасой и всем необходимым для расслабляющего отдыха.
-                    </p>
+                    <p class="footer-text">У нас вас ждут уютные шатры с комфортабельными кроватями, своей террасой и всем необходимым для расслабляющего отдыха.</p>
                     <div class="copyright">@2025 Все права защищены.</div>
                 </div>
-
-                <!-- Колонна 2 -->
                 <div class="col-lg-3 footer-column">
                     <h4 class="footer-title">-MENU</h4>
                     <ul class="footer-links">
@@ -590,8 +673,6 @@
                         <li><a href="/contact.html">Контактные данные</a></li>
                     </ul>
                 </div>
-
-                <!-- Колонна 3 -->
                 <div class="col-lg-3 footer-column">
                     <h4 class="footer-title">-Follow us</h4>
                     <ul class="footer-links">
@@ -601,8 +682,6 @@
                         <li><a href="#">Facebook</a></li>
                     </ul>
                 </div>
-
-                <!-- Колонна 4 -->
                 <div class="col-lg-3 footer-column">
                     <h4 class="footer-title">-Оставьте свою почту, для связи с нами:</h4>
                     <input type="text" class="newsletter-input" placeholder="Ваш email...">
@@ -612,100 +691,120 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="/js/main.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Инициализация Swiper
-            const swiper = new Swiper(".mySwiper", {
-                slidesPerView: 1.6, 
-                centeredSlides: true,
-                loop: true,
-                spaceBetween: 0,
-                speed: 1000,
-                navigation: {
-                    nextEl: "#nextSlide",
-                    prevEl: "#prevSlide",
-                },
-                keyboard: {
-                    enabled: true,
-                },
+        const burgerMenu = document.getElementById('burgerMenu');
+        const navMenu = document.getElementById('navMenu');
+        
+        if (burgerMenu) {
+            burgerMenu.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+                burgerMenu.classList.toggle('active');
+                
+                const spans = burgerMenu.querySelectorAll('span');
+                if (burgerMenu.classList.contains('active')) {
+                    spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+                    spans[1].style.opacity = '0';
+                    spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    spans[0].style.transform = 'none';
+                    spans[1].style.opacity = '1';
+                    spans[2].style.transform = 'none';
+                    document.body.style.overflow = '';
+                }
             });
-
-            // Функция для сохранения данных бронирования в localStorage
-            function saveBookingData(checkIn, checkOut, guests) {
-                const bookingData = {
-                    checkIn: checkIn,
-                    checkOut: checkOut,
-                    guests: guests,
-                    timestamp: new Date().getTime()
-                };
-                localStorage.setItem('glampingBooking', JSON.stringify(bookingData));
-                console.log('Данные сохранены:', bookingData);
-            }
-
-            // Функция для получения выбранных дат и гостей
-            function getBookingFormData() {
-                const dateInputs = document.querySelectorAll('.booking-container input[type="date"]');
-                const guestsSelect = document.querySelector('.booking-container select');
-                
-                let checkIn = '';
-                let checkOut = '';
-                let guests = 2;
-                
-                if (dateInputs.length >= 2) {
-                    checkIn = dateInputs[0].value;
-                    checkOut = dateInputs[1].value;
+        }
+        
+        // Закрытие меню при клике на ссылку
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+                if (burgerMenu) burgerMenu.classList.remove('active');
+                const spans = burgerMenu.querySelectorAll('span');
+                spans[0].style.transform = 'none';
+                spans[1].style.opacity = '1';
+                spans[2].style.transform = 'none';
+                document.body.style.overflow = '';
+            });
+        });
+        
+        document.addEventListener('click', function(event) {
+            if (navMenu.classList.contains('active')) {
+                if (!burgerMenu.contains(event.target) && !navMenu.contains(event.target)) {
+                    navMenu.classList.remove('active');
+                    burgerMenu.classList.remove('active');
+                    const spans = burgerMenu.querySelectorAll('span');
+                    spans[0].style.transform = 'none';
+                    spans[1].style.opacity = '1';
+                    spans[2].style.transform = 'none';
+                    document.body.style.overflow = '';
                 }
-                
-                if (guestsSelect) {
-                    const guestsValue = guestsSelect.value;
-                    const match = guestsValue.match(/(\d+)/);
-                    if (match) {
-                        guests = parseInt(match[1]);
-                    }
-                }
-                
-                return { checkIn, checkOut, guests };
-            }
-
-            // Обработчик кнопки "Показать наличие"
-            let showButton = document.querySelector('.btn-search');
-            
-            if (showButton) {
-                showButton.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    const { checkIn, checkOut, guests } = getBookingFormData();
-                    
-                    console.log('Выбранные данные:', { checkIn, checkOut, guests });
-                    
-                    if (!checkIn || !checkOut) {
-                        alert('Пожалуйста, выберите даты заезда и выезда');
-                        return;
-                    }
-                    
-                    if (new Date(checkIn) >= new Date(checkOut)) {
-                        alert('Дата выезда должна быть позже даты заезда');
-                        return;
-                    }
-                    
-                    saveBookingData(checkIn, checkOut, guests);
-                    window.location.href = '/glamps.html';
-                });
-            }
-            
-            // Устанавливаем минимальные даты
-            const today = new Date();
-            const tomorrow = new Date(today);
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            
-            const dateInputs = document.querySelectorAll('input[type="date"]');
-            if (dateInputs[0]) {
-                dateInputs[0].min = today.toISOString().split('T')[0];
-            }
-            if (dateInputs[1]) {
-                dateInputs[1].min = tomorrow.toISOString().split('T')[0];
             }
         });
+
+        const swiper = new Swiper(".mySwiper", {
+            slidesPerView: 1.6, 
+            centeredSlides: true,
+            loop: true,
+            spaceBetween: 0,
+            speed: 1000,
+            navigation: {
+                nextEl: "#nextSlide",
+                prevEl: "#prevSlide",
+            },
+            keyboard: { enabled: true },
+        });
+
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        
+        const checkInInput = document.getElementById('checkInDate');
+        const checkOutInput = document.getElementById('checkOutDate');
+        
+        if (checkInInput) {
+            checkInInput.min = today.toISOString().split('T')[0];
+            checkInInput.value = today.toISOString().split('T')[0];
+        }
+        if (checkOutInput) {
+            checkOutInput.min = tomorrow.toISOString().split('T')[0];
+            checkOutInput.value = tomorrow.toISOString().split('T')[0];
+        }
+
+        // Функция сохранения данных бронирования
+        function saveBookingData(checkIn, checkOut, guests) {
+            const bookingData = {
+                checkIn: checkIn,
+                checkOut: checkOut,
+                guests: guests,
+                timestamp: new Date().getTime()
+            };
+            localStorage.setItem('glampingBooking', JSON.stringify(bookingData));
+        }
+
+        // Кнопка "Показать наличие"
+        const showBtn = document.getElementById('showAvailabilityBtn');
+        if (showBtn) {
+            showBtn.addEventListener('click', function() {
+                const checkIn = checkInInput.value;
+                const checkOut = checkOutInput.value;
+                const guests = parseInt(document.getElementById('guestsSelect').value);
+                
+                if (!checkIn || !checkOut) {
+                    alert('Пожалуйста, выберите даты заезда и выезда');
+                    return;
+                }
+                
+                if (new Date(checkIn) >= new Date(checkOut)) {
+                    alert('Дата выезда должна быть позже даты заезда');
+                    return;
+                }
+                
+                saveBookingData(checkIn, checkOut, guests);
+                window.location.href = '/glamps.html';
+            });
+        }
     </script>
 </body>
 </html>

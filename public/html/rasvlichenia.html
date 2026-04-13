@@ -1,383 +1,654 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Развлечения · GlampTime</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: #061108;
+            color: white;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            overflow-x: hidden;
+        }
 
+        .top-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(10, 15, 10, 0.95);
+            border-bottom: 1px solid rgba(255,215,0,0.2);
+        }
+
+        .logo {
+            color: white;
+            font-size: 22px;
+            font-weight: 300;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+        }
+
+        .logo i {
+            margin-left: 5px;
+            font-size: 18px;
+        }
+
+        .burger-menu {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            z-index: 20;
+        }
+
+        .burger-menu span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 35px;
+            margin: 0;
+            padding: 0;
+            transition: 0.3s;
+        }
+
+        .nav-menu a {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 400;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: white;
+        }
+
+        .entertainment-hero {
+            height: 480px;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/images/photo_2026-04-07_15-18-07.jpg');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            margin-top: 80px;
+        }
+
+        .hero-title-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-title-container h1 {
+            color: white;
+            font-size: 56px;
+            font-weight: 300;
+            letter-spacing: 3px;
+        }
+
+        .style-divider {
+            height: 6px;
+            background-color: #0d2b05;
+            width: 100%;
+            border-bottom: 2px solid #1a472a;
+        }
+
+        .entertainment-intro {
+            background-color: #061108;
+            padding: 60px 0 20px;
+            text-align: left;
+            color: white;
+        }
+
+        .intro-text-block {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .intro-text-block p {
+            font-size: 20px;
+            font-weight: 300;
+            line-height: 1.5;
+            margin-bottom: 5px;
+            letter-spacing: 0.3px;
+        }
+
+        /* КАРТОЧКА*/
+        .activities {
+            background-color: #061108;
+            padding: 20px 20px 80px;
+        }
+
+        .activities-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            margin-bottom: 40px;
+        }
+
+        .header .title {
+            font-size: 26px;
+            font-weight: 300;
+            line-height: 1.3;
+            margin: 0;
+        }
+
+        /* Masonry-сетка */
+        .grid-masonry {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .masonry-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Карточка с анимацией */
+        .card {
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+            display: flex;
+            align-items: flex-end;
+            padding: 20px;
+            overflow: hidden;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.5) 100%);
+            border-radius: 8px;
+            z-index: 1;
+            transition: background 0.3s ease;
+        }
+
+        .card:hover::before {
+            background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.8) 100%);
+        }
+
+        .card-text {
+            position: relative;
+            z-index: 3;
+            color: white;
+            font-size: 22px;
+            font-weight: 400;
+            line-height: 1.3;
+            width: 100%;
+            text-align: left;
+            padding-bottom: 8px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.7);
+            text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover .card-text {
+            transform: translateY(-10px);
+        }
+
+        .card-description {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            color: white;
+            padding: 20px;
+            z-index: 4;
+            transform: translateY(100%);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0 0 8px 8px;
+        }
+
+        .card:hover .card-description {
+            transform: translateY(0);
+        }
+
+        .card-description h4 {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #a8d8a8;
+        }
+
+        .card-description p {
+            font-size: 14px;
+            line-height: 1.5;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        .card-description .price {
+            margin-top: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #8bc34a;
+        }
+
+        /* Размеры карточек */
+        .card-small { aspect-ratio: 1 / 0.7; }
+        .card-small2 { aspect-ratio: 1 / 1.1; }
+        .card-small3 { aspect-ratio: 1 / 1.2; }
+        .card-medium { aspect-ratio: 1 / 0.9; }
+        .card-medium2 { aspect-ratio: 1 / 1.2; }
+        .card-large { aspect-ratio: 1 / 1.3; }
+        .card-xl { aspect-ratio: 1 / 1.4; }
+
+        @media (max-width: 900px) {
+            .grid-masonry {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .grid-masonry {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .top-header {
+                padding: 15px 5%;
+            }
+            
+            .burger-menu {
+                display: flex;
+            }
+            
+            .nav-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                background: rgba(10, 15, 10, 0.98);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                padding: 80px 30px;
+                gap: 25px;
+                z-index: 15;
+            }
+            
+            .nav-menu.active {
+                right: 0;
+            }
+            
+            .nav-menu a {
+                font-size: 18px;
+            }
+            
+            .entertainment-hero {
+                margin-top: 70px;
+                height: 350px;
+            }
+            
+            .hero-title-container h1 {
+                font-size: 36px;
+            }
+            
+            .header .title {
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title-container h1 {
+                font-size: 28px;
+            }
+        }
+
+        footer {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/images/photo_2026-04-07_18-07-30.jpg');
+            background-size: cover;
+            background-position: center;
+            padding: 80px 0 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            width: 100%;
+        }
+
+        .footer-column {
+            padding: 0 30px;
+            border-right: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .footer-column:last-child {
+            border-right: none;
+        }
+
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 300;
+            margin-bottom: 25px;
+            display: block;
+        }
+
+        .footer-text {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.5;
+            margin-bottom: 30px;
+        }
+
+        .footer-title {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: 0.3s;
+            font-size: 1rem;
+        }
+
+        .footer-links a:hover {
+            color: #fff;
+            padding-left: 5px;
+        }
+
+        .newsletter-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            padding: 12px 15px;
+            color: white;
+            width: 100%;
+            outline: none;
+            margin-top: 15px;
+        }
+
+        .copyright {
+            margin-top: 50px;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        @media (max-width: 992px) {
+            .footer-column {
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                padding: 30px 0;
+            }
+        }
+
+        footer .container {
+            max-width: 1320px;
+            padding: 0 12px;
+        }
+
+        footer .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0;
+        }
+
+        footer .col-lg-3 {
+            padding: 0 15px;
+        }
+    </style>
 </head>
-
-<style>
-.entertainment-hero {
-    height: 480px;
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
-                url('https://unsplash.com');
-    background-size: cover;
-    background-position: center;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-}
-
-.hero-title-container {
-    flex-grow: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.hero-title-container h1 {
-    color: white;
-    font-size: 56px;
-    font-weight: 300;
-    letter-spacing: 3px;
-}
-
-/* Тонкая зеленая линия-разделитель */
-.style-divider {
-    height: 6px;
-    background-color: #0d2b05; 
-    width: 100%;
-    border-bottom: 2px solid #1a472a; 
-}
-
-/* Нижний блок с текстом */
-.entertainment-intro {
-    background-color: #061108; 
-    padding: 100px 0;
-    text-align: center;
-    color: white;
-}
-
-.intro-text-block {
-    max-width: 900px;
-    margin: 0 auto;
-}
-
-.intro-text-block p {
-    font-size: 28px;
-    font-weight: 300;
-    line-height: 1.4;
-    margin-bottom: 5px;
-    letter-spacing: 0.5px;
-}
-
-/* Навигация  */
-.top-nav {
-    display: flex;
-    justify-content: space-between;
-    padding: 30px 6%;
-}
-
-.logo { 
-    color: white;
-    font-size: 22px;
-    font-weight: 300;
-}
-
-.nav-links { 
-    display: flex;
-    list-style: none;
-    gap: 30px; 
-}
-
-.nav-links a {
-    color: rgba(255,255,255,0.7);
-    text-decoration: none;
-    font-size: 14px; 
-}
-
-.nav-links a.active { 
-    color: white;
- }
-
-@media (max-width: 768px) {
-    .hero-title-container h1 { font-size: 36px; }
-    .intro-text-block p { font-size: 20px; }
-}
-
-.activities-section {
-    background-color: #061108; 
-    padding: 80px 0;
-    display: flex;
-    justify-content: center;
-}
-
-.activities-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr; 
-    grid-template-rows: 250px 250px;   
-    gap: 30px;
-    width: 90%;
-    max-width: 1200px;
-}
-
-.grid-item {
-    position: relative;
-    overflow: hidden;
-}
-
-/* Настройка сетки: кто где стоит */
-.text-block   { grid-column: 1; grid-row: 1; }
-.tall-card    { grid-column: 2; grid-row: 1 / span 2; } 
-.card:nth-of-type(3) { grid-column: 3; grid-row: 1; } 
-.card:nth-of-type(4) { grid-column: 1; grid-row: 2; } 
-.action-block { grid-column: 3; grid-row: 2; align-self: end; }
-
-/* Текстовый вводный блок */
-.text-block p {
-    color: white;
-    font-size: 24px;
-    line-height: 1.3;
-    font-weight: 300;
-    margin: 0;
-}
-
-/* Карточки с картинками */
-.card {
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    align-items: center; 
-    padding-left: 20px;
-}
-
-/* Затемнение картинок для читаемости текста */
-.card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0, 0, 0, 0.4);
-    transition: 0.3s;
-}
-
-.card:hover::before {
-    background: rgba(0, 0, 0, 0.2);
-}
-
-.card-content {
-    position: relative;
-    z-index: 2;
-    width: 100%;
-}
-
-.card h4 {
-    color: white;
-    font-size: 18px;
-    font-weight: 300;
-    margin: 0 0 10px 0;
-}
-
-.white-line {
-    width: 80%;
-    height: 1px;
-    background-color: rgba(255, 255, 255, 0.8);
-}
-
-/* Кнопка "О отдыхе" */
-.btn-rest {
-    display: block;
-    background-color: #0d2b05;
-    color: white;
-    text-decoration: none;
-    padding: 15px;
-    text-align: center;
-    font-weight: 300;
-    border-radius: 4px;
-    transition: 0.3s;
-}
-
-.btn-rest:hover {
-    background-color: #1a472a;
-    color: white;
-}
-
-/* Адаптив для мобилок */
-@media (max-width: 992px) {
-    .activities-grid {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto;
-    }
-    .tall-card { grid-row: auto; height: 300px; }
-    .action-block { grid-column: 1; }
-}
-
-
-.water-section {
-    background-color: #050a06; 
-    padding: 80px 0;
-    display: flex;
-    justify-content: center;
-}
-
-.water-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1.2fr;
-    gap: 25px;
-    width: 95%;
-    max-width: 1400px;
-}
-
-.water-item {
-    display: flex;
-    flex-direction: column;
-}
-
-.water-card {
-    height: 550px; 
-    background-size: cover;
-    background-position: center;
-    position: relative;
-    display: flex;
-    align-items: flex-end; 
-    padding: 0 20px 60px 20px; 
-}
-
-/* Затемнение фото как на макете */
-.water-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.5); 
-}
-
-.card-content {
-    position: relative;
-    z-index: 2;
-    width: 100%;
-}
-
-.card-title {
-    color: white;
-    font-size: 22px;
-    font-weight: 300;
-    margin-bottom: 8px;
-}
-
-.card-line {
-    width: 100%;
-    height: 1px;
-    background-color: rgba(255, 255, 255, 0.4);
-}
-
-/* Текст в четвертой колонке */
-.side-promo-text {
-    color: white;
-    font-size: 26px;
-    font-weight: 300;
-    line-height: 1.3;
-    padding-top: 5px; /* Выравнивание по верху карточек */
-}
-
-/* Адаптив для планшетов */
-@media (max-width: 1100px) {
-    .water-container {
-        grid-template-columns: repeat(3, 1fr);
-    }
-    .side-promo-text {
-        grid-column: span 3;
-        text-align: center;
-        margin-top: 30px;
-    }
-}
-
-/* Адаптив для мобильных */
-@media (max-width: 768px) {
-    .water-container { grid-template-columns: 1fr; }
-    .side-promo-text { grid-column: span 1; }
-    .water-card { height: 400px; }
-}
-
-</style>
-
-
 <body>
-    
 
-<header class="entertainment-hero">
-    <nav class="top-nav">
-        <div class="logo"  href="/index.html">GlampTime <i class="fa-regular fa-clock"></i></div>
-        <ul class="nav-links">
-            <li><a href="/services">Услуги</a></li>
-            <li><a href="/rooms">Проживание</a></li>
-            <li><a href="/entertainment" class="active">Развлечения</a></li>
+    <header class="top-header">
+        <a class="logo" href="/">GlampTime <i class="fa-regular fa-clock"></i></a>
+        
+        <div class="burger-menu" id="burgerMenu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="/services.html">Услуги</a></li>
+            <li><a href="/glamps.html">Проживание</a></li>
+            <li><a href="/rasvlichenia.html" class="active">Развлечения</a></li>
             <li><a href="/contact.html">Контакты</a></li>
         </ul>
-    </nav>
+    </header>
 
-    <div class="hero-title-container">
-        <h1>Развлечения</h1>
-    </div>
-
-    <div class="style-divider"></div>
-</header>
-
-<section class="entertainment-intro">
-    <div class="container">
-        <div class="intro-text-block">
-            <p>Смените ритм мегаполиса на ритм приключений!</p>
-            <p>Активный отдых в GlampTime — это заряд энергии</p>
-            <p>и незабываемые впечатления.</p>
+    <section class="entertainment-hero">
+        <div class="hero-title-container">
+            <h1>Развлечения</h1>
         </div>
-    </div>
-</section>
+        <div class="style-divider"></div>
+    </section>
 
-<section class="activities-section">
-    <div class="activities-grid">
-        <div class="grid-item text-block">
-            <p>Подберите развлечение себе по душе. С нашими захватывающими активностями</p>
-        </div>
+    <section class="activities">
+        <div class="activities-container">
+            <div class="header">
+                <h2 class="title">Смените ритм мегаполиса на ритм приключений! Активный отдых в GlampTime — это заряд энергии и незабываемые впечатления.
+                Подберите развлечение себе по душе. С нашими захватывающими активностями</h2>
+            </div>
 
-        <div class="grid-item card tall-card" style="background-image: url('https://unsplash.com');">
-            <div class="card-content">
-                <h4>Велопрокат</h4>
-                <div class="white-line"></div>
+            <div class="grid-masonry">
+                <!-- Колонка 1 -->
+                <div class="masonry-column">
+                    <div class="card card-small" style="background-image: url('/images/tenis-rasvlichenia.jpg');">
+                        <div class="card-text">Настольный теннис</div>
+                        <div class="card-description">
+                            <h4>Настольный теннис</h4>
+                            <p>Профессиональные столы, ракетки и мячи. Играйте с друзьями или участвуйте в турнирах.</p>
+                            <div class="price">500 ₽ / час</div>
+                        </div>
+                    </div>
+                    <div class="card card-large" style="background-image: url('/images/vr-rasvlichenia.jpg');">
+                        <div class="card-text">Очки виртуальной реальности</div>
+                        <div class="card-description">
+                            <h4>VR-очки</h4>
+                            <p>Погрузитесь в виртуальные миры. Более 50 игр и приложений для любого возраста.</p>
+                            <div class="price">800 ₽ / 30 мин</div>
+                        </div>
+                    </div>
+                    <div class="card card-small3" style="background-image: url('/images/chan-rasvlichenia.jpg');">
+                        <div class="card-text">Чан</div>
+                        <div class="card-description">
+                            <h4>Чан</h4>
+                            <p>Горячий чан на дровах с видом на лес. Вместимость до 6 человек.</p>
+                            <div class="price">3000 ₽ / 2 часа</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="masonry-column">
+                    <div class="card card-xl" style="background-image: url('/images/readbike-rasvlichenia.jpg');">
+                        <div class="card-text">Велопрокат</div>
+                        <div class="card-description">
+                            <h4>Велопрокат</h4>
+                            <p>Горные, городские и детские велосипеды. Проложенные маршруты по живописным местам.</p>
+                            <div class="price">400 ₽ / час</div>
+                        </div>
+                    </div>
+                    <div class="card card-medium" style="background-image: url('/images/katamaran-rasvlichenia.jpg');">
+                        <div class="card-text">Катамаран</div>
+                        <div class="card-description">
+                            <h4>Катамаран</h4>
+                            <p>Прогулки по озеру на двухместных и четырёхместных катамаранах.</p>
+                            <div class="price">600 ₽ / 30 мин</div>
+                        </div>
+                    </div>
+                    <div class="card card-medium" style="background-image: url('/images/bana-.jpg');">
+                        <div class="card-text">Баня</div>
+                        <div class="card-description">
+                            <h4>Баня</h4>
+                            <p>Русская баня на дровах с вениками, купелью и комнатой отдыха.</p>
+                            <div class="price">4000 ₽ / 3 часа</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="masonry-column">
+                    <div class="card card-medium" style="background-image: url('/images/sap-rasvlichenia.jpg');">
+                        <div class="card-text">Сапборды</div>
+                        <div class="card-description">
+                            <h4>Сапборды</h4>
+                            <p>Аренда SUP-досок для прогулок по озеру. Обучение для новичков.</p>
+                            <div class="price">700 ₽ / час</div>
+                        </div>
+                    </div>
+                    <div class="card card-small2" style="background-image: url('/images/lodka-rasvlichenia.jpg');">
+                        <div class="card-text">Лодки</div>
+                        <div class="card-description">
+                            <h4>Лодки</h4>
+                            <p>Вёсельные лодки для романтических прогулок или рыбалки.</p>
+                            <div class="price">500 ₽ / час</div>
+                        </div>
+                    </div>
+                    <div class="card card-medium2" style="background-image: url('/images/rubalka-rasvlichenia.jpg');">
+                        <div class="card-text">Удочки</div>
+                        <div class="card-description">
+                            <h4>Удочки</h4>
+                            <p>Рыбалка на оборудованном пирсе. Удочки и наживка в комплекте.</p>
+                            <div class="price">300 ₽ / день</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+    </section>
 
-        <div class="grid-item card" style="background-image: url('https://unsplash.com');">
-            <div class="card-content">
-                <h4>Очки виртуальной реальности</h4>
-                <div class="white-line"></div>
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 footer-column">
+                    <span class="footer-logo">GlampTime</span>
+                    <p class="footer-text">
+                        У нас вас ждут уютные шатры с комфортабельными кроватями, своей террасой и всем необходимым для расслабляющего отдыха.
+                    </p>
+                    <div class="copyright">@2026 Все права защищены.</div>
+                </div>
+
+                <div class="col-lg-3 footer-column">
+                    <h4 class="footer-title">-MENU</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">О нас</a></li>
+                        <li><a href="/services.html">Услуги</a></li>
+                        <li><a href="/glamps.html">Проживание</a></li>
+                        <li><a href="/rasvlichenia.html">Развлечения</a></li>
+                        <li><a href="/contact.html">Контактные данные</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3 footer-column">
+                    <h4 class="footer-title">-Follow us</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">Telegram</a></li>
+                        <li><a href="#">Facebook</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3 footer-column">
+                    <h4 class="footer-title">-Оставьте свою почту, для связи с нами:</h4>
+                    <input type="text" class="newsletter-input" placeholder="Ваш email...">
+                </div>
             </div>
         </div>
-        <div class="grid-item card" style="background-image: url('https://unsplash.com');">
-            <div class="card-content">
-                <h4>Настольный теннис</h4>
-                <div class="white-line"></div>
-            </div>
-        </div>
+    </footer>
 
-        <div class="grid-item action-block">
-            <a href="#" class="btn-rest">О отдыхе</a>
-        </div>
-
-
-        <div class="grid-item card tall-card" style="background-image: url('https://unsplash.com');">
-            <div class="card-content">
-                <h4>Велопрокат</h4>
-                <div class="white-line"></div>
-            </div>
-        </div>
-
-        <div class="grid-item card tall-card" style="background-image: url('https://unsplash.com');">
-            <div class="card-content">
-                <h4>Велопрокат</h4>
-                <div class="white-line"></div>
-            </div>
-        </div>
-
-        <div class="grid-item card tall-card" style="background-image: url('https://unsplash.com');">
-            <div class="card-content">
-                <h4>Велопрокат</h4>
-                <div class="white-line"></div>
-            </div>
-        </div>
-    </div>
-</section>
-
-
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script>
+        const burgerMenu = document.getElementById('burgerMenu');
+        const navMenu = document.getElementById('navMenu');
+        
+        if (burgerMenu) {
+            burgerMenu.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+                burgerMenu.classList.toggle('active');
+                
+                const spans = burgerMenu.querySelectorAll('span');
+                if (burgerMenu.classList.contains('active')) {
+                    spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+                    spans[1].style.opacity = '0';
+                    spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    spans[0].style.transform = 'none';
+                    spans[1].style.opacity = '1';
+                    spans[2].style.transform = 'none';
+                    document.body.style.overflow = '';
+                }
+            });
+        }
+        
+        // Закрытие меню при клике на ссылку
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+                if (burgerMenu) burgerMenu.classList.remove('active');
+                const spans = burgerMenu.querySelectorAll('span');
+                spans[0].style.transform = 'none';
+                spans[1].style.opacity = '1';
+                spans[2].style.transform = 'none';
+                document.body.style.overflow = '';
+            });
+        });
+        
+        // Закрытие при клике вне меню
+        document.addEventListener('click', function(event) {
+            if (navMenu.classList.contains('active')) {
+                if (!burgerMenu.contains(event.target) && !navMenu.contains(event.target)) {
+                    navMenu.classList.remove('active');
+                    burgerMenu.classList.remove('active');
+                    const spans = burgerMenu.querySelectorAll('span');
+                    spans[0].style.transform = 'none';
+                    spans[1].style.opacity = '1';
+                    spans[2].style.transform = 'none';
+                    document.body.style.overflow = '';
+                }
+            }
+        });
+    </script>
 </body>
 </html>

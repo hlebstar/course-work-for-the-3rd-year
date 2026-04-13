@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Проживание - GlampTime</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -14,41 +14,83 @@
             --glass-border: rgba(255, 255, 255, 0.2);
         }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--forest-dark);
             color: white;
             margin: 0;
+            overflow-x: hidden;
         }
 
-        /* Навигация*/
-        .navbar {
-            background: transparent !important;
-            padding: 2rem 0;
+        .top-header {
             position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            z-index: 10;
+            padding: 30px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
         }
 
-        .navbar-brand {
-            font-size: 1.5rem;
+        .logo {
+            color: white;
+            font-size: 22px;
             font-weight: 300;
-            letter-spacing: 1px;
-            color: white !important;
+            text-decoration: none;
+            letter-spacing: 0.5px;
         }
 
-        .nav-link {
-            color: rgba(255,255,255,0.8) !important;
-            font-size: 0.9rem;
-            margin: 0 15px;
+        .logo i {
+            margin-left: 5px;
+            font-size: 18px;
+        }
+
+        /* Бургер-меню */
+        .burger-menu {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            z-index: 20;
+        }
+
+        .burger-menu span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            margin: 3px 0;
             transition: 0.3s;
         }
 
-        .nav-link:hover {
-            color: white !important;
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 35px;
+            margin: 0;
+            padding: 0;
+            transition: 0.3s;
         }
 
-        /* Hero секция */
+        .nav-menu a {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 400;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: white;
+        }
+
         .page-hero {
             background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/images/photo_2026-04-07_15-18-07.jpg');
             background-size: cover;
@@ -119,7 +161,7 @@
         /* Фильтры */
         .filters-section {
             padding: 2rem 0;
-            background: rgba(0,0,0,0.3);
+            background: rgba(21, 197, 30, 0.3);
             border-bottom: 1px solid var(--glass-border);
         }
 
@@ -149,20 +191,30 @@
             background: #1a2a1a;
         }
 
-        /* КАРТОЧКИ  */
+        /* КАРТОЧКИ*/
         .glamps-section {
             padding: 60px 0;
-            background-color: #050a06;
+            background: linear-gradient(rgba(13, 32, 16, 0.822),rgba(2, 22, 5, 0.822), rgba(14, 61, 0, 0.562));
         }
 
+        .glamps-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px 30px;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /*  адаптируется под грид */
         .chalet-card-wrapper {
             display: flex;
-            width: 95%;
-            max-width: 739px;
-            margin: 0 auto 60px auto;
+            width: 100%;
             height: 403px;
             align-items: center;
             position: relative;
+            margin: 0;
         }
 
         .chalet-image-side {
@@ -177,7 +229,7 @@
             flex: 0 0 42%;
             background-color: #145507;
             height: 85%;
-            padding: 40px 45px;
+            padding: 40px 35px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -204,7 +256,6 @@
             margin-bottom: 10px;
         }
 
-        /* Цена и кнопка в одной строке */
         .price-button-row {
             display: flex;
             align-items: center;
@@ -248,6 +299,7 @@
         }
 
         .no-results {
+            grid-column: span 2;
             text-align: center;
             padding: 4rem;
         }
@@ -333,37 +385,107 @@
             color: rgba(255, 255, 255, 0.4);
         }
 
+        @media (max-width: 1200px) {
+            .chalet-content-side {
+                padding: 30px 25px;
+            }
+            .chalet-content-side h2 {
+                font-size: 28px;
+            }
+        }
+
         @media (max-width: 992px) {
             .page-hero h1 { font-size: 3rem; }
-            .navbar { padding: 1rem 0; }
             .booking-info-content { gap: 0.5rem; flex-direction: column; }
             .footer-column { border-right: none; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding: 30px 0; }
+            
+            .glamps-grid {
+                gap: 30px 20px;
+            }
+            .chalet-card-wrapper { 
+                height: 380px;
+            }
+            .chalet-image-side { 
+                flex: 0 0 55%;
+            }
+            .chalet-content-side { 
+                flex: 0 0 45%;
+                padding: 25px 20px;
+                height: 90%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .top-header {
+                padding: 20px 5%;
+            }
+            
+            .burger-menu {
+                display: flex;
+            }
+            
+            .nav-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                background: rgba(10, 15, 10, 0.98);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                padding: 80px 30px;
+                gap: 25px;
+                z-index: 15;
+            }
+            
+            .nav-menu.active {
+                right: 0;
+            }
+            
+            .nav-menu a {
+                font-size: 18px;
+            }
+            
+            .page-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .glamps-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                padding: 0 15px;
+            }
+            
+            .no-results {
+                grid-column: span 1;
+            }
             
             .chalet-card-wrapper { 
                 flex-direction: column; 
                 height: auto;
-                width: 90%;
-                margin-bottom: 40px;
+                width: 100%;
             }
+            
             .chalet-image-side { 
                 width: 100%; 
                 height: 300px; 
                 flex: none; 
             }
+            
             .chalet-content-side { 
                 width: 100%; 
                 height: auto; 
                 flex: none;
-                padding: 30px;
+                padding: 30px 25px;
             }
-            .chalet-content-side h2 { font-size: 28px; }
-        }
-
-        @media (max-width: 768px) {
-            .chalet-card-wrapper { width: 95%; }
-            .chalet-content-side { padding: 25px; }
-            .chalet-content-side h2 { font-size: 24px; }
-            .chalet-description p { font-size: 14px; }
+            
+            .chalet-content-side h2 { 
+                font-size: 26px; 
+            }
+            
+            .chalet-description p { 
+                font-size: 14px; 
+            }
             
             .price-button-row {
                 flex-direction: column;
@@ -374,27 +496,38 @@
                 white-space: normal;
             }
         }
+
+        @media (max-width: 480px) {
+            .page-hero h1 {
+                font-size: 2rem;
+            }
+            .chalet-content-side h2 {
+                font-size: 22px;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg">
-        <div class="container">
-            <a class="navbar-brand" href="/">GlampTime <i class="fa-regular fa-clock"></i></a>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="/services.html">Услуги</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/glamps.html">Проживание</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/rasvlichenia.html">Развлечения</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/contact.html">Контакты</a></li>
-                </ul>
-            </div>
+    <header class="top-header">
+        <a class="logo" href="/">GlampTime <i class="fa-regular fa-clock"></i></a>
+        
+        <div class="burger-menu" id="burgerMenu">
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
-    </nav>
+        
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="/services.html">Услуги</a></li>
+            <li><a href="/glamps.html">Проживание</a></li>
+            <li><a href="/rasvlichenia.html">Развлечения</a></li>
+            <li><a href="/contact.html">Контакты</a></li>
+        </ul>
+    </header>
 
     <section class="page-hero">
-        <h1>GlampTime</h1>
-        <p>Выберите идеальное место для вашего отдыха на природе</p>
+        <h1>Проживание</h1>
     </section>
 
     <div class="booking-info-bar" id="bookingInfoBar" style="display: none;">
@@ -458,9 +591,7 @@
     <div class="green-divider"></div>
     
     <section class="glamps-section">
-        <div class="container-fluid" style="display: flex; flex-direction: column; align-items: center;">
-            <div id="glampsList" style="width: 100%; display: flex; flex-direction: column; align-items: center;"></div>
-        </div>
+        <div class="glamps-grid" id="glampsList"></div>
     </section>
 
     <footer>
@@ -504,224 +635,59 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/glamps2.js"></script>
     <script>
-        const glampsData = [
-            {
-                id: 1,
-                name: "Шале у леса",
-                description: "Ваш уединенный уголок на опушке. Это шале — воплощение гармонии швейцарского уюта и русской природы. Просыпайтесь под пение птиц за окном, а вечером грейтесь у камина с чашкой травяного чая. Идеальное место, чтобы отключиться от суеты и насладиться тишиной и покоем.",
-                price_per_night: 8900,
-                max_guests: 2,
-                amenities: [],
-                images: ["/images/photo_2026-04-07_15-21-14.jpg"],
-                location: { city: "Сочи" },
-                type: "house"
-            },
-            {
-                id: 2,
-                name: "Сфера",
-                description: "Ваш современный уголок с панорамным видом на звездное небо. Этот геодезический купол сочетает футуристичный дизайн и полное единение с природой. Засыпайте под свет звезд, а днем наслаждайтесь уютом и необычной атмосферой. Идеально для романтического отдыха и новых впечатлений.",
-                price_per_night: 12400,
-                max_guests: 3,
-                amenities: [],
-                images: ["https://images.unsplash.com/photo-1542718610-a1d656d1884c?w=800"],
-                location: { city: "Сочи" },
-                type: "tent"
-            },
-            {
-                id: 3,
-                name: "Домик у озера",
-                description: "Деревянный домик с видом на озеро. Есть мангал и рыбалка рядом. Отличное место для семейного отдыха.",
-                price_per_night: 6800,
-                max_guests: 4,
-                amenities: [],
-                images: ["https://images.unsplash.com/photo-1445308394109-4ec2920981b1?w=800"],
-                location: { city: "Сочи" },
-                type: "house"
-            },
-            {
-                id: 4,
-                name: "Лодж Горный",
-                description: "Просторный лодж в горах с сауной и большой террасой. Идеален для большой компании.",
-                price_per_night: 14500,
-                max_guests: 6,
-                amenities: [],
-                images: ["https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=800"],
-                location: { city: "Красная Поляна" },
-                type: "lodge"
-            },
-            {
-                id: 5,
-                name: "Лесной шатер",
-                description: "Уютный шатер в сосновом лесу с панорамными окнами. Идеально для романтического отдыха.",
-                price_per_night: 5200,
-                max_guests: 2,
-                amenities: [],
-                images: ["https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?w=800"],
-                location: { city: "Сочи" },
-                type: "tent"
-            },
-            {
-                id: 6,
-                name: "Избушка на опушке",
-                description: "Аутентичная русская избушка с печкой. Погружение в атмосферу деревенского уюта.",
-                price_per_night: 4800,
-                max_guests: 3,
-                amenities: [],
-                images: ["https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800"],
-                location: { city: "Сочи" },
-                type: "house"
-            }
-        ];
-
-        let bookingData = null;
-        let bookingNights = 0;
-
-        function getBookingDataFromStorage() {
-            const data = localStorage.getItem('glampingBooking');
-            if (data) {
-                try {
-                    return JSON.parse(data);
-                } catch(e) {
-                    return null;
+        const burgerMenu = document.getElementById('burgerMenu');
+        const navMenu = document.getElementById('navMenu');
+        
+        if (burgerMenu) {
+            burgerMenu.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+                burgerMenu.classList.toggle('active');
+                
+                const spans = burgerMenu.querySelectorAll('span');
+                if (burgerMenu.classList.contains('active')) {
+                    spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+                    spans[1].style.opacity = '0';
+                    spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    spans[0].style.transform = 'none';
+                    spans[1].style.opacity = '1';
+                    spans[2].style.transform = 'none';
+                    document.body.style.overflow = '';
+                }
+            });
+        }
+        
+        // Закрытие меню при клике на ссылку
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+                if (burgerMenu) burgerMenu.classList.remove('active');
+                const spans = burgerMenu.querySelectorAll('span');
+                spans[0].style.transform = 'none';
+                spans[1].style.opacity = '1';
+                spans[2].style.transform = 'none';
+                document.body.style.overflow = '';
+            });
+        });
+        
+        // Закрытие при клике вне меню
+        document.addEventListener('click', function(event) {
+            if (navMenu && navMenu.classList.contains('active')) {
+                if (!burgerMenu.contains(event.target) && !navMenu.contains(event.target)) {
+                    navMenu.classList.remove('active');
+                    burgerMenu.classList.remove('active');
+                    const spans = burgerMenu.querySelectorAll('span');
+                    spans[0].style.transform = 'none';
+                    spans[1].style.opacity = '1';
+                    spans[2].style.transform = 'none';
+                    document.body.style.overflow = '';
                 }
             }
-            return null;
-        }
-
-        function calculateNights(checkIn, checkOut) {
-            const start = new Date(checkIn);
-            const end = new Date(checkOut);
-            const diffTime = Math.abs(end - start);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            return diffDays;
-        }
-
-        function formatDate(dateString) {
-            if (!dateString) return 'не выбрано';
-            const date = new Date(dateString);
-            return date.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
-        }
-
-        function displayBookingInfo() {
-            bookingData = getBookingDataFromStorage();
-            const infoBar = document.getElementById('bookingInfoBar');
-            const infoContent = document.getElementById('bookingInfoContent');
-            
-            if (bookingData && bookingData.checkIn && bookingData.checkOut) {
-                bookingNights = calculateNights(bookingData.checkIn, bookingData.checkOut);
-                infoContent.innerHTML = `
-                    <div class="booking-info-item">
-                        <i class="fas fa-calendar-check"></i>
-                        <span>Заезд: <strong>${formatDate(bookingData.checkIn)}</strong></span>
-                    </div>
-                    <div class="booking-info-item">
-                        <i class="fas fa-calendar-times"></i>
-                        <span>Выезд: <strong>${formatDate(bookingData.checkOut)}</strong></span>
-                    </div>
-                    <div class="booking-info-item">
-                        <i class="fas fa-users"></i>
-                        <span>Гостей: <strong>${bookingData.guests || 2}</strong></span>
-                    </div>
-                    <div class="booking-info-item">
-                        <i class="fas fa-moon"></i>
-                        <span>Ночей: <strong>${bookingNights}</strong></span>
-                    </div>
-                    <div class="booking-info-item">
-                        <i class="fas fa-arrow-right"></i>
-                        <span>Показаны домики на <strong>${bookingData.guests || 2} гостей</strong></span>
-                    </div>
-                `;
-                infoBar.style.display = 'block';
-            } else {
-                infoBar.style.display = 'none';
-            }
-        }
-
-        function renderGlamps(glamps) {
-            const container = document.getElementById('glampsList');
-            
-            if (!glamps || glamps.length === 0) {
-                container.innerHTML = `
-                    <div class="col-12 no-results">
-                        <i class="fas fa-tent"></i>
-                        <h3>Нет доступных домиков</h3>
-                        <p>Попробуйте изменить параметры поиска</p>
-                        <a href="/" class="btn btn-outline-warning mt-3">Вернуться на главную</a>
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = glamps.map(glamp => {
-                return `
-                    <div class="chalet-card-wrapper">
-                        <div class="chalet-image-side" style="background-image: url('${glamp.images[0]}');">
-                        </div>
-                        <div class="chalet-content-side">
-                            <h2>${glamp.name}</h2>
-                            <div class="chalet-description">
-                                <p>${glamp.description}</p>
-                            </div>
-                            <div class="price-button-row">
-                                <div class="price-per-night">
-                                    ${glamp.price_per_night.toLocaleString()} ₽ <small>/ночь</small>
-                                </div>
-                                <button class="chalet-button" onclick="bookNow(${glamp.id})">Подробнее</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function bookNow(id) {
-            if (bookingData) {
-                localStorage.setItem('glampingBooking', JSON.stringify(bookingData));
-            }
-            window.location.href = `/glamp-detail.html?id=${id}`;
-        }
-
-        function filterGlamps() {
-            const type = document.getElementById('typeFilter').value;
-            const guestsSelect = document.getElementById('guestsFilter').value;
-            const guests = guestsSelect === 'any' ? NaN : parseInt(guestsSelect);
-            const priceSelect = document.getElementById('priceFilter').value;
-            const price = priceSelect === 'any' ? NaN : parseInt(priceSelect);
-            const amenities = document.getElementById('amenitiesFilter').value;
-
-            let filtered = [...glampsData];
-
-            if (type !== 'all') {
-                filtered = filtered.filter(g => g.type === type);
-            }
-
-            if (!isNaN(guests)) {
-                filtered = filtered.filter(g => g.max_guests <= guests);
-            }
-
-            if (!isNaN(price)) {
-                filtered = filtered.filter(g => g.price_per_night <= price);
-            }
-
-            if (amenities !== 'all') {
-                filtered = filtered.filter(g => g.amenities.includes(amenities));
-            }
-            
-            if (bookingData && bookingData.guests) {
-                filtered = filtered.filter(g => g.max_guests >= bookingData.guests);
-            }
-
-            renderGlamps(filtered);
-        }
-
-        document.getElementById('typeFilter').addEventListener('change', filterGlamps);
-        document.getElementById('guestsFilter').addEventListener('change', filterGlamps);
-        document.getElementById('priceFilter').addEventListener('change', filterGlamps);
-        document.getElementById('amenitiesFilter').addEventListener('change', filterGlamps);
-
-        displayBookingInfo();
-        renderGlamps(glampsData);
+        });
     </script>
 </body>
 </html>

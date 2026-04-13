@@ -1,7 +1,6 @@
 const { Glamp } = require('../models');
 
 const glampController = {
-  // Получить все дома
   async getAllGlamps(req, res) {
     try {
       const glambs = await Glamp.findAll({
@@ -37,7 +36,6 @@ const glampController = {
     }
   },
 
-  // Обновить дом
   async updateGlamp(req, res) {
     try {
       const glamp = await Glamp.findByPk(req.params.id);
@@ -51,7 +49,6 @@ const glampController = {
     }
   },
 
-  // Удалить дом
   async deleteGlamp(req, res) {
     try {
       const glamp = await Glamp.findByPk(req.params.id);

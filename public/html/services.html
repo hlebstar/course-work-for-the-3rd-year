@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Услуги - GlampTime</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -15,99 +15,156 @@
 
         body {
             font-family: 'Segoe UI', Roboto, sans-serif;
-            background-color: #0a0f0a;
+            background-color: #051901;
             color: white;
+            overflow-x: hidden;
         }
 
-        /* Навигация */
-        .navbar {
-            background: rgba(10, 15, 10, 0.95) !important;
-            padding: 1.5rem 0;
-            position: absolute;
+        .top-header {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
+            padding: 20px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             z-index: 100;
+            background: rgba(10, 15, 10, 0.95);
+            border-bottom: 1px solid rgba(255,215,0,0.2);
         }
 
-        .navbar-brand {
-            font-size: 1.5rem;
+        .logo {
+            color: white;
+            font-size: 22px;
             font-weight: 300;
-            letter-spacing: 1px;
-            color: white !important;
+            text-decoration: none;
+            letter-spacing: 0.5px;
         }
 
-        .nav-link {
-            color: rgba(255,255,255,0.8) !important;
-            font-size: 0.9rem;
-            margin: 0 15px;
+        .logo i {
+            margin-left: 5px;
+            font-size: 18px;
+        }
+
+        .burger-menu {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            z-index: 20;
+        }
+
+        .burger-menu span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            margin: 3px 0;
             transition: 0.3s;
         }
 
-        .nav-link:hover, .nav-link.active {
-            color: #ffd700 !important;
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 35px;
+            margin: 0;
+            padding: 0;
+            transition: 0.3s;
+        }
+
+        .nav-menu a {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 400;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: white;
         }
 
         /* Hero секция */
         .services-hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), 
-                        url('https://img.freepik.com/free-photo/cat-snowy-environment_23-2151920599.jpg?semt=ais_hybrid&w=740&q=80');
-            background-size: cover;
-            background-position: center;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 120px 0 80px;
+            margin-top: 80px;
+            background: linear-gradient(rgba(28, 122, 9, 0.5), rgba(5, 129, 11, 0.7));
+            background-size: cover;
+            background-position: center;
         }
 
-        /* Сетка услуг */
+        /* Обновлённая сетка услуг */
         .services-grid {
-            max-width: 1200px;
+            max-width: 1500px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 10px;
+            width: 100%;
         }
 
-        .services-row {
+        .services-row-top {
             display: flex;
-            flex-wrap: wrap;
             justify-content: center;
-            gap: 30px;
-            margin-bottom: 50px;
+            align-items: flex-end;
+            flex-wrap: wrap;
         }
 
-        .service-item {
-            width: calc(33.33% - 30px);
-            min-width: 280px;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            border-radius: 15px;
-            padding: 2rem;
-            text-align: center;
-            transition: all 0.3s;
+        .services-row-bottom {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .service-card {
+            position: relative;
+            width: 450px;
+            height: 430px;
+            overflow: hidden;
             cursor: pointer;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: #1e2a1e;
+            border: 1px solid rgba(23, 65, 3, 0.2);
         }
 
-        .service-item:hover {
-            transform: translateY(-10px);
-            border-color: #ffd700;
-            background: rgba(0, 0, 0, 0.7);
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+            border-color: #02380e;
         }
 
-        .service-icon {
-            font-size: 3rem;
-            color: #ffd700;
-            margin-bottom: 1rem;
+        .service-card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s;
         }
 
-        .service-title {
-            font-size: 1.5rem;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
+        .service-card:hover .service-card-image {
+            transform: scale(1.05);
         }
 
-        .service-short {
-            color: rgba(255,255,255,0.7);
-            font-size: 0.9rem;
+        .service-card-title {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 25px 15px 200px;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 70%, transparent 100%);
+            color: white;
+            font-size: 28px;
+            font-weight: 600;
+            text-align: center;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
+        }
+
+        .offset-card {
+            margin-top: 50px;
         }
 
         /* Модальное окно */
@@ -126,7 +183,6 @@
 
         .modal-container {
             background: linear-gradient(135deg, #1a2a1a, #0d2618);
-            border: 2px solid #ffd700;
             border-radius: 20px;
             max-width: 500px;
             width: 90%;
@@ -136,14 +192,8 @@
         }
 
         @keyframes modalFadeIn {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
         }
 
         .modal-close {
@@ -152,7 +202,7 @@
             right: 20px;
             font-size: 1.8rem;
             cursor: pointer;
-            color: #ffd700;
+            color: #468f0b8a;
             transition: 0.3s;
         }
 
@@ -162,7 +212,7 @@
 
         .modal-icon {
             font-size: 3rem;
-            color: #ffd700;
+            color: #69974e;
             text-align: center;
             margin-bottom: 1rem;
         }
@@ -171,7 +221,7 @@
             font-size: 1.8rem;
             text-align: center;
             margin-bottom: 1rem;
-            color: #ffd700;
+            color: #40a826;
         }
 
         .modal-description {
@@ -200,7 +250,7 @@
 
         .modal-price {
             font-size: 1.5rem;
-            color: #ffd700;
+            color: #e3f5e6;
             text-align: center;
             margin-bottom: 1.5rem;
         }
@@ -209,41 +259,52 @@
             width: 100%;
             padding: 1rem;
             background: transparent;
-            border: 1px solid #ffd700;
-            color: #ffd700;
+            border: 1px solid #037903;
+            color: #337408;
             border-radius: 10px;
             font-size: 1rem;
             transition: 0.3s;
+            cursor: pointer;
         }
 
         .modal-btn:hover {
-            background: #ffd700;
-            color: #0a0f0a;
+            background: #05771e3a;
+            color: #dfebdf;
         }
 
-        /* Футер */
         footer {
-            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.9));
-            padding: 60px 0 30px;
-            border-top: 1px solid rgba(255,215,0,0.2);
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/images/photo_2026-04-07_18-07-30.jpg');
+            padding: 80px 0 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+        }
+
+        .footer-column {
+            padding: 0 30px;
+            border-right: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .footer-column:last-child {
+            border-right: none;
         }
 
         .footer-logo {
             font-size: 1.8rem;
             font-weight: 300;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             display: block;
         }
 
         .footer-text {
             font-size: 0.85rem;
-            color: rgba(255,255,255,0.6);
+            color: rgba(255, 255, 255, 0.6);
             line-height: 1.5;
+            margin-bottom: 30px;
         }
 
         .footer-title {
-            font-size: 1.1rem;
-            margin-bottom: 20px;
+            font-size: 1.2rem;
+            margin-bottom: 25px;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -254,119 +315,172 @@
         }
 
         .footer-links li {
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .footer-links a {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
             transition: 0.3s;
+            font-size: 1rem;
         }
 
         .footer-links a:hover {
-            color: #ffd700;
+            color: #fff;
             padding-left: 5px;
         }
 
         .newsletter-input {
-            width: 100%;
-            padding: 12px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,215,0,0.3);
-            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            padding: 12px 15px;
             color: white;
+            width: 100%;
+            outline: none;
+            margin-top: 15px;
         }
 
-        .newsletter-input::placeholder {
-            color: rgba(255,255,255,0.5);
+        .copyright {
+            margin-top: 50px;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .green-divider1 {
+            height: 4px;
+            background-color: #1a472a;
+            width: 100%;
+            border-bottom: 2px solid #2d5a27;
+        }
+
+        h2 {
+            font-size: 3rem;
+            font-weight: 300;
+            letter-spacing: 3px;
+            color: white;
+            text-align: center;
+            padding: 50px 0 20px;
         }
 
         @media (max-width: 768px) {
-            .service-item {
-                width: calc(50% - 30px);
+            .top-header {
+                padding: 15px 5%;
+            }
+            
+            .burger-menu {
+                display: flex;
+            }
+            
+            .nav-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                background: rgba(10, 15, 10, 0.98);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                padding: 80px 30px;
+                gap: 25px;
+                z-index: 15;
+            }
+            
+            .nav-menu.active {
+                right: 0;
+            }
+            
+            .nav-menu a {
+                font-size: 18px;
+            }
+            
+            .services-hero {
+                margin-top: 70px;
+                padding: 100px 0 60px;
+            }
+            
+            .service-card {
+                width: 100%;
+                max-width: 350px;
+                height: 350px;
+            }
+            
+            .service-card-title {
+                font-size: 22px;
+                padding: 20px 15px 150px;
+            }
+            
+            h2 {
+                font-size: 2rem;
+                padding: 30px 0 15px;
             }
         }
 
-        @media (max-width: 576px) {
-            .service-item {
-                width: 100%;
+        @media (max-width: 480px) {
+            .service-card {
+                max-width: 300px;
+                height: 300px;
             }
-            .services-hero {
-                min-height: auto;
+            
+            .service-card-title {
+                font-size: 20px;
+                padding: 15px 15px 120px;
             }
         }
     </style>
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg">
-        <div class="container">
-            <a class="navbar-brand" href="/index.html">GlampTime</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link active" href="/services.html">Услуги</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/glamps.html">Проживание</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/rasvlichenia.html">Развлечения</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/contact.html">Контакты</a></li>
-                </ul>
-            </div>
+    <header class="top-header">
+        <a class="logo" href="/">GlampTime <i class="fa-regular fa-clock"></i></a>
+        
+        <div class="burger-menu" id="burgerMenu">
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
-    </nav>
+        
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="/services.html" class="active">Услуги</a></li>
+            <li><a href="/glamps.html">Проживание</a></li>
+            <li><a href="/rasvlichenia.html">Развлечения</a></li>
+            <li><a href="/contact.html">Контакты</a></li>
+        </ul>
+    </header>
+
+    <div class="green-divider1"></div>
 
     <section class="services-hero">
         <div class="services-grid">
-            <div class="services-row">
-                <div class="service-item" onclick="openModal('spa')">
-                    <div class="service-icon">
-                        <i class="fas fa-spa"></i>
-                    </div>
-                    <div class="service-title">SPA</div>
-                    <div class="service-short">Релакс и восстановление</div>
-                </div>
+            <h2>Услуги</h2>
 
-                <div class="service-item" onclick="openModal('transfer')">
-                    <div class="service-icon">
-                        <i class="fas fa-car"></i>
-                    </div>
-                    <div class="service-title">Трансфер</div>
-                    <div class="service-short">Комфортные поездки</div>
+            <div class="services-row-top">
+                <div class="service-card" onclick="openModal('spa')">
+                    <img class="service-card-image" src="https://i.ytimg.com/vi/IEAU3_rSNgQ/maxresdefault.jpg" alt="SPA">
+                    <div class="service-card-title">СПА</div>
                 </div>
-
-                <div class="service-item" onclick="openModal('restaurant')">
-                    <div class="service-icon">
-                        <i class="fas fa-utensils"></i>
-                    </div>
-                    <div class="service-title">Ресторан</div>
-                    <div class="service-short">Изысканная кухня</div>
+                <div class="service-card" onclick="openModal('transfer')">
+                    <img class="service-card-image" src="/images/photo_2026-04-10_09-41-17.jpg" alt="Трансфер">
+                    <div class="service-card-title">Трансфер</div>
+                </div>
+                <div class="service-card offset-card" onclick="openModal('restaurant')">
+                    <img class="service-card-image" src="https://avatars.mds.yandex.net/i?id=453e8b3abbcfcc77a9cc91e271ec1b61_l-5233341-images-thumbs&n=13" alt="Ресторан">
+                    <div class="service-card-title">Ресторан</div>
                 </div>
             </div>
 
-            <div class="services-row">
-                <div class="service-item" onclick="openModal('events')">
-                    <div class="service-icon">
-                        <i class="fas fa-calendar-alt"></i>
-                    </div>
-                    <div class="service-title">Мероприятия</div>
-                    <div class="service-short">Праздники и свадьбы</div>
+            <div class="services-row-bottom">
+                <div class="service-card" onclick="openModal('events')">
+                    <img class="service-card-image" src="https://avatars.mds.yandex.net/i?id=094dfda851be67a0658d9a0cba607037_l-4534759-images-thumbs&n=13" alt="Мероприятия">
+                    <div class="service-card-title">Мероприятия</div>
                 </div>
-
-                <div class="service-item" onclick="openModal('animals')">
-                    <div class="service-icon">
-                        <i class="fas fa-paw"></i>
-                    </div>
-                    <div class="service-title">Животные</div>
-                    <div class="service-short">Конные прогулки</div>
+                <div class="service-card" onclick="openModal('animals')">
+                    <img class="service-card-image" src="https://avatars.mds.yandex.net/i?id=023e86e944e1739ee1177a359d726ae1_l-12422010-images-thumbs&n=13" alt="Животные">
+                    <div class="service-card-title">Животные</div>
                 </div>
-
-                <div class="service-item" onclick="openModal('active')">
-                    <div class="service-icon">
-                        <i class="fas fa-bicycle"></i>
-                    </div>
-                    <div class="service-title">Активный отдых</div>
-                    <div class="service-short">Экскурсии и спорт</div>
+                <div class="service-card" onclick="openModal('active')">
+                    <img class="service-card-image" src="https://avatars.mds.yandex.net/i?id=512c545ecc0235053225673ed68635d3_l-2447388-images-thumbs&n=13" alt="Активный отдых">
+                    <div class="service-card-title">Активный отдых</div>
                 </div>
             </div>
         </div>
@@ -382,187 +496,94 @@
     <footer>
         <div class="container">
             <div class="row">
-                <div class="col-lg-4">
+                <div class="col-lg-3 footer-column">
                     <span class="footer-logo">GlampTime</span>
                     <p class="footer-text">
                         У нас вас ждут уютные шатры с комфортабельными кроватями, своей террасой и всем необходимым для расслабляющего отдыха.
                     </p>
-                    <p class="footer-text">©2025 Все права защищены.</p>
+                    <div class="copyright">@2025 Все права защищены.</div>
                 </div>
-                <div class="col-lg-4">
+
+                <div class="col-lg-3 footer-column">
                     <h4 class="footer-title">-MENU</h4>
                     <ul class="footer-links">
-                        <li><a href="/">Главная</a></li>
-                        <li><a href="/about.html">О нас</a></li>
+                        <li><a href="#">О нас</a></li>
                         <li><a href="/services.html">Услуги</a></li>
                         <li><a href="/glamps.html">Проживание</a></li>
-                        <li><a href="/entertainment.html">Развлечения</a></li>
-                        <li><a href="/contact.html">Контакты</a></li>
+                        <li><a href="/rasvlichenia.html">Развлечения</a></li>
+                        <li><a href="/contact.html">Контактные данные</a></li>
                     </ul>
                 </div>
-                <div class="col-lg-4">
-                    <h4 class="footer-title">-FOLLOW US</h4>
+
+                <div class="col-lg-3 footer-column">
+                    <h4 class="footer-title">-Follow us</h4>
                     <ul class="footer-links">
                         <li><a href="#">Twitter</a></li>
                         <li><a href="#">Instagram</a></li>
                         <li><a href="#">Telegram</a></li>
                         <li><a href="#">Facebook</a></li>
                     </ul>
-                    <h4 class="footer-title mt-3">-Оставьте свою почту</h4>
-                    <input type="email" class="newsletter-input" placeholder="Search...">
+                </div>
+
+                <div class="col-lg-3 footer-column">
+                    <h4 class="footer-title">-Оставьте свою почту, для связи с нами:</h4>
+                    <input type="text" class="newsletter-input" placeholder="Ваш email...">
                 </div>
             </div>
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/services2.js"></script>
     <script>
-
-        // Загрузка услуг из БД
-async function loadServices() {
-    try {
-        const response = await fetch('/api/services');
-        const result = await response.json();
+        const burgerMenu = document.getElementById('burgerMenu');
+        const navMenu = document.getElementById('navMenu');
         
-        if (result.success && result.data) {
-            // Обновляем данные услуг
-            result.data.forEach(service => {
-                if (servicesData[service.category]) {
-                    servicesData[service.category] = {
-                        ...servicesData[service.category],
-                        title: service.name,
-                        description: service.description,
-                        price: `${service.price} ₽`,
-                        image: service.image_url,
-                        details: [
-                            { label: "Длительность", value: service.duration },
-                            { label: "Включено", value: service.features?.join(', ') || '—' }
-                        ]
-                    };
+        if (burgerMenu) {
+            burgerMenu.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+                burgerMenu.classList.toggle('active');
+                
+                const spans = burgerMenu.querySelectorAll('span');
+                if (burgerMenu.classList.contains('active')) {
+                    spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+                    spans[1].style.opacity = '0';
+                    spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    spans[0].style.transform = 'none';
+                    spans[1].style.opacity = '1';
+                    spans[2].style.transform = 'none';
+                    document.body.style.overflow = '';
                 }
             });
         }
-    } catch (error) {
-        console.error('Ошибка загрузки услуг:', error);
-    }
-}
-
-// Вызвать при загрузке
-loadServices();
-        // Данные об услугах
-        const servicesData = {
-            spa: {
-                title: "SPA & Wellness",
-                icon: "fas fa-spa",
-                description: "Погрузитесь в мир релаксации и восстановления. Наши SPA-процедуры помогут снять стресс, расслабить мышцы и восстановить энергию после активного дня.",
-                details: [
-                    { label: "Длительность", value: "от 60 минут" },
-                    { label: "Время работы", value: "10:00 - 22:00" },
-                    { label: "Включено", value: "Полотенца, чай, ароматерапия" }
-                ],
-                price: "от 2500 ₽"
-            },
-            transfer: {
-                title: "Трансфер",
-                icon: "fas fa-car",
-                description: "Комфортабельные автомобили для ваших поездок. Встреча в аэропорту, трансфер до глэмпинга, экскурсии по окрестностям.",
-                details: [
-                    { label: "Типы авто", value: "Business, Premium, Минивэн" },
-                    { label: "Время работы", value: "Круглосуточно" },
-                    { label: "Включено", value: "Вода, Wi-Fi, детское кресло" }
-                ],
-                price: "от 1500 ₽"
-            },
-            restaurant: {
-                title: "Ресторан",
-                icon: "fas fa-utensils",
-                description: "Изысканная кухня от шеф-повара. Блюда из свежих локальных продуктов, авторские десерты, винная карта. Завтраки, обеды, романтические ужины.",
-                details: [
-                    { label: "Часы работы", value: "08:00 - 23:00" },
-                    { label: "Кухня", value: "Европейская, Русская" },
-                    { label: "Особенности", value: "Детское меню, вегетарианское меню" }
-                ],
-                price: "от 1000 ₽"
-            },
-            events: {
-                title: "Мероприятия",
-                icon: "fas fa-calendar-alt",
-                description: "Организуем ваш праздник на высшем уровне. Дни рождения, свадьбы, корпоративы - мы создадим незабываемую атмосферу.",
-                details: [
-                    { label: "Вместимость", value: "до 100 человек" },
-                    { label: "Длительность", value: "по запросу" },
-                    { label: "Включено", value: "Декор, ведущий, кейтеринг" }
-                ],
-                price: "от 15000 ₽"
-            },
-            animals: {
-                title: "Животные",
-                icon: "fas fa-paw",
-                description: "Конные прогулки по живописным местам, фотосессии с животными, кормление и уход. Отличное развлечение для детей и взрослых.",
-                details: [
-                    { label: "Длительность", value: "от 30 минут" },
-                    { label: "Время работы", value: "10:00 - 18:00" },
-                    { label: "Животные", value: "Лошади, козы, кролики" }
-                ],
-                price: "от 1000 ₽"
-            },
-            active: {
-                title: "Активный отдых",
-                icon: "fas fa-bicycle",
-                description: "Пешие и велосипедные экскурсии, квадроциклы, рыбалка, йога на свежем воздухе. Выбирайте развлечение по душе!",
-                details: [
-                    { label: "Длительность", value: "от 1 часа" },
-                    { label: "Время работы", value: "09:00 - 19:00" },
-                    { label: "Снаряжение", value: "Предоставляется" }
-                ],
-                price: "от 1500 ₽"
-            }
-        };
-
-        function openModal(serviceId) {
-            const service = servicesData[serviceId];
-            if (!service) return;
-
-            const modalContent = `
-                <div class="modal-icon">
-                    <i class="${service.icon}"></i>
-                </div>
-                <h2 class="modal-title">${service.title}</h2>
-                <div class="modal-description">
-                    ${service.description}
-                </div>
-                <div class="modal-details">
-                    ${service.details.map(detail => `
-                        <div class="modal-detail-item">
-                            <span>${detail.label}</span>
-                            <strong>${detail.value}</strong>
-                        </div>
-                    `).join('')}
-                </div>
-                <div class="modal-price">
-                    ${service.price}
-                </div>
-                <button class="modal-btn" onclick="orderService('${service.title}')">
-                    Забронировать услугу
-                </button>
-            `;
-
-            document.getElementById('modalContent').innerHTML = modalContent;
-            document.getElementById('serviceModal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('serviceModal').style.display = 'none';
-        }
-
-        function orderService(serviceName) {
-            closeModal();
-            alert(` Заказ услуги "${serviceName}"\n\nДля оформления свяжитесь с нами:\n +7 (123) 456-78-90\n info@glamptime.ru`);
-        }
-
-        // Закрытие по клику вне модального окна
-        document.getElementById('serviceModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeModal();
+        
+        // Закрытие меню при клике на ссылку
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+                if (burgerMenu) burgerMenu.classList.remove('active');
+                const spans = burgerMenu.querySelectorAll('span');
+                spans[0].style.transform = 'none';
+                spans[1].style.opacity = '1';
+                spans[2].style.transform = 'none';
+                document.body.style.overflow = '';
+            });
+        });
+        
+        // Закрытие при клике вне меню
+        document.addEventListener('click', function(event) {
+            if (navMenu.classList.contains('active')) {
+                if (!burgerMenu.contains(event.target) && !navMenu.contains(event.target)) {
+                    navMenu.classList.remove('active');
+                    burgerMenu.classList.remove('active');
+                    const spans = burgerMenu.querySelectorAll('span');
+                    spans[0].style.transform = 'none';
+                    spans[1].style.opacity = '1';
+                    spans[2].style.transform = 'none';
+                    document.body.style.overflow = '';
+                }
             }
         });
     </script>
