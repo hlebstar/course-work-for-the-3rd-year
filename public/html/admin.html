@@ -15,9 +15,24 @@
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Poppins', 'Segoe UI', Roboto, sans-serif;
             background: #0a0f0a;
             color: #fff;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #ffd700;
+            border-radius: 10px;
         }
 
         @keyframes fadeIn {
@@ -29,25 +44,25 @@
             animation: fadeIn 0.5s ease-out;
         }
 
-        /* Бургер-кнопка */
         .burger-btn {
             display: none;
             position: fixed;
-            top: 15px;
-            left: 15px;
+            top: 20px;
+            left: 20px;
             z-index: 1001;
-            background: #ffd700;
+            background: linear-gradient(135deg, #ffd700, #e6c200);
             border: none;
-            border-radius: 8px;
-            padding: 10px 12px;
+            border-radius: 12px;
+            padding: 12px 14px;
             cursor: pointer;
             font-size: 20px;
             color: #0a0f0a;
             transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(255,215,0,0.3);
         }
 
         .burger-btn:hover {
-            background: #e6c200;
+            transform: scale(1.05);
         }
 
         .admin-sidebar {
@@ -56,25 +71,21 @@
             top: 0;
             width: 280px;
             height: 100vh;
-            background: linear-gradient(135deg, #0a1a0a 0%, #0d2618 100%);
-            border-right: 1px solid rgba(255,215,0,0.2);
+            background: linear-gradient(180deg, #0e1a0e 0%, #0a1208 100%);
+            border-right: 1px solid rgba(255,215,0,0.15);
             padding: 2rem 1rem;
             overflow-y: auto;
             z-index: 1000;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         @media (max-width: 768px) {
             .burger-btn {
                 display: block;
             }
-
             .admin-sidebar {
                 transform: translateX(-100%);
-                box-shadow: 10px 0 30px rgba(0,0,0,0.5);
-                width: 280px;
             }
-
             .admin-sidebar.open {
                 transform: translateX(0);
             }
@@ -84,17 +95,21 @@
             text-align: center;
             margin-bottom: 2rem;
             padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(255,215,0,0.3);
+            border-bottom: 1px solid rgba(255,215,0,0.2);
         }
 
         .admin-logo h2 {
             font-size: 1.5rem;
-            color: #ffd700;
+            background: linear-gradient(135deg, #ffd700, #e6c200);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 600;
         }
 
         .admin-logo p {
-            font-size: 0.8rem;
-            color: rgba(255,255,255,0.5);
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.4);
         }
 
         .admin-menu {
@@ -111,10 +126,11 @@
             align-items: center;
             gap: 12px;
             padding: 12px 16px;
-            color: rgba(255,255,255,0.8);
+            color: rgba(255,255,255,0.7);
             text-decoration: none;
             border-radius: 12px;
             transition: all 0.3s;
+            font-weight: 500;
         }
 
         .admin-menu a i {
@@ -122,9 +138,16 @@
             font-size: 1.2rem;
         }
 
-        .admin-menu a:hover, .admin-menu a.active {
-            background: rgba(255,215,0,0.15);
+        .admin-menu a:hover {
+            background: rgba(255,215,0,0.1);
             color: #ffd700;
+            transform: translateX(5px);
+        }
+
+        .admin-menu a.active {
+            background: linear-gradient(90deg, rgba(255,215,0,0.2), transparent);
+            color: #ffd700;
+            border-left: 3px solid #ffd700;
         }
 
         .admin-content {
@@ -138,7 +161,7 @@
             .admin-content {
                 margin-left: 0;
                 padding: 1rem;
-                padding-top: 70px;
+                padding-top: 80px;
             }
         }
 
@@ -148,20 +171,18 @@
             align-items: center;
             margin-bottom: 2rem;
             padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(255,215,0,0.2);
-        }
-
-        @media (max-width: 768px) {
-            .admin-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
-            }
+            border-bottom: 1px solid rgba(255,215,0,0.15);
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
         .page-title {
             font-size: 1.8rem;
-            font-weight: 300;
+            font-weight: 600;
+            background: linear-gradient(135deg, #fff, #ffd700);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
 
         @media (max-width: 768px) {
@@ -170,13 +191,81 @@
             }
         }
 
+        /* Выпадающее меню профиля */
         .admin-user {
+            position: relative;
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.8rem;
             background: rgba(255,255,255,0.05);
-            padding: 0.5rem 1rem;
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,215,0,0.2);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .admin-user:hover {
+            background: rgba(255,215,0,0.1);
+            border-color: #ffd700;
+        }
+
+        .admin-user i {
+            font-size: 1.2rem;
+            color: #ffd700;
+        }
+
+        .admin-user span {
+            font-size: 0.9rem;
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background: linear-gradient(135deg, #1a2a1a, #0d2618);
+            border: 1px solid rgba(255,215,0,0.3);
+            border-radius: 16px;
+            padding: 0.5rem;
+            min-width: 220px;
+            z-index: 100;
+            display: none;
+            animation: fadeIn 0.2s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .admin-user.active .user-dropdown {
+            display: block;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 15px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
             border-radius: 12px;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255,215,0,0.1);
+            color: #ffd700;
+        }
+
+        .dropdown-item i {
+            width: 20px;
+            font-size: 1rem;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+            margin: 0.5rem 0;
         }
 
         .stats-grid {
@@ -186,18 +275,13 @@
             margin-bottom: 2rem;
         }
 
-        @media (max-width: 768px) {
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
         .stat-card {
             background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,215,0,0.2);
+            border: 1px solid rgba(255,215,0,0.15);
             border-radius: 20px;
             padding: 1.5rem;
             transition: all 0.3s;
+            backdrop-filter: blur(10px);
         }
 
         .stat-card:hover {
@@ -216,7 +300,7 @@
         .stat-icon {
             width: 50px;
             height: 50px;
-            background: rgba(255,215,0,0.1);
+            background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,215,0,0.05));
             border-radius: 15px;
             display: flex;
             align-items: center;
@@ -226,14 +310,20 @@
         }
 
         .stat-value {
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: bold;
             margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #fff, #ffd700);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
 
         .stat-label {
             color: rgba(255,255,255,0.6);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .charts-grid {
@@ -251,15 +341,17 @@
 
         .chart-card {
             background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,215,0,0.2);
+            border: 1px solid rgba(255,215,0,0.15);
             border-radius: 20px;
             padding: 1.5rem;
         }
 
         .chart-title {
-            font-size: 1.1rem;
+            font-size: 1rem;
             margin-bottom: 1rem;
             color: #ffd700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         canvas {
@@ -268,7 +360,7 @@
 
         .data-table {
             background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,215,0,0.2);
+            border: 1px solid rgba(255,215,0,0.15);
             border-radius: 20px;
             overflow: hidden;
             overflow-x: auto;
@@ -282,9 +374,12 @@
 
         .data-table th {
             padding: 1rem;
-            background: rgba(255,215,0,0.1);
+            background: rgba(255,215,0,0.08);
             text-align: left;
-            font-weight: 500;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
         }
 
         .data-table td {
@@ -297,37 +392,73 @@
         }
 
         .badge {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
         }
 
-        .badge-pending { background: #ffc107; color: #000; }
-        .badge-confirmed { background: #28a745; color: #fff; }
-        .badge-cancelled { background: #dc3545; color: #fff; }
+        .badge-pending { background: rgba(255,193,7,0.2); color: #ffc107; border: 1px solid #ffc107; }
+        .badge-confirmed { background: rgba(40,167,69,0.2); color: #28a745; border: 1px solid #28a745; }
+        .badge-cancelled { background: rgba(220,53,69,0.2); color: #dc3545; border: 1px solid #dc3545; }
 
         .btn-action {
             padding: 6px 12px;
             border-radius: 8px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             margin: 0 3px;
             cursor: pointer;
             transition: all 0.3s;
             border: none;
+            font-weight: 600;
         }
 
         .btn-edit {
+            background: rgba(255,193,7,0.2);
+            color: #ffc107;
+            border: 1px solid #ffc107;
+        }
+
+        .btn-edit:hover {
             background: #ffc107;
             color: #000;
         }
 
         .btn-delete {
+            background: rgba(220,53,69,0.2);
+            color: #dc3545;
+            border: 1px solid #dc3545;
+        }
+
+        .btn-delete:hover {
             background: #dc3545;
             color: #fff;
         }
 
         .btn-view {
+            background: rgba(23,162,184,0.2);
+            color: #17a2b8;
+            border: 1px solid #17a2b8;
+        }
+
+        .btn-view:hover {
             background: #17a2b8;
+            color: #fff;
+        }
+
+        .btn-save {
+            background: rgba(40,167,69,0.2);
+            color: #28a745;
+            border: 1px solid #28a745;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-save:hover {
+            background: #28a745;
             color: #fff;
         }
 
@@ -342,17 +473,19 @@
             z-index: 1001;
             justify-content: center;
             align-items: center;
+            backdrop-filter: blur(5px);
         }
 
         .modal-content {
             background: linear-gradient(135deg, #1a2a1a, #0d2618);
             border-radius: 20px;
             padding: 2rem;
-            max-width: 600px;
+            max-width: 500px;
             width: 90%;
             max-height: 90vh;
             overflow-y: auto;
             border: 1px solid rgba(255,215,0,0.3);
+            animation: fadeIn 0.3s ease;
         }
 
         .modal-header {
@@ -364,6 +497,27 @@
             border-bottom: 1px solid rgba(255,215,0,0.2);
         }
 
+        .modal-header h3 {
+            color: #ffd700;
+        }
+
+        .settings-section {
+            background: rgba(255,255,255,0.03);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255,215,0,0.1);
+        }
+
+        .settings-section h4 {
+            color: #ffd700;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
         .form-group {
             margin-bottom: 1rem;
         }
@@ -372,6 +526,8 @@
             display: block;
             margin-bottom: 0.5rem;
             color: rgba(255,255,255,0.8);
+            font-size: 0.85rem;
+            font-weight: 500;
         }
 
         .form-group input, .form-group textarea, .form-group select {
@@ -379,20 +535,41 @@
             padding: 0.8rem;
             background: rgba(255,255,255,0.1);
             border: 1px solid rgba(255,215,0,0.3);
-            border-radius: 10px;
+            border-radius: 12px;
             color: #fff;
+            transition: 0.3s;
+        }
+
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: #ffd700;
+            background: rgba(255,215,0,0.05);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
         }
 
         .toast-notification {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: #28a745;
+            background: linear-gradient(135deg, #28a745, #1e7e34);
             color: #fff;
             padding: 1rem 1.5rem;
-            border-radius: 10px;
+            border-radius: 12px;
             z-index: 1100;
             animation: slideIn 0.3s ease-out;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            font-weight: 500;
         }
 
         @keyframes slideIn {
@@ -407,9 +584,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.6);
             z-index: 999;
-            backdrop-filter: blur(2px);
+            backdrop-filter: blur(3px);
         }
 
         @media (max-width: 768px) {
@@ -429,26 +606,39 @@
 
     <div class="admin-sidebar" id="sidebar">
         <div class="admin-logo">
-            <h2><i class="fas fa-crown"></i> GlampTime</h2>
+            <h2> GlampTime</h2>
             <p>Административная панель</p>
         </div>
         <ul class="admin-menu">
             <li><a href="#" data-tab="dashboard" class="active"><i class="fas fa-tachometer-alt"></i> Дашборд</a></li>
             <li><a href="#" data-tab="glamps"><i class="fas fa-home"></i> Домики</a></li>
             <li><a href="#" data-tab="bookings"><i class="fas fa-calendar-check"></i> Бронирования</a></li>
-            <li><a href="#" data-tab="users"><i class="fas fa-users"></i> Пользователи</a></li>
             <li><a href="#" data-tab="settings"><i class="fas fa-cog"></i> Настройки</a></li>
             <li><a href="#" data-tab="reviews"><i class="fas fa-star"></i> Отзывы</a></li>
-            <li><a href="/"><i class="fas fa-sign-out-alt"></i> Выход</a></li>
+            <li><a href="#" onclick="adminLogout(); return false;"><i class="fas fa-sign-out-alt"></i> Выход</a></li>
         </ul>
     </div>
 
     <div class="admin-content">
         <div class="admin-header">
             <h1 class="page-title" id="pageTitle">Панель управления</h1>
-            <div class="admin-user">
+            
+            <div class="admin-user" id="adminUser">
                 <i class="fas fa-user-circle"></i>
                 <span>Администратор</span>
+                <i class="fas fa-chevron-down" style="font-size: 0.8rem;"></i>
+                <div class="user-dropdown">
+                    <div class="dropdown-item" onclick="openProfileModal()">
+                        <i class="fas fa-user"></i> Мой профиль
+                    </div>
+                    <div class="dropdown-item" onclick="openAdminSettingsModal()">
+                        <i class="fas fa-cog"></i> Настройки аккаунта
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-item" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Выйти
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -465,7 +655,7 @@
                 </div>
             </div>
             <div class="data-table">
-                <h4 style="padding: 1rem; margin: 0;">Последние бронирования</h4>
+                <h4 style="padding: 1rem; margin: 0; color: #ffd700;"><i class="fas fa-clock"></i> Последние бронирования</h4>
                 <div id="recentBookings"></div>
             </div>
         </div>
@@ -485,28 +675,62 @@
             </div>
         </div>
 
-        <div id="usersTab" class="tab-content fade-in" style="display: none;">
-            <div class="data-table">
-                <div id="usersTable"></div>
-            </div>
-        </div>
-
         <div id="settingsTab" class="tab-content fade-in" style="display: none;">
             <div class="data-table" style="padding: 2rem;">
-                <h3>Настройки системы</h3>
-                <div class="form-group">
-                    <label>Название сайта</label>
-                    <input type="text" id="siteName" value="GlampTime">
-                </div>
-                <div class="form-group">
-                    <label>Email для уведомлений</label>
-                    <input type="email" id="adminEmail" value="admin@glamptime.ru">
-                </div>
-                <div class="form-group">
-                    <label>Телефон</label>
-                    <input type="text" id="adminPhone" value="+7 (123) 456-78-90">
-                </div>
-                <button class="btn-action btn-edit" onclick="saveSettings()">Сохранить настройки</button>
+                <h3 style="color: #ffd700; margin-bottom: 1rem;"><i class="fas fa-sliders-h"></i> Настройки системы</h3>
+                
+                <form id="settingsForm">
+                    <div class="settings-section">
+                        <h4><i class="fas fa-building"></i> Основные настройки</h4>
+                        <div class="form-group">
+                            <label>Название сайта</label>
+                            <input type="text" id="siteName" value="GlampTime">
+                        </div>
+                        <div class="form-group">
+                            <label>Описание сайта</label>
+                            <textarea id="siteDescription" rows="2" placeholder="Краткое описание сайта">Уютные домики для идеального отдыха на природе</textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Email для связи</label>
+                                <input type="email" id="adminEmail" value="admin@glamptime.ru">
+                            </div>
+                            <div class="form-group">
+                                <label>Телефон</label>
+                                <input type="text" id="adminPhone" value="+7 (123) 456-78-90">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h4><i class="fas fa-share-alt"></i> Социальные сети</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label><i class="fab fa-instagram"></i> Instagram</label>
+                                <input type="text" id="socialInstagram" placeholder="https://instagram.com/glamptime">
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fab fa-telegram"></i> Telegram</label>
+                                <input type="text" id="socialTelegram" placeholder="https://t.me/glamptime">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label><i class="fab fa-facebook"></i> Facebook</label>
+                                <input type="text" id="socialFacebook" placeholder="https://facebook.com/glamptime">
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fab fa-twitter"></i> Twitter</label>
+                                <input type="text" id="socialTwitter" placeholder="https://twitter.com/glamptime">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1rem;">
+                        <button type="button" class="btn-action btn-delete" onclick="resetSettings()">Сбросить</button>
+                        <button type="submit" class="btn-save"><i class="fas fa-save"></i> Сохранить настройки</button>
+                    </div>
+                </form>
             </div>
         </div>
 
@@ -514,6 +738,39 @@
             <div class="data-table">
                 <div id="reviewsTable"></div>
             </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно профиля администратора -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-circle"></i> Профиль администратора</h3>
+                <button class="btn-action btn-delete" onclick="closeProfileModal()">✕</button>
+            </div>
+            <form id="profileForm">
+                <div class="form-group">
+                    <label>Имя пользователя</label>
+                    <input type="text" id="profileUsername" value="admin" readonly style="opacity: 0.7;">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="profileEmail" placeholder="admin@glamptime.ru">
+                </div>
+                <div class="form-group">
+                    <label>Телефон</label>
+                    <input type="text" id="profilePhone" placeholder="+7 (123) 456-78-90">
+                </div>
+                <div class="form-group">
+                    <label>Новый пароль</label>
+                    <input type="password" id="profilePassword" placeholder="Оставьте пустым, чтобы не менять">
+                </div>
+                <div class="form-group">
+                    <label>Подтверждение пароля</label>
+                    <input type="password" id="profilePasswordConfirm" placeholder="Подтвердите новый пароль">
+                </div>
+                <button type="submit" class="btn-save" style="width: 100%;"><i class="fas fa-save"></i> Сохранить изменения</button>
+            </form>
         </div>
     </div>
 
@@ -576,6 +833,34 @@
     <script src="/js/admin2.js"></script>
     
     <script>
+
+// Проверка авторизации администратора
+async function checkAdminAuth() {
+    try {
+        const response = await fetch('/api/admin/check');
+        const result = await response.json();
+        
+        if (!result.authenticated) {
+            window.location.href = '/admin-login.html';
+        }
+    } catch (error) {
+        window.location.href = '/admin-login.html';
+    }
+}
+
+// Выход из админ-панели
+async function adminLogout() {
+    if (confirm('Вы уверены, что хотите выйти?')) {
+        await fetch('/api/admin/logout', { method: 'POST' });
+        window.location.href = '/admin-login.html';
+    }
+}
+
+// Вызов при загрузке страницы
+checkAdminAuth();
+
+
+        // Бургер-меню
         const burgerBtn = document.getElementById('burgerBtn');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebarOverlay');
@@ -609,6 +894,124 @@
                 closeSidebar();
             }
         });
+
+        // Выпадающее меню профиля
+        const adminUser = document.getElementById('adminUser');
+        adminUser.addEventListener('click', (e) => {
+            e.stopPropagation();
+            adminUser.classList.toggle('active');
+        });
+
+        document.addEventListener('click', () => {
+            adminUser.classList.remove('active');
+        });
+
+        // Модальные окна профиля
+        function openProfileModal() {
+            closeProfileModal();
+            loadProfileData();
+            document.getElementById('profileModal').style.display = 'flex';
+            adminUser.classList.remove('active');
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profileModal').style.display = 'none';
+        }
+
+        function openAdminSettingsModal() {
+            // Переключаемся на вкладку настроек
+            document.querySelector('.admin-menu a[data-tab="settings"]').click();
+            adminUser.classList.remove('active');
+        }
+
+        function loadProfileData() {
+            const settings = JSON.parse(localStorage.getItem('glamping_settings') || '{}');
+            document.getElementById('profileEmail').value = settings.adminEmail || 'admin@glamptime.ru';
+            document.getElementById('profilePhone').value = settings.adminPhone || '+7 (123) 456-78-90';
+        }
+
+        function saveProfileData() {
+            const email = document.getElementById('profileEmail').value;
+            const phone = document.getElementById('profilePhone').value;
+            const password = document.getElementById('profilePassword').value;
+            const passwordConfirm = document.getElementById('profilePasswordConfirm').value;
+
+            if (password && password !== passwordConfirm) {
+                showNotification('Пароли не совпадают!', 'error');
+                return;
+            }
+
+            const settings = JSON.parse(localStorage.getItem('glamping_settings') || '{}');
+            settings.adminEmail = email;
+            settings.adminPhone = phone;
+            localStorage.setItem('glamping_settings', JSON.stringify(settings));
+
+            showNotification('Профиль обновлен!', 'success');
+            closeProfileModal();
+        }
+
+        document.getElementById('profileForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            saveProfileData();
+        });
+
+        function logout() {
+            if (confirm('Вы уверены, что хотите выйти?')) {
+                window.location.href = '/login.html';
+            }
+        }
+
+        // Система настроек
+        function loadSettings() {
+            const settings = JSON.parse(localStorage.getItem('glamping_settings') || '{}');
+            document.getElementById('siteName').value = settings.siteName || 'GlampTime';
+            document.getElementById('siteDescription').value = settings.siteDescription || 'Уютные домики для идеального отдыха на природе';
+            document.getElementById('adminEmail').value = settings.adminEmail || 'admin@glamptime.ru';
+            document.getElementById('adminPhone').value = settings.adminPhone || '+7 (123) 456-78-90';
+            document.getElementById('socialInstagram').value = settings.socialInstagram || '';
+            document.getElementById('socialTelegram').value = settings.socialTelegram || '';
+            document.getElementById('socialFacebook').value = settings.socialFacebook || '';
+            document.getElementById('socialTwitter').value = settings.socialTwitter || '';
+        }
+
+        function saveSettings() {
+            const settings = {
+                siteName: document.getElementById('siteName').value,
+                siteDescription: document.getElementById('siteDescription').value,
+                adminEmail: document.getElementById('adminEmail').value,
+                adminPhone: document.getElementById('adminPhone').value,
+                socialInstagram: document.getElementById('socialInstagram').value,
+                socialTelegram: document.getElementById('socialTelegram').value,
+                socialFacebook: document.getElementById('socialFacebook').value,
+                socialTwitter: document.getElementById('socialTwitter').value
+            };
+            localStorage.setItem('glamping_settings', JSON.stringify(settings));
+            showNotification('Настройки сохранены!', 'success');
+        }
+
+        function resetSettings() {
+            if (confirm('Сбросить все настройки к значениям по умолчанию?')) {
+                localStorage.removeItem('glamping_settings');
+                loadSettings();
+                showNotification('Настройки сброшены', 'success');
+            }
+        }
+
+        function showNotification(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+            toast.style.background = type === 'success' ? '#28a745' : '#dc3545';
+            toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        document.getElementById('settingsForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            saveSettings();
+        });
+
+        loadSettings();
     </script>
 </body>
 </html>

@@ -647,6 +647,91 @@ app.get('/api/reviews/stats', async (req, res) => {
 });
 
 
+// Вход в админ-панель
+app.post('/api/admin/login', async (req, res) => {
+    res.sendFile(path.join(htmlPath, 'admin-login.html'));
+    
+    try {
+        const result = await pool.query(
+            "SELECT * FROM users WHERE username = $1 AND role = 'admin'",
+            [username]
+        );
+        
+        if (result.rows.length === 0) {
+            return res.status(401).json({ success: false, error: 'Неверный логин или пароль' });
+        }
+        
+        const admin = result.rows[0];
+        const isValidPassword = await bcrypt.compare(password, admin.password_hash);
+        
+        if (!isValidPassword) {
+            return res.status(401).json({ success: false, error: 'Неверный логин или пароль' });
+        }
+        
+        const token = jwt.sign(
+            { id: admin.id, username: admin.username, role: admin.role },
+            JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+        
+        res.cookie('adminToken', token, {
+            httpOnly: true,
+            maxAge: 24 * 60 * 60 * 1000,
+            sameSite: 'strict'
+        });
+        
+        res.json({ 
+            success: true, 
+            message: 'Вход выполнен успешно',
+            admin: { id: admin.id, username: admin.username, email: admin.email }
+        });
+        
+    } catch (err) {
+        console.error('Ошибка входа:', err);
+        res.status(500).json({ success: false, error: 'Ошибка сервера' });
+    }
+});
+
+// Проверка сессии администратора
+app.get('/api/admin/check', async (req, res) => {
+    const token = req.cookies.adminToken;
+    
+    if (!token) {
+        return res.json({ success: false, authenticated: false });
+    }
+    
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const result = await pool.query(
+            "SELECT id, username, email FROM users WHERE id = $1 AND role = 'admin'",
+            [decoded.id]
+        );
+        
+        if (result.rows.length === 0) {
+            return res.json({ success: false, authenticated: false });
+        }
+        
+        res.json({ 
+            success: true, 
+            authenticated: true,
+            admin: result.rows[0]
+        });
+        
+    } catch (err) {
+        res.json({ success: false, authenticated: false });
+    }
+});
+
+// Выход из админ-панели
+app.post('/api/admin/logout', (req, res) => {
+    res.clearCookie('adminToken');
+    res.json({ success: true, message: 'Выход выполнен' });
+});
+
+app.get('/admin-login.html', (req, res) => {
+    res.sendFile(path.join(htmlPath, 'admin-login.html'));
+});
+
 app.listen(port, async () => {
     await initTables();
     console.log(`\n Сервер запущен на http://localhost:${port}`);
