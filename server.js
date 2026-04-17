@@ -10,9 +10,8 @@ const app = express();
 const port = 3000;
 
 // Секретный ключ для JWT
-const JWT_SECRET = 'glamptime_secret_key_2025';
+const JWT_SECRET = 'glamptime_secret_key_2026';
 
-// Настройка подключения к PostgreSQL
 const pool = new Pool({
     host: 'localhost',
     port: 5432,
@@ -87,6 +86,65 @@ app.get('/js/main.js', (req, res) => {
 
 app.get('/js/services.js', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'js', 'services.js'));
+});
+
+// Статистика для графиков
+app.get('/api/charts-data', async (req, res) => {
+    try {
+        // Бронирования по месяцам (текущий год)
+        const bookingsByMonth = await pool.query(`
+            SELECT 
+                EXTRACT(MONTH FROM created_at) as month,
+                COUNT(*) as count
+            FROM bookings 
+            WHERE EXTRACT(YEAR FROM created_at) = EXTRACT(YEAR FROM CURRENT_DATE)
+            GROUP BY EXTRACT(MONTH FROM created_at)
+            ORDER BY month
+        `);
+        
+        // Популярность домиков (топ 5)
+        const popularGlamps = await pool.query(`
+            SELECT 
+                g.name,
+                COUNT(b.id) as bookings_count
+            FROM glamps g
+            LEFT JOIN bookings b ON g.id = b.glamp_id
+            GROUP BY g.id, g.name
+            ORDER BY bookings_count DESC
+            LIMIT 5
+        `);
+        
+        res.json({ 
+            success: true, 
+            data: {
+                bookingsByMonth: bookingsByMonth.rows,
+                popularGlamps: popularGlamps.rows
+            }
+        });
+    } catch (err) {
+        console.error('Ошибка получения данных для графиков:', err);
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// Удаление бронирования
+app.delete('/api/bookings/:id', async (req, res) => {
+    try {
+        await pool.query('DELETE FROM bookings WHERE id = $1', [req.params.id]);
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// Удаление домика
+app.delete('/api/glamps/:id', async (req, res) => {
+    try {
+        await pool.query('DELETE FROM glamps WHERE id = $1', [req.params.id]);
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
 });
 
 //создание таблиц
@@ -646,10 +704,15 @@ app.get('/api/reviews/stats', async (req, res) => {
     }
 });
 
-
 // Вход в админ-панель
 app.post('/api/admin/login', async (req, res) => {
-    res.sendFile(path.join(htmlPath, 'admin-login.html'));
+    const { username, password } = req.body;
+    
+    console.log('Попытка входа в админку:', username);
+    
+    if (!username || !password) {
+        return res.status(400).json({ success: false, error: 'Введите логин и пароль' });
+    }
     
     try {
         const result = await pool.query(
@@ -658,6 +721,7 @@ app.post('/api/admin/login', async (req, res) => {
         );
         
         if (result.rows.length === 0) {
+            console.log('Админ не найден:', username);
             return res.status(401).json({ success: false, error: 'Неверный логин или пароль' });
         }
         
@@ -665,6 +729,7 @@ app.post('/api/admin/login', async (req, res) => {
         const isValidPassword = await bcrypt.compare(password, admin.password_hash);
         
         if (!isValidPassword) {
+            console.log('Неверный пароль для:', username);
             return res.status(401).json({ success: false, error: 'Неверный логин или пароль' });
         }
         
@@ -680,6 +745,7 @@ app.post('/api/admin/login', async (req, res) => {
             sameSite: 'strict'
         });
         
+        console.log('Админ вошел:', username);
         res.json({ 
             success: true, 
             message: 'Вход выполнен успешно',
@@ -687,8 +753,8 @@ app.post('/api/admin/login', async (req, res) => {
         });
         
     } catch (err) {
-        console.error('Ошибка входа:', err);
-        res.status(500).json({ success: false, error: 'Ошибка сервера' });
+        console.error('Ошибка входа в админку:', err);
+        res.status(500).json({ success: false, error: 'Ошибка сервера: ' + err.message });
     }
 });
 
@@ -718,6 +784,7 @@ app.get('/api/admin/check', async (req, res) => {
         });
         
     } catch (err) {
+        console.error('Ошибка проверки сессии:', err);
         res.json({ success: false, authenticated: false });
     }
 });
@@ -728,8 +795,16 @@ app.post('/api/admin/logout', (req, res) => {
     res.json({ success: true, message: 'Выход выполнен' });
 });
 
+app.get('/admin.html', (req, res) => {
+    res.sendFile(path.join(htmlPath, 'admin.html'));
+});
+
 app.get('/admin-login.html', (req, res) => {
     res.sendFile(path.join(htmlPath, 'admin-login.html'));
+});
+
+app.get('/glamp-detail.html', (req, res) => {
+    res.sendFile(path.join(htmlPath, 'glamp-detail.html'));
 });
 
 app.listen(port, async () => {
@@ -744,7 +819,7 @@ app.listen(port, async () => {
     console.log(`   http://localhost:${port}/rasvlichenia.html - развлечения`);
     console.log(`   http://localhost:${port}/contact.html - контакты`);
     console.log(`   http://localhost:${port}/admin.html - админ-панель`);
-    console.log(`   http://localhost:${port}/login.html - вход/регистрация`);
+    console.log(`   http://localhost:${port}/admin-login.html - вход/регистрация`);
     console.log(`   http://localhost:${port}/account.html - личный кабинет`);
     console.log(`   http://localhost:${port}/booking.html - бронирование`);
     console.log(`   http://localhost:${port}/booking-success.html - успешное бронирование`);

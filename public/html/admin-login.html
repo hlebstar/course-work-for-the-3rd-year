@@ -16,7 +16,7 @@
         body {
             font-family: 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1445308394109-4ec2920981b1?w=1920');
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.8));
             background-size: cover;
             background-position: center;
             display: flex;
@@ -90,10 +90,6 @@
             background: rgba(255,215,0,0.05);
         }
 
-        .form-group input::placeholder {
-            color: rgba(255,255,255,0.4);
-        }
-
         .btn-login {
             width: 100%;
             padding: 0.8rem;
@@ -138,6 +134,7 @@
     <div class="login-container">
         <div class="login-card">
             <div class="login-logo">
+                <i class="fas fa-crown" style="font-size: 2rem; color: #ffd700;"></i>
                 <h2>GlampTime Admin</h2>
                 <p>Вход в панель управления</p>
             </div>
@@ -195,7 +192,6 @@
             }
         });
         
-        // Проверка, если уже авторизован - перенаправляем в админку
         async function checkAuth() {
             try {
                 const response = await fetch('/api/admin/check');

@@ -24,7 +24,7 @@
         }
 
         .top-header {
-            position: fixed;
+            position: absolute;      
             top: 0;
             left: 0;
             width: 100%;
@@ -33,8 +33,7 @@
             justify-content: space-between;
             align-items: center;
             z-index: 100;
-            background: rgba(10, 15, 10, 0.95);
-            border-bottom: 1px solid rgba(255,215,0,0.2);
+           
         }
 
         .logo {
@@ -43,6 +42,7 @@
             font-weight: 300;
             text-decoration: none;
             letter-spacing: 0.5px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.6);
         }
 
         .logo i {
@@ -63,6 +63,7 @@
             background: white;
             margin: 3px 0;
             transition: 0.3s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
 
         .nav-menu {
@@ -75,27 +76,29 @@
         }
 
         .nav-menu a {
-            color: rgba(255, 255, 255, 0.85);
+            color: rgba(255, 255, 255, 0.95);
             text-decoration: none;
             font-size: 15px;
             font-weight: 400;
             transition: color 0.3s;
+            text-shadow: 0 1px 6px rgba(0,0,0,0.5);
         }
 
         .nav-menu a:hover,
         .nav-menu a.active {
             color: white;
+            border-bottom: 1px solid rgba(255,255,240,0.7);
         }
 
         .entertainment-hero {
             height: 480px;
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/images/photo_2026-04-07_15-18-07.jpg');
+            background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('/images/photo_2026-04-07_15-18-07.jpg');
             background-size: cover;
             background-position: center;
             position: relative;
             display: flex;
             flex-direction: column;
-            margin-top: 80px;
+            margin-top: 0;          
         }
 
         .hero-title-container {
@@ -110,6 +113,7 @@
             font-size: 56px;
             font-weight: 300;
             letter-spacing: 3px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.4);
         }
 
         .style-divider {
@@ -140,7 +144,7 @@
             letter-spacing: 0.3px;
         }
 
-        /* КАРТОЧКА*/
+        /* КАРТОЧКА */
         .activities {
             background-color: #061108;
             padding: 20px 20px 80px;
@@ -284,9 +288,12 @@
             }
         }
 
+        /* Мобильная адаптация — шапка остаётся прозрачной */
         @media (max-width: 768px) {
             .top-header {
                 padding: 15px 5%;
+                background-color: rgba(10, 15, 10, 0.3);
+                backdrop-filter: blur(4px);
             }
             
             .burger-menu {
@@ -313,10 +320,11 @@
             
             .nav-menu a {
                 font-size: 18px;
+                text-shadow: none;
             }
             
             .entertainment-hero {
-                margin-top: 70px;
+                margin-top: 0;       /* без отступа */
                 height: 350px;
             }
             
@@ -439,6 +447,7 @@
 </head>
 <body>
 
+    <!-- ШАПКА — теперь внутри hero, прозрачная -->
     <header class="top-header">
         <a class="logo" href="/">GlampTime <i class="fa-regular fa-clock"></i></a>
         
@@ -456,6 +465,7 @@
         </ul>
     </header>
 
+    <!-- HERO — шапка теперь абсолютно спозиционирована поверх этого блока -->
     <section class="entertainment-hero">
         <div class="hero-title-container">
             <h1>Развлечения</h1>
