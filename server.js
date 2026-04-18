@@ -807,6 +807,108 @@ app.get('/glamp-detail.html', (req, res) => {
     res.sendFile(path.join(htmlPath, 'glamp-detail.html'));
 });
 
+
+// Добавьте эти маршруты после существующих
+
+// Обновление статуса бронирования (PUT уже есть, но проверим)
+app.put('/api/bookings/:id/status', async (req, res) => {
+    const { status } = req.body;
+    try {
+        const result = await pool.query(
+            'UPDATE bookings SET status = $1 WHERE id = $2 RETURNING *',
+            [status, req.params.id]
+        );
+        if (result.rows.length === 0) {
+            return res.status(404).json({ success: false, error: 'Бронирование не найдено' });
+        }
+        res.json({ success: true, data: result.rows[0] });
+    } catch (err) {
+        console.error('Ошибка обновления статуса:', err);
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// Удаление бронирования (DELETE уже есть, но проверим)
+app.delete('/api/bookings/:id', async (req, res) => {
+    try {
+        const result = await pool.query('DELETE FROM bookings WHERE id = $1 RETURNING *', [req.params.id]);
+        if (result.rows.length === 0) {
+            return res.status(404).json({ success: false, error: 'Бронирование не найдено' });
+        }
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Ошибка удаления бронирования:', err);
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// Создание бронирования (исправленная версия)
+app.post('/api/bookings', async (req, res) => {
+    const token = req.cookies.token;
+    let userId = null;
+
+    if (token) {
+        try {
+            const decoded = jwt.verify(token, JWT_SECRET);
+            userId = decoded.id;
+        } catch (err) {
+            console.log('Ошибка верификации токена:', err.message);
+        }
+    }
+
+    const { glamp_id, user_name, user_email, user_phone, user_comment, check_in, check_out, guests, nights, total_price } = req.body;
+    
+    // Валидация обязательных полей
+    if (!glamp_id || !user_name || !user_email || !check_in || !check_out || !guests || !nights || !total_price) {
+        return res.status(400).json({ 
+            success: false, 
+            error: 'Заполните все обязательные поля' 
+        });
+    }
+    
+    try {
+        // Проверяем, что домик существует
+        const glampCheck = await pool.query('SELECT id FROM glamps WHERE id = $1', [glamp_id]);
+        if (glampCheck.rows.length === 0) {
+            return res.status(404).json({ success: false, error: 'Домик не найден' });
+        }
+        
+        const result = await pool.query(
+            `INSERT INTO bookings (glamp_id, user_id, user_name, user_email, user_phone, user_comment, check_in, check_out, guests, nights, total_price, status, created_at) 
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, 'confirmed', NOW()) RETURNING *`,
+            [glamp_id, userId, user_name, user_email, user_phone || null, user_comment || null, check_in, check_out, guests, nights, total_price]
+        );
+        res.json({ success: true, data: result.rows[0] });
+    } catch (err) {
+        console.error('Ошибка создания бронирования:', err);
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+
+// Добавление нового домика
+app.post('/api/glamps', async (req, res) => {
+    const { name, description, price_per_night, max_guests, amenities, city, address, type, image_url } = req.body;
+    
+    if (!name || !price_per_night || !max_guests) {
+        return res.status(400).json({ success: false, error: 'Заполните обязательные поля' });
+    }
+    
+    try {
+        const result = await pool.query(
+            `INSERT INTO glamps (name, description, price_per_night, max_guests, amenities, city, address, type, image_url, created_at) 
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW()) RETURNING *`,
+            [name, description || '', price_per_night, max_guests, amenities || [], city || '', address || '', type || 'house', image_url || '']
+        );
+        
+        res.json({ success: true, data: result.rows[0] });
+    } catch (err) {
+        console.error('Ошибка добавления домика:', err);
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+
 app.listen(port, async () => {
     await initTables();
     console.log(`\n Сервер запущен на http://localhost:${port}`);

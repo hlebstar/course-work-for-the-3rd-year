@@ -1,5 +1,3 @@
-// booking.js - Логика страницы бронирования
-
 function getBookingDataFromStorage() {
     const data = localStorage.getItem('glampingBooking');
     if (data) {
@@ -135,6 +133,8 @@ function getCardName(cardValue) {
 }
 
 async function submitBooking() {
+    console.log('🚀 Начинаем отправку бронирования...');
+    
     const formData = getFormData();
     
     if (!validateForm(formData)) {
@@ -161,10 +161,9 @@ async function submitBooking() {
     const paymentTypeText = formData.paymentType === 'prepayment' ? 'Полная предоплата' : 'Оплата после заселения';
     const paymentCard = formData.paymentType === 'prepayment' ? getCardName(formData.selectedCard) : 'Наличные/Карта при заселении';
     
-    const newBooking = {
-        id: Date.now(),
+    // Данные для отправки на сервер
+    const bookingPayload = {
         glamp_id: glampData.id,
-        glamp_name: glampData.name,
         user_name: fullName,
         user_email: formData.email,
         user_phone: formData.phone,
@@ -173,41 +172,51 @@ async function submitBooking() {
         check_out: bookingData.checkOut,
         guests: bookingData.guests,
         nights: nights,
-        price_per_night: glampData.price_per_night,
-        glamp_total: glampTotal,
-        services: selectedServices,
-        services_total: servicesTotal,
-        total_price: totalPrice,
-        status: 'confirmed',
-        payment_type: formData.paymentType,
-        payment_card: formData.selectedCard,
-        created_at: new Date().toISOString().split('T')[0]
+        total_price: totalPrice
     };
     
-    saveBookingToLocalStorage(newBooking);
+    console.log(' Отправляем запрос на сервер:', bookingPayload);
     
-    sessionStorage.setItem('lastBooking', JSON.stringify({
-        bookingId: newBooking.id,
-        glampName: glampData.name,
-        checkIn: bookingData.checkIn,
-        checkOut: bookingData.checkOut,
-        guests: bookingData.guests,
-        nights: nights,
-        glampTotal: glampTotal,
-        services: selectedServices,
-        servicesTotal: servicesTotal,
-        totalPrice: totalPrice,
-        userName: fullName,
-        paymentCard: paymentCard,
-        paymentType: paymentTypeText
-    }));
-    
-    // Очищаем временные данные
-    localStorage.removeItem('glampingBooking');
-    localStorage.removeItem('selectedGlamp');
-    localStorage.removeItem('selectedServices');
-    
-    window.location.href = '/booking-success.html';
+    try {
+        // Отправляем запрос на сервер
+        const response = await fetch('/api/bookings', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(bookingPayload)
+        });
+        
+        const result = await response.json();
+        console.log('Ответ сервера:', result);
+        
+        if (result.success) {
+            // Сохраняем в sessionStorage для страницы успеха
+            sessionStorage.setItem('lastBooking', JSON.stringify({
+                bookingId: result.data.id,
+                glampName: glampData.name,
+                checkIn: bookingData.checkIn,
+                checkOut: bookingData.checkOut,
+                guests: bookingData.guests,
+                nights: nights,
+                totalPrice: totalPrice,
+                userName: fullName,
+                paymentCard: paymentCard,
+                paymentType: paymentTypeText
+            }));
+            
+            // Очищаем временные данные
+            localStorage.removeItem('glampingBooking');
+            localStorage.removeItem('selectedGlamp');
+            localStorage.removeItem('selectedServices');
+            
+            alert(' Бронирование успешно создано!');
+            window.location.href = '/booking-success.html';
+        } else {
+            alert(' Ошибка: ' + (result.error || 'Не удалось создать бронирование'));
+        }
+    } catch (error) {
+        console.error(' Ошибка при отправке:', error);
+        alert('Ошибка соединения с сервером. Попробуйте позже.');
+    }
 }
 
 function initTabs() {

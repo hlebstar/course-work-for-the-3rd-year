@@ -720,15 +720,15 @@
                                 <input type="text" id="socialFacebook" placeholder="https://facebook.com/glamptime">
                             </div>
                             <div class="form-group">
-                                <label><i class="fab fa-twitter"></i> Twitter</label>
-                                <input type="text" id="socialTwitter" placeholder="https://twitter.com/glamptime">
+                                <label><i class="fab fa-vk"></i> VK</label>
+                                <input type="text" id="socialTwitter" placeholder="https://vk.com/glamptime">
                             </div>
                         </div>
                     </div>
 
                     <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1rem;">
                         <button type="button" class="btn-action btn-delete" onclick="resetSettings()">Сбросить</button>
-                        <button type="submit" class="btn-save"><i class="fas fa-save"></i> Сохранить настройки</button>
+                        <button type="submit" class="btn-save"></i> Сохранить настройки</button>
                     </div>
                 </form>
             </div>
@@ -768,63 +768,61 @@
                     <label>Подтверждение пароля</label>
                     <input type="password" id="profilePasswordConfirm" placeholder="Подтвердите новый пароль">
                 </div>
-                <button type="submit" class="btn-save" style="width: 100%;"><i class="fas fa-save"></i> Сохранить изменения</button>
+                <button type="submit" class="btn-save" style="width: 100%;"> Сохранить изменения</button>
             </form>
         </div>
     </div>
 
     <div id="glampModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modalTitle">Добавить домик</h3>
-                <button class="btn-action btn-delete" onclick="closeModal()">✕</button>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modalTitle">Добавить домик</h3>
+            <button class="btn-action btn-delete" onclick="closeModal()">✕</button>
+        </div>
+        <form id="glampForm">
+            <input type="hidden" id="glampId">
+            <div class="form-group">
+                <label>Название *</label>
+                <input type="text" id="glampName" required>
             </div>
-            <form id="glampForm">
-                <input type="hidden" id="glampId">
+            <div class="form-group">
+                <label>Описание</label>
+                <textarea id="glampDescription" rows="3"></textarea>
+            </div>
+            <div class="form-row">
                 <div class="form-group">
-                    <label>Название</label>
-                    <input type="text" id="glampName" required>
-                </div>
-                <div class="form-group">
-                    <label>Описание</label>
-                    <textarea id="glampDescription" rows="3" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Цена за ночь (₽)</label>
+                    <label>Цена за ночь (₽) *</label>
                     <input type="number" id="glampPrice" required>
                 </div>
                 <div class="form-group">
-                    <label>Макс. гостей</label>
+                    <label>Макс. гостей *</label>
                     <input type="number" id="glampMaxGuests" required>
                 </div>
-                <div class="form-group">
-                    <label>Удобства (через запятую)</label>
-                    <input type="text" id="glampAmenities" placeholder="WiFi, Парковка, Кухня">
-                </div>
-                <div class="form-group">
-                    <label>Город</label>
-                    <input type="text" id="glampCity" required>
-                </div>
+            </div>
+            <div class="form-group">
+                <label>Удобства (через запятую)</label>
+                <input type="text" id="glampAmenities" placeholder="WiFi, Парковка, Кухня">
+            </div>
+            <div class="form-row">
+               
                 <div class="form-group">
                     <label>Адрес</label>
-                    <input type="text" id="glampAddress" required>
+                    <input type="text" id="glampAddress">
                 </div>
-                <div class="form-group">
-                    <label>Тип</label>
-                    <select id="glampType">
-                        <option value="house">Домик</option>
-                        <option value="tent">Шатер</option>
-                        <option value="lodge">Лодж</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>URL фото</label>
-                    <input type="text" id="glampImage" placeholder="https://...">
-                </div>
-                <button type="submit" class="btn-action btn-edit" style="width: 100%;">Сохранить</button>
-            </form>
-        </div>
+            </div>
+            <div class="form-group">
+                <label>Тип</label>
+                <select id="glampType">
+                    <option value="house">Домик</option>
+                    <option value="tent">Шатер</option>
+                    <option value="lodge">Лодж</option>
+                </select>
+            </div>
+           
+            <button type="submit" class="btn-action btn-edit" style="width: 100%;">Сохранить</button>
+        </form>
     </div>
+</div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -855,9 +853,7 @@ async function adminLogout() {
     }
 }
 
-// Вызов при загрузке страницы
 checkAdminAuth();
-
 
         // Бургер-меню
         const burgerBtn = document.getElementById('burgerBtn');
@@ -905,7 +901,6 @@ checkAdminAuth();
             adminUser.classList.remove('active');
         });
 
-        // Модальные окна профиля
         function openProfileModal() {
             closeProfileModal();
             loadProfileData();
@@ -918,7 +913,6 @@ checkAdminAuth();
         }
 
         function openAdminSettingsModal() {
-            // Переключаемся на вкладку настроек
             document.querySelector('.admin-menu a[data-tab="settings"]').click();
             adminUser.classList.remove('active');
         }
