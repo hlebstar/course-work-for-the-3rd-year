@@ -1,5 +1,4 @@
-  // Данные о домиках
-        const glampsData = [
+const glampsData = [
             {
                 id: 1,
                 name: "Шале у леса",

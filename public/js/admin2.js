@@ -27,7 +27,7 @@ async function loadData() {
         // Загружаем настройки
         settings = JSON.parse(localStorage.getItem('glamping_settings') || JSON.stringify({
             siteName: "GlampTime",
-            adminEmail: "admin@glamptime.ru",
+            adminEmail: "admin@gmail.com",
             adminPhone: "+7 (123) 456-78-90"
         }));
         
@@ -38,13 +38,13 @@ async function loadData() {
             localStorage.setItem('glamping_users', JSON.stringify(realUsers));
         }
         
-        users = [{ id: 1, name: "Admin", email: "admin@glamptime.ru", role: "admin", created_at: new Date().toISOString() }];
+        users = [{ id: 1, name: "Admin", email: "admin@gmail.com", role: "admin", created_at: new Date().toISOString() }];
         
     } catch (error) {
         console.error('Ошибка загрузки данных:', error);
         glamps = [];
         bookings = [];
-        users = [{ id: 1, name: "Admin", email: "admin@glamptime.ru", role: "admin", created_at: new Date().toISOString() }];
+        users = [{ id: 1, name: "Admin", email: "admin@gmail.com", role: "admin", created_at: new Date().toISOString() }];
     }
 }
 
@@ -209,9 +209,9 @@ function renderBookingsTable() {
                         <td>${(b.total_price || 0).toLocaleString()} ₽</td>
                         <td>
                             <select class="status-select" data-id="${b.id}" data-status="${b.status}">
-                                <option value="pending" ${b.status === 'pending' ? 'selected' : ''}>⏳ Ожидание</option>
-                                <option value="confirmed" ${b.status === 'confirmed' ? 'selected' : ''}>✓ Подтверждено</option>
-                                <option value="cancelled" ${b.status === 'cancelled' ? 'selected' : ''}>✗ Отменено</option>
+                                <option value="pending" ${b.status === 'pending' ? 'selected' : ''}> Ожидание</option>
+                                <option value="confirmed" ${b.status === 'confirmed' ? 'selected' : ''}>+ Подтверждено</option>
+                                <option value="cancelled" ${b.status === 'cancelled' ? 'selected' : ''}>- Отменено</option>
                             </select>
                         </td>
                         <td>
@@ -244,9 +244,9 @@ function renderRecentBookings() {
     
     const getStatusBadge = (status) => {
         switch(status) {
-            case 'confirmed': return '<span class="badge badge-confirmed">✓ Подтверждено</span>';
+            case 'confirmed': return '<span class="badge badge-confirmed">Подтверждено</span>';
             case 'pending': return '<span class="badge badge-pending"> Ожидание</span>';
-            case 'cancelled': return '<span class="badge badge-cancelled">✗ Отменено</span>';
+            case 'cancelled': return '<span class="badge badge-cancelled"> Отменено</span>';
             default: return '<span class="badge badge-pending"> Ожидание</span>';
         }
     };
@@ -385,9 +385,9 @@ async function loadReviewsForAdmin() {
 function renderReviewsTable(reviews) {
     const getStatusBadge = (status) => {
         switch(status) {
-            case 'approved': return '<span class="badge badge-confirmed">✓ Одобрен</span>';
+            case 'approved': return '<span class="badge badge-confirmed"> Одобрен</span>';
             case 'pending': return '<span class="badge badge-pending"> На модерации</span>';
-            case 'rejected': return '<span class="badge badge-cancelled">✗ Отклонен</span>';
+            case 'rejected': return '<span class="badge badge-cancelled"> Отклонен</span>';
             default: return '<span class="badge badge-pending"> На модерации</span>';
         }
     };
@@ -411,8 +411,8 @@ function renderReviewsTable(reviews) {
                             <td>${new Date(review.created_at).toLocaleDateString('ru-RU')}</td>
                             <td>${getStatusBadge(review.status)}</td>
                             <td>
-                                ${review.status !== 'rejected' ? `<button class="btn-action btn-view" onclick="rejectReview(${review.id})">✗ Отклонить</button>` : ''}
-                                <button class="btn-action btn-delete" onclick="deleteReview(${review.id})">🗑 Удалить</button>
+                                ${review.status !== 'rejected' ? `<button class="btn-action btn-view" onclick="rejectReview(${review.id})"> Отклонить</button>` : ''}
+                                <button class="btn-action btn-delete" onclick="deleteReview(${review.id})"> Удалить</button>
                             </td>
                         </tr>
                     `).join('')

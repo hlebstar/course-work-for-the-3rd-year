@@ -845,7 +845,6 @@ async function checkAdminAuth() {
     }
 }
 
-// Выход из админ-панели
 async function adminLogout() {
     if (confirm('Вы уверены, что хотите выйти?')) {
         await fetch('/api/admin/logout', { method: 'POST' });
@@ -855,7 +854,6 @@ async function adminLogout() {
 
 checkAdminAuth();
 
-        // Бургер-меню
         const burgerBtn = document.getElementById('burgerBtn');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebarOverlay');
@@ -919,8 +917,8 @@ checkAdminAuth();
 
         function loadProfileData() {
             const settings = JSON.parse(localStorage.getItem('glamping_settings') || '{}');
-            document.getElementById('profileEmail').value = settings.adminEmail || 'admin@glamptime.ru';
-            document.getElementById('profilePhone').value = settings.adminPhone || '+7 (123) 456-78-90';
+            document.getElementById('profileEmail').value = settings.adminEmail || 'admin@gmail.com';
+            document.getElementById('profilePhone').value = settings.adminPhone || '+7 (999) 999-99-99';
         }
 
         function saveProfileData() {
@@ -959,8 +957,8 @@ checkAdminAuth();
             const settings = JSON.parse(localStorage.getItem('glamping_settings') || '{}');
             document.getElementById('siteName').value = settings.siteName || 'GlampTime';
             document.getElementById('siteDescription').value = settings.siteDescription || 'Уютные домики для идеального отдыха на природе';
-            document.getElementById('adminEmail').value = settings.adminEmail || 'admin@glamptime.ru';
-            document.getElementById('adminPhone').value = settings.adminPhone || '+7 (123) 456-78-90';
+            document.getElementById('adminEmail').value = settings.adminEmail || 'admin@gmail.com';
+            document.getElementById('adminPhone').value = settings.adminPhone || '+7 (999) 99-99-99';
             document.getElementById('socialInstagram').value = settings.socialInstagram || '';
             document.getElementById('socialTelegram').value = settings.socialTelegram || '';
             document.getElementById('socialFacebook').value = settings.socialFacebook || '';

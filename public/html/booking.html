@@ -7,13 +7,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root {
-            --forest-dark: #0a0f0a;
-            --accent-gold: #b7eb7c;
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-        }
-
         * {
             margin: 0;
             padding: 0;
@@ -22,92 +15,102 @@
 
         body {
             font-family: 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.9)), url('https://images.unsplash.com/photo-1445308394109-4ec2920981b1?w=1920');
-            background-size: cover;
-            background-attachment: fixed;
-            color: white;
             min-height: 100vh;
-        }
-
-        .navbar {
-            background: rgba(10, 15, 10, 0.95) !important;
-            padding: 1.5rem 0;
-            border-bottom: 1px solid rgba(255,215,0,0.2);
+            display: flex;
+            flex-direction: column;
             position: relative;
-            z-index: 100;
         }
 
-        .navbar-brand {
-            font-size: 1.5rem;
+        /* Фоновое изображение на весь экран */
+        .background-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('/images/photo_2026-04-07_15-18-07.jpg') center/cover no-repeat;
+            z-index: -1;
+        }
+
+        .background-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: -1;
+        }
+
+        /* Шапка поверх фото */
+        .top-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 30px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .logo {
+            color: #eff5ef;
+            font-size: 22px;
             font-weight: 300;
-            color: white !important;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+        }
+
+        .logo i {
+            margin-left: 5px;
+            font-size: 18px;
         }
 
         .burger-menu {
             display: none;
             flex-direction: column;
             cursor: pointer;
-            z-index: 101;
+            z-index: 20;
         }
 
         .burger-menu span {
             width: 25px;
             height: 3px;
-            background: white;
+            background: #eff5ef;
             margin: 3px 0;
             transition: 0.3s;
         }
 
-        .navbar-collapse {
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 35px;
+            margin: 0;
+            padding: 0;
             transition: 0.3s;
         }
 
-        @media (max-width: 768px) {
-            .burger-menu {
-                display: flex;
-            }
-            
-            .navbar-collapse {
-                position: fixed;
-                top: 0;
-                right: -100%;
-                width: 250px;
-                height: 100vh;
-                background: rgba(10, 15, 10, 0.98);
-                padding: 80px 30px;
-                transition: 0.3s;
-                z-index: 100;
-            }
-            
-            .navbar-collapse.active {
-                right: 0;
-            }
-            
-            .navbar-nav {
-                flex-direction: column;
-                gap: 20px;
-            }
-            
-            .nav-link {
-                font-size: 18px !important;
-            }
+        .nav-menu a {
+            color: rgba(239, 245, 239, 0.85);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 400;
+            transition: color 0.3s;
         }
 
-        .nav-link {
-            color: rgba(255,255,255,0.8) !important;
-            font-size: 0.9rem;
-            margin: 0 15px;
-            transition: 0.3s;
-        }
-
-        .nav-link:hover {
-            color: #95d470 !important;
+        .nav-menu a:hover {
+            color: #eff5ef;
         }
 
         .booking-container {
+            flex: 1;
             max-width: 1200px;
-            margin: 2rem auto;
+            margin: 120px auto 2rem;
             padding: 0 1rem;
+            position: relative;
+            z-index: 5;
         }
 
         .booking-grid {
@@ -116,18 +119,19 @@
             gap: 2rem;
         }
 
+        /* Левая колонка - форма */
         .booking-form-section {
-            background: rgba(0,0,0,0.4);
+            background: rgba(52, 65, 50, 0.479);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,215,0,0.2);
-            border-radius: 20px;
+            border-radius: 30px;
             padding: 2rem;
+            border: 1px solid rgba(239, 245, 239, 0.1);
         }
 
         .form-title {
             font-size: 1.5rem;
             margin-bottom: 1.5rem;
-            color: #8ad151;
+            color: #eff5ef;
         }
 
         .booking-tabs {
@@ -140,16 +144,17 @@
             flex: 1;
             padding: 0.8rem;
             background: rgba(255,255,255,0.05);
-            border-radius: 10px;
-            color: white;
+            border-radius: 12px;
+            color: #eff5ef;
             cursor: pointer;
             transition: 0.3s;
-            border: 1px solid rgba(255,215,0,0.3);
+            border: 1px solid rgba(239, 245, 239, 0.2);
         }
 
         .tab-btn.active {
-            background: #7f9373d5;
-            color: #fbfffb;
+            background: rgba(77, 153, 100, 0.3);
+            color: #eff5ef;
+            border-color: #7F9373;
         }
 
         .tab-content {
@@ -168,20 +173,24 @@
             display: block;
             margin-bottom: 0.5rem;
             font-size: 0.85rem;
-            color: rgba(255,255,255,0.7);
+            color: #eff5ef;
         }
 
         .form-group input, .form-group select {
             width: 100%;
             padding: 0.8rem;
             background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,215,0,0.3);
-            border-radius: 10px;
-            color: white;
+            border: 1px solid rgba(239, 245, 239, 0.2);
+            border-radius: 12px;
+            color: #eff5ef;
             outline: none;
         }
 
-        .form-group input:focus {
+        .form-group input::placeholder {
+            color: rgba(239, 245, 239, 0.5);
+        }
+
+        .form-group input:focus, .form-group select:focus {
             border-color: #7F9373;
         }
 
@@ -191,16 +200,17 @@
             gap: 1rem;
         }
 
+        /* Секция оплаты */
         .payment-section {
             margin-top: 1.5rem;
             padding-top: 1rem;
-            border-top: 1px solid rgba(255,215,0,0.3);
+            border-top: 1px solid rgba(239, 245, 239, 0.1);
         }
 
         .payment-title {
             font-size: 1.1rem;
             margin-bottom: 1rem;
-            color: #ffffff;
+            color: #eff5ef;
         }
 
         .payment-options {
@@ -214,16 +224,17 @@
             flex: 1;
             padding: 0.8rem;
             background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,215,0,0.3);
-            border-radius: 10px;
+            border: 1px solid rgba(239, 245, 239, 0.2);
+            border-radius: 12px;
             cursor: pointer;
             text-align: center;
             transition: 0.3s;
+            color: #eff5ef;
         }
 
         .payment-option.selected {
-            background: rgba(163, 196, 126, 0.2);
-            border-color: #ffffff4d;
+            background: rgba(77, 153, 100, 0.3);
+            border-color: #7F9373;
         }
 
         .payment-option input {
@@ -242,26 +253,27 @@
             align-items: center;
             gap: 0.5rem;
             padding: 0.5rem 1rem;
-            background: rgba(101, 151, 43, 0.308);
-            border-radius: 10px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
             cursor: pointer;
             transition: 0.3s;
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(239, 245, 239, 0.2);
+            color: #eff5ef;
         }
 
         .card-item.selected {
-            background: rgba(108, 146, 104, 0.822);
-            border-color: #6e8652;
+            background: rgba(77, 153, 100, 0.3);
+            border-color: #7F9373;
         }
 
         .cash-info {
-            background: rgba(255,215,0,0.1);
-            border-radius: 10px;
+            background: rgba(77, 153, 100, 0.15);
+            border-radius: 12px;
             padding: 0.8rem;
             margin-top: 0.5rem;
             text-align: center;
             font-size: 0.85rem;
-            color: #30cf22;
+            color: #a8d8a8;
         }
 
         .checkbox-group {
@@ -279,49 +291,55 @@
         .checkbox-group label {
             margin-bottom: 0;
             font-size: 0.8rem;
+            color: #eff5ef;
         }
 
+        /* Правая колонка */
         .booking-summary {
-            background: rgba(0,0,0,0.4);
+            background: rgba(52, 65, 50, 0.479);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(14, 182, 8, 0.2);
-            border-radius: 20px;
+            border-radius: 30px;
             padding: 2rem;
             position: sticky;
             top: 100px;
+            border: 1px solid rgba(239, 245, 239, 0.1);
         }
 
         .summary-title {
             font-size: 1.3rem;
             margin-bottom: 1rem;
-            color: #ffd700;
+            color: #eff5ef;
         }
 
         .summary-dates {
-            background: rgba(255,255,255,0.05);
+            background: rgba(77, 153, 100, 0.15);
             border-radius: 15px;
             padding: 1rem;
             margin-bottom: 1rem;
+            color: #eff5ef;
         }
 
         .summary-glamp {
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(239, 245, 239, 0.1);
             padding-bottom: 1rem;
             margin-bottom: 1rem;
+            color: #eff5ef;
         }
 
         .summary-price {
             margin-bottom: 1rem;
+            color: #eff5ef;
         }
 
         .summary-total {
-            border-top: 1px solid rgba(255,215,0,0.3);
+            border-top: 1px solid rgba(239, 245, 239, 0.1);
             padding-top: 1rem;
             margin-top: 1rem;
+            color: #eff5ef;
         }
 
         .summary-total .total-amount {
-            color: #ffd700;
+            color: #a8d8a8;
             font-size: 1.5rem;
             font-weight: bold;
         }
@@ -329,10 +347,10 @@
         .btn-submit {
             width: 100%;
             padding: 1rem;
-            background: #ffd700;
-            color: #0a0f0a;
+            background: #7F9373;
+            color: #eff5ef;
             border: none;
-            border-radius: 10px;
+            border-radius: 50px;
             font-weight: bold;
             font-size: 1.1rem;
             margin-top: 1rem;
@@ -341,62 +359,110 @@
         }
 
         .btn-submit:hover {
-            background: #e6c200;
+            background: #45573a;
             transform: translateY(-2px);
         }
 
         .btn-back {
             display: inline-block;
             margin-top: 1rem;
-            color: rgba(255,255,255,0.7);
+            color: rgba(239, 245, 239, 0.7);
             text-decoration: none;
         }
 
         .btn-back:hover {
-            color: #ffd700;
+            color: #a8d8a8;
         }
 
         @media (max-width: 768px) {
+            .top-header {
+                padding: 20px 5%;
+            }
+            
+            .burger-menu {
+                display: flex;
+            }
+            
+            .nav-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 250px;
+                height: 100vh;
+                background: rgba(10, 15, 10, 0.98);
+                flex-direction: column;
+                padding: 80px 30px;
+                gap: 25px;
+                transition: 0.3s;
+                z-index: 15;
+            }
+            
+            .nav-menu.active {
+                right: 0;
+            }
+            
+            .nav-menu a {
+                font-size: 18px;
+                color: #eff5ef;
+            }
+            
+            .booking-container {
+                margin-top: 100px;
+            }
+            
             .booking-grid {
                 grid-template-columns: 1fr;
             }
+            
             .form-row {
                 grid-template-columns: 1fr;
             }
+            
             .payment-options {
                 flex-direction: column;
             }
+            
             .booking-form-section {
                 padding: 1.5rem;
             }
+            
             .booking-summary {
                 padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .booking-form-section {
+                padding: 1rem;
+            }
+            
+            .booking-summary {
+                padding: 1rem;
             }
         }
     </style>
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg">
-        <div class="container">
-            <a class="navbar-brand" href="/index.html">GlampTime</a>
-            
-            <div class="burger-menu" id="burgerMenu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="/services.html">Услуги</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/glamps.html">Проживание</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/rasvlichenia.html">Развлечения</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/contact.html">Контакты</a></li>
-                </ul>
-            </div>
+    <div class="background-image"></div>
+    <div class="background-overlay"></div>
+
+    <header class="top-header">
+        <a class="logo" href="/">GlampTime <i class="fa-regular fa-clock"></i></a>
+        
+        <div class="burger-menu" id="burgerMenu">
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
-    </nav>
+        
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="/services.html">Услуги</a></li>
+            <li><a href="/glamps.html">Проживание</a></li>
+            <li><a href="/rasvlichenia.html">Развлечения</a></li>
+            <li><a href="/contact.html">Контакты</a></li>
+        </ul>
+    </header>
 
     <div class="booking-container">
         <div class="booking-grid">
@@ -413,25 +479,25 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label>Фамилия *</label>
-                                <input type="text" id="selfLastName" placeholder="Иванов">
+                                <input type="text" id="selfLastName" placeholder="Мария">
                             </div>
                             <div class="form-group">
                                 <label>Имя *</label>
-                                <input type="text" id="selfFirstName" placeholder="Иван">
+                                <input type="text" id="selfFirstName" placeholder="Петрова">
                             </div>
                         </div>
                         <div class="form-group">
                             <label>Отчество</label>
-                            <input type="text" id="selfMiddleName" placeholder="Иванович">
+                            <input type="text" id="selfMiddleName" placeholder="Сергеевна">
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label>Номер телефона *</label>
-                                <input type="tel" id="selfPhone" placeholder="+7 (999) 123-45-67">
+                                <input type="tel" id="selfPhone" placeholder="+7 (999) 999-99-99">
                             </div>
                             <div class="form-group">
                                 <label>Электронная почта *</label>
-                                <input type="email" id="selfEmail" placeholder="ivan@mail.com">
+                                <input type="email" id="selfEmail" placeholder="maria@gmail.com">
                             </div>
                         </div>
                         <div class="form-row">
@@ -448,8 +514,6 @@
                                     <option value="UA">🇺🇦 Украина</option>
                                     <option value="AM">🇦🇲 Армения</option>
                                     <option value="GE">🇬🇪 Грузия</option>
-                                    <option value="UZ">🇺🇿 Узбекистан</option>
-                                    <option value="KG">🇰🇬 Кыргызстан</option>
                                 </select>
                             </div>
                         </div>
@@ -473,11 +537,11 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label>Номер телефона *</label>
-                                <input type="tel" id="otherPhone" placeholder="+7 (999) 123-45-67">
+                                <input type="tel" id="otherPhone" placeholder="+7 (999) 999-99-99">
                             </div>
                             <div class="form-group">
                                 <label>Электронная почта *</label>
-                                <input type="email" id="otherEmail" placeholder="maria@mail.com">
+                                <input type="email" id="otherEmail" placeholder="maria@gmail.com">
                             </div>
                         </div>
                         <div class="form-row">
@@ -494,8 +558,6 @@
                                     <option value="UA">🇺🇦 Украина</option>
                                     <option value="AM">🇦🇲 Армения</option>
                                     <option value="GE">🇬🇪 Грузия</option>
-                                    <option value="UZ">🇺🇿 Узбекистан</option>
-                                    <option value="KG">🇰🇬 Кыргызстан</option>
                                 </select>
                             </div>
                         </div>
@@ -517,10 +579,10 @@
                             <h3 class="payment-title" style="margin-top: 1rem;">Выберите способ оплаты</h3>
                             <div class="card-selector" id="cardSelector">
                                 <div class="card-item selected" data-card="sber">
-                                    <span> Сбербанк</span>
+                                    <span>Сбербанк</span>
                                 </div>
                                 <div class="card-item" data-card="tinkoff">
-                                    <span>Тинькофф</span>
+                                    <span> Тинькофф</span>
                                 </div>
                                 <div class="card-item" data-card="yandex">
                                     <span> Яндекс.Деньги</span>
@@ -545,21 +607,18 @@
                         </div>
                     </div>
 
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="smsConfirm">
-                        <label>Пришлите мне подтверждение на телефон</label>
-                    </div>
+                  
                     <div class="checkbox-group">
                         <input type="checkbox" id="offersAgree">
                         <label>Я даю согласие на получение специальных предложений и новостей</label>
                     </div>
                     <div class="checkbox-group">
                         <input type="checkbox" id="privacyAgree" required>
-                        <label>Я даю согласие на обработку персональных данных и подтверждаю ознакомление с <a href="#" style="color: #ffd700;">пользовательским соглашением</a> и <a href="#" style="color: #ffd700;">политикой конфиденциальности</a> *</label>
+                        <label>Я даю согласие на обработку персональных данных и подтверждаю ознакомление с <a href="#" style="color: #a8d8a8;">пользовательским соглашением</a> и <a href="#" style="color: #a8d8a8;">политикой конфиденциальности</a> *</label>
                     </div>
 
                     <div class="summary-services" id="servicesSection" style="margin-bottom: 1rem;">
-                        <h4 style="font-size: 1rem; margin-bottom: 0.5rem; color: #ffd700;">Дополнительные услуги:</h4>
+                        <h4 style="font-size: 1rem; margin-bottom: 0.5rem; color: #a8d8a8;">Дополнительные услуги:</h4>
                         <div id="selectedServicesList"></div>
                     </div>
                 </form>
@@ -589,7 +648,7 @@
                 </div>
 
                 <button type="button" class="btn-submit" id="submitBookingBtn">Забронировать</button>
-                <a href="/glamps.html" class="btn-back"><i class="fas fa-arrow-left"></i> Назад к домикам</a>
+                <a href="/glamps.html" class="btn-back"> Назад к домикам</a>
             </div>
         </div>
     </div>
@@ -599,35 +658,54 @@
     <script src="/js/booking.js"></script>
     <script>
         const burgerMenu = document.getElementById('burgerMenu');
-        const navbarCollapse = document.getElementById('navbarNav');
+        const navMenu = document.getElementById('navMenu');
         
         if (burgerMenu) {
             burgerMenu.addEventListener('click', function() {
-                navbarCollapse.classList.toggle('active');
+                navMenu.classList.toggle('active');
+                burgerMenu.classList.toggle('active');
                 
                 const spans = burgerMenu.querySelectorAll('span');
-                if (navbarCollapse.classList.contains('active')) {
+                if (burgerMenu.classList.contains('active')) {
                     spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
                     spans[1].style.opacity = '0';
                     spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
+                    document.body.style.overflow = 'hidden';
                 } else {
                     spans[0].style.transform = 'none';
                     spans[1].style.opacity = '1';
                     spans[2].style.transform = 'none';
+                    document.body.style.overflow = '';
                 }
             });
         }
         
-        document.querySelectorAll('.nav-link').forEach(link => {
+        // Закрытие меню при клике на ссылку
+        document.querySelectorAll('.nav-menu a').forEach(link => {
             link.addEventListener('click', () => {
-                navbarCollapse.classList.remove('active');
-                if (burgerMenu) {
+                navMenu.classList.remove('active');
+                if (burgerMenu) burgerMenu.classList.remove('active');
+                const spans = burgerMenu.querySelectorAll('span');
+                spans[0].style.transform = 'none';
+                spans[1].style.opacity = '1';
+                spans[2].style.transform = 'none';
+                document.body.style.overflow = '';
+            });
+        });
+        
+        // Закрытие при клике вне меню
+        document.addEventListener('click', function(event) {
+            if (navMenu.classList.contains('active')) {
+                if (!burgerMenu.contains(event.target) && !navMenu.contains(event.target)) {
+                    navMenu.classList.remove('active');
+                    burgerMenu.classList.remove('active');
                     const spans = burgerMenu.querySelectorAll('span');
                     spans[0].style.transform = 'none';
                     spans[1].style.opacity = '1';
                     spans[2].style.transform = 'none';
+                    document.body.style.overflow = '';
                 }
-            });
+            }
         });
     </script>
 </body>
