@@ -452,7 +452,7 @@ app.get('/api/glamps/:id', async (req, res) => {
     }
 });
 
-
+//создание бронирования
 app.post('/api/bookings', async (req, res) => {
     const token = req.cookies.token;
     let userId = null;

@@ -42,96 +42,73 @@ P.S - глэмпинг это разновидность кемпинга, об�
 - **Язык программирования:** JavaScript (ES6+).
 
 ---
-Архитетура проекта 
+
+###   Структура проекта
+
+```bash
 glamptime/
-├── server.js
-├── app.js
-├── package.json
-├── .env
-├── .env.example
-├── .gitignore
-├── README.md
+├── server.js                 
+├──  app.js                    
 │
-├── public/                          
-│   ├── css/                         
-│   ├── js/                          
-│   ├── images/                      
-│   └── html/                       
+├──  public/                   
+├──  views/                    
 │
-├── views/                           
-│   └── partials/               
+├──  src/                      
+│   │
+│   ├──  config/               
+│   │   ├── database.js          
+│   │   └── env.js               
+│   │
+│   ├──  models/              
+│   │   ├── User.js              
+│   │   ├── Glamp.js             
+│   │   ├── Booking.js           
+│   │   └── Review.js            
+│   │
+│   ├──  controllers/         
+│   │   ├── userController.js    
+│   │   ├── glampController.js   
+│   │   ├── bookingController.js 
+│   │   └── reviewController.js  
+│   │
+│   ├──  services/             
+│   │   ├── userService.js       
+│   │   ├── glampService.js      
+│   │   ├── bookingService.js    
+│   │   └── emailService.js      
+│   │
+│   ├──  routes/               
+│   │   ├── userRoutes.js        
+│   │   ├── glampRoutes.js       
+│   │   ├── bookingRoutes.js    
+│   │   └── reviewRoutes.js      
+│   │
+│   ├──  middleware/           
+│   │   ├── auth.js              
+│   │   ├── admin.js             
+│   │   ├── validate.js          
+│   │   └── errorHandler.js      
+│   │
+│   ├──  validations/          
+│   │   ├── userValidation.js    
+│   │   ├── glampValidation.js   
+│   │   └── bookingValidation.js 
+│   │
+│   ├── utils/                
+│   │   ├── logger.js            
+│   │   ├── AppError.js          
+│   │   └── helpers.js           
+│   │
+│   └──  jobs/                 
+│       └── cleanupBookings.js   
 │
-├── src/
-│   ├── config/
-│   │   ├── database.js
-│   │   └── env.js
-│   │
-│   ├── models/
-│   │   ├── index.js
-│   │   ├── User.js
-│   │   ├── Glamp.js
-│   │   ├── Booking.js
-│   │   └── Review.js
-│   │
-│   ├── controllers/
-│   │   ├── userController.js
-│   │   ├── glampController.js
-│   │   ├── bookingController.js
-│   │   └── reviewController.js
-│   │
-│   ├── routes/
-│   │   ├── index.js
-│   │   ├── userRoutes.js
-│   │   ├── glampRoutes.js
-│   │   ├── bookingRoutes.js
-│   │   └── reviewRoutes.js
-│   │
-│   ├── services/
-│   │   ├── userService.js
-│   │   ├── glampService.js
-│   │   ├── bookingService.js
-│   │   └── emailService.js
-│   │
-│   ├── middleware/
-│   │   ├── auth.js
-│   │   ├── admin.js
-│   │   ├── validate.js
-│   │   └── errorHandler.js
-│   │
-│   ├── validations/
-│   │   ├── userValidation.js
-│   │   ├── glampValidation.js
-│   │   └── bookingValidation.js
-│   │
-│   ├── utils/
-│   │   ├── logger.js
-│   │   ├── AppError.js
-│   │   └── helpers.js
-│   │
-│   └── jobs/
-│       └── cleanupBookings.js
-│
-└── tests/
-    ├── unit/
-    │   ├── booking.test.js
-    │   ├── payment.test.js
-    │   ├── validation.test.js
-    │   └── error-handling.test.js
-    │
-    ├── integration/
-    │   ├── api.test.js
-    │   ├── booking-flow.test.js
-    │   ├── database.test.js
-    │   └── scenarios.test.js
-    │
-    ├── security/
-    │   └── security.test.js
-    │
-    ├── performance/
-    │   └── perf.test.js
-    │
-    └── load/
-        └── load-test.js
+└──  tests/                    
+    ├── unit/                    
+    ├── integration/             
+    ├── security/                
+    ├── performance/             
+    └── load/                    
+```
 
 ## Установка и запуск
 ### 1. Установите Node.js

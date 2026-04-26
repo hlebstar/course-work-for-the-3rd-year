@@ -178,7 +178,7 @@ function getCardName(cardValue) {
     };
     return cards[cardValue] || cardValue;
 }
-
+// отправка бронирования
 async function submitBooking() {
     console.log(' Начинаем отправку бронирования...');
     
