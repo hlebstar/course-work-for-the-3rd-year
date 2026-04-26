@@ -832,18 +832,14 @@
     <script>
 
 // Проверка авторизации администратора
-async function checkAdminAuth() {
-    try {
-        const response = await fetch('/api/admin/check');
-        const result = await response.json();
-        
-        if (!result.authenticated) {
-            window.location.href = '/admin-login.html';
-        }
-    } catch (error) {
+function checkAdminAuth() {
+    const isAuth = localStorage.getItem('admin_authenticated');
+    if (isAuth !== 'true') {
         window.location.href = '/admin-login.html';
     }
 }
+
+checkAdminAuth();
 
 async function adminLogout() {
     if (confirm('Вы уверены, что хотите выйти?')) {

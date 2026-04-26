@@ -56,59 +56,106 @@ function updateSummary() {
     const servicesTotal = displaySelectedServices();
     const totalPrice = glampTotal + servicesTotal;
     
-    document.getElementById('summaryNights').textContent = nights;
-    document.getElementById('summaryCheckIn').textContent = formatDate(bookingData.checkIn);
-    document.getElementById('summaryCheckOut').textContent = formatDate(bookingData.checkOut);
-    document.getElementById('glampName').textContent = glampData.name;
-    document.getElementById('glampPrice').textContent = glampData.price_per_night.toLocaleString();
-    document.getElementById('glampGuests').innerHTML = `${bookingData.guests} взрослых`;
-    document.getElementById('basePrice').textContent = glampTotal.toLocaleString();
-    document.getElementById('totalPrice').textContent = totalPrice.toLocaleString();
+    const summaryNights = document.getElementById('summaryNights');
+    const summaryCheckIn = document.getElementById('summaryCheckIn');
+    const summaryCheckOut = document.getElementById('summaryCheckOut');
+    const glampName = document.getElementById('glampName');
+    const glampPrice = document.getElementById('glampPrice');
+    const glampGuests = document.getElementById('glampGuests');
+    const basePrice = document.getElementById('basePrice');
+    const totalPriceEl = document.getElementById('totalPrice');
+    
+    if (summaryNights) summaryNights.textContent = nights;
+    if (summaryCheckIn) summaryCheckIn.textContent = formatDate(bookingData.checkIn);
+    if (summaryCheckOut) summaryCheckOut.textContent = formatDate(bookingData.checkOut);
+    if (glampName) glampName.textContent = glampData.name;
+    if (glampPrice) glampPrice.textContent = glampData.price_per_night.toLocaleString();
+    if (glampGuests) glampGuests.innerHTML = `${bookingData.guests} взрослых`;
+    if (basePrice) basePrice.textContent = glampTotal.toLocaleString();
+    if (totalPriceEl) totalPriceEl.textContent = totalPrice.toLocaleString();
     
     updatePaymentText();
 }
+
 function updatePaymentText() {
-    const selectedPayment = document.querySelector('input[name="paymentType"]:checked').value;
-    const totalPrice = parseInt(document.getElementById('totalPrice').textContent);
+    const selectedPaymentRadio = document.querySelector('input[name="paymentType"]:checked');
+    const totalPriceEl = document.getElementById('totalPrice');
+    const paymentStatusText = document.getElementById('paymentStatusText');
+    
+    if (!selectedPaymentRadio || !totalPriceEl || !paymentStatusText) {
+        console.warn('Элементы оплаты не найдены на странице');
+        return;
+    }
+    
+    const selectedPayment = selectedPaymentRadio.value;
+    const totalPrice = parseInt(totalPriceEl.textContent) || 0;
+    const totalPaySpan = document.querySelector('#paymentStatusText .total-amount');
     
     if (selectedPayment === 'prepayment') {
-        document.getElementById('paymentStatusText').innerHTML = `К оплате сейчас <span class="total-amount" id="totalPay">${totalPrice.toLocaleString()}</span> ₽`;
+        paymentStatusText.innerHTML = `К оплате сейчас <span class="total-amount" id="totalPay">${totalPrice.toLocaleString()}</span> ₽`;
     } else {
-        document.getElementById('paymentStatusText').innerHTML = `К оплате при заселении <span class="total-amount" id="totalPay">${totalPrice.toLocaleString()}</span> ₽`;
+        paymentStatusText.innerHTML = `К оплате при заселении <span class="total-amount" id="totalPay">${totalPrice.toLocaleString()}</span> ₽`;
     }
 }
 
 function getFormData() {
-    const activeTab = document.querySelector('.tab-btn.active').getAttribute('data-tab');
-    const isSelf = activeTab === 'self';
+    const formData = {};
     
-    const lastName = isSelf ? document.getElementById('selfLastName').value.trim() : document.getElementById('otherLastName').value.trim();
-    const firstName = isSelf ? document.getElementById('selfFirstName').value.trim() : document.getElementById('otherFirstName').value.trim();
-    const middleName = isSelf ? document.getElementById('selfMiddleName').value.trim() : document.getElementById('otherMiddleName').value.trim();
-    const phone = isSelf ? document.getElementById('selfPhone').value.trim() : document.getElementById('otherPhone').value.trim();
-    const email = isSelf ? document.getElementById('selfEmail').value.trim() : document.getElementById('otherEmail').value.trim();
-    const birthDate = isSelf ? document.getElementById('selfBirthDate').value : document.getElementById('otherBirthDate').value;
-    const citizenship = isSelf ? document.getElementById('selfCitizenship').value : document.getElementById('otherCitizenship').value;
-    const smsConfirm = document.getElementById('smsConfirm').checked;
-    const offersAgree = document.getElementById('offersAgree').checked;
-    const privacyAgree = document.getElementById('privacyAgree').checked;
-    const paymentType = document.querySelector('input[name="paymentType"]:checked').value;
-    const selectedCard = document.getElementById('selectedCard').value;
+    const activeTab = document.querySelector('.tab-btn.active');
+    const isSelfTab = activeTab && activeTab.getAttribute('data-tab') === 'self';
     
-    return {
-        lastName, firstName, middleName, phone, email, birthDate, citizenship,
-        smsConfirm, offersAgree, privacyAgree, isSelf, paymentType, selectedCard
-    };
+    // Получаем значения в зависимости от активной вкладки
+    if (isSelfTab) {
+        formData.lastName = document.getElementById('selfLastName')?.value || '';
+        formData.firstName = document.getElementById('selfFirstName')?.value || '';
+        formData.middleName = document.getElementById('selfMiddleName')?.value || '';
+        formData.phone = document.getElementById('selfPhone')?.value || '';
+        formData.email = document.getElementById('selfEmail')?.value || '';
+        formData.birthDate = document.getElementById('selfBirthDate')?.value || '';
+        formData.citizenship = document.getElementById('selfCitizenship')?.value || 'RU';
+        formData.isSelf = true;
+    } else {
+        formData.lastName = document.getElementById('otherLastName')?.value || '';
+        formData.firstName = document.getElementById('otherFirstName')?.value || '';
+        formData.middleName = document.getElementById('otherMiddleName')?.value || '';
+        formData.phone = document.getElementById('otherPhone')?.value || '';
+        formData.email = document.getElementById('otherEmail')?.value || '';
+        formData.birthDate = document.getElementById('otherBirthDate')?.value || '';
+        formData.citizenship = document.getElementById('otherCitizenship')?.value || 'RU';
+        formData.isSelf = false;
+    }
+    
+    const paymentTypeRadio = document.querySelector('input[name="paymentType"]:checked');
+    formData.paymentType = paymentTypeRadio ? paymentTypeRadio.value : 'prepayment';
+    
+    // Выбранная карта
+    const selectedCardInput = document.getElementById('selectedCard');
+    formData.selectedCard = selectedCardInput ? selectedCardInput.value : 'sber';
+    
+    // Согласия
+    const privacyAgree = document.getElementById('privacyAgree');
+    formData.privacyAgree = privacyAgree ? privacyAgree.checked : false;
+    
+    const offersAgree = document.getElementById('offersAgree');
+    formData.offersAgree = offersAgree ? offersAgree.checked : false;
+    
+    console.log(' Собранные данные формы:', formData);
+    return formData;
 }
 
 function validateForm(formData) {
     if (!formData.lastName || !formData.firstName || !formData.phone || !formData.email) {
-        alert('Пожалуйста, заполните все обязательные поля (Фамилия, Имя, Телефон, Email)');
+        let missingFields = [];
+        if (!formData.lastName) missingFields.push('Фамилия');
+        if (!formData.firstName) missingFields.push('Имя');
+        if (!formData.phone) missingFields.push('Телефон');
+        if (!formData.email) missingFields.push('Email');
+        alert(`Пожалуйста, заполните все обязательные поля: ${missingFields.join(', ')}`);
         return false;
     }
     
     if (!formData.email.includes('@')) {
-        alert('Введите корректный email');
+        alert('Введите корректный email (например: name@mail.ru)');
         return false;
     }
     
@@ -133,7 +180,7 @@ function getCardName(cardValue) {
 }
 
 async function submitBooking() {
-    console.log('🚀 Начинаем отправку бронирования...');
+    console.log(' Начинаем отправку бронирования...');
     
     const formData = getFormData();
     
@@ -143,7 +190,6 @@ async function submitBooking() {
     
     const bookingData = getBookingDataFromStorage();
     const glampData = getGlampDataFromStorage();
-    const selectedServices = loadSelectedServices();
     
     if (!bookingData || !glampData) {
         alert('Ошибка: данные о бронировании не найдены');
@@ -152,65 +198,55 @@ async function submitBooking() {
     }
     
     const nights = calculateNights(bookingData.checkIn, bookingData.checkOut);
-    const glampTotal = glampData.price_per_night * nights;
-    const servicesTotal = selectedServices.reduce((sum, s) => sum + s.price, 0);
-    const totalPrice = glampTotal + servicesTotal;
-    
-    const fullName = `${formData.lastName} ${formData.firstName} ${formData.middleName}`.trim();
-    
-    const paymentTypeText = formData.paymentType === 'prepayment' ? 'Полная предоплата' : 'Оплата после заселения';
-    const paymentCard = formData.paymentType === 'prepayment' ? getCardName(formData.selectedCard) : 'Наличные/Карта при заселении';
-    
-    // Данные для отправки на сервер
-    const bookingPayload = {
-        glamp_id: glampData.id,
-        user_name: fullName,
-        user_email: formData.email,
-        user_phone: formData.phone,
-        user_comment: `Бронирование для ${formData.isSelf ? 'себя' : 'другого'}. Оплата: ${paymentTypeText}. ${formData.paymentType === 'prepayment' ? `Карта: ${paymentCard}` : 'Оплата на месте'}`,
-        check_in: bookingData.checkIn,
-        check_out: bookingData.checkOut,
-        guests: bookingData.guests,
-        nights: nights,
-        total_price: totalPrice
-    };
+    const totalPrice = glampData.price_per_night * nights;
+    const fullName = `${formData.lastName} ${formData.firstName} ${formData.middleName || ''}`.trim();
+   const bookingPayload = {
+    user_name: fullName,
+    user_email: formData.email,
+    user_phone: formData.phone,
+    glamp_name: glampData.name,
+    glamp_price: glampData.price_per_night,
+    check_in: bookingData.checkIn,
+    check_out: bookingData.checkOut,
+    guests: bookingData.guests,
+    total_price: totalPrice
+};
     
     console.log(' Отправляем запрос на сервер:', bookingPayload);
     
     try {
-        // Отправляем запрос на сервер
         const response = await fetch('/api/bookings', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(bookingPayload)
         });
         
-        const result = await response.json();
-        console.log('Ответ сервера:', result);
+        const text = await response.text();
+        console.log('Ответ сервера (текст):', text);
+        
+        let result;
+        try {
+            result = JSON.parse(text);
+        } catch(e) {
+            result = { success: false, error: text };
+        }
         
         if (result.success) {
-            // Сохраняем в sessionStorage для страницы успеха
-            sessionStorage.setItem('lastBooking', JSON.stringify({
-                bookingId: result.data.id,
-                glampName: glampData.name,
-                checkIn: bookingData.checkIn,
-                checkOut: bookingData.checkOut,
-                guests: bookingData.guests,
-                nights: nights,
-                totalPrice: totalPrice,
-                userName: fullName,
-                paymentCard: paymentCard,
-                paymentType: paymentTypeText
-            }));
-            
-            // Очищаем временные данные
-            localStorage.removeItem('glampingBooking');
-            localStorage.removeItem('selectedGlamp');
-            localStorage.removeItem('selectedServices');
-            
-            alert(' Бронирование успешно создано!');
-            window.location.href = '/booking-success.html';
-        } else {
+   const bookingInfo = {
+        bookingId: result.data.id,
+        glampName: glampData.name,
+        checkIn: bookingData.checkIn,
+        checkOut: bookingData.checkOut,
+        guests: bookingData.guests,
+        nights: nights,
+        totalPrice: totalPrice,
+        userName: fullName
+    };
+    sessionStorage.setItem('lastBooking', JSON.stringify(bookingInfo));
+    
+    alert(' Бронирование успешно создано!');
+    window.location.href = '/booking-success.html';
+}else {
             alert(' Ошибка: ' + (result.error || 'Не удалось создать бронирование'));
         }
     } catch (error) {
@@ -227,20 +263,29 @@ function initTabs() {
             tab.classList.add('active');
             
             const tabId = tab.getAttribute('data-tab');
-            document.getElementById('selfTab').classList.remove('active');
-            document.getElementById('otherTab').classList.remove('active');
-            document.getElementById(`${tabId}Tab`).classList.add('active');
+            const selfTab = document.getElementById('selfTab');
+            const otherTab = document.getElementById('otherTab');
+            
+            if (selfTab) selfTab.classList.remove('active');
+            if (otherTab) otherTab.classList.remove('active');
+            
+            if (tabId === 'self' && selfTab) selfTab.classList.add('active');
+            if (tabId === 'other' && otherTab) otherTab.classList.add('active');
         });
     });
 }
 
 function initCardSelector() {
     const cardItems = document.querySelectorAll('.card-item');
+    const selectedCardInput = document.getElementById('selectedCard');
+    
     cardItems.forEach(card => {
         card.addEventListener('click', () => {
             cardItems.forEach(c => c.classList.remove('selected'));
             card.classList.add('selected');
-            document.getElementById('selectedCard').value = card.getAttribute('data-card');
+            if (selectedCardInput) {
+                selectedCardInput.value = card.getAttribute('data-card');
+            }
         });
     });
 }
@@ -251,39 +296,30 @@ function initPaymentOptions() {
     const onlinePaymentBlock = document.getElementById('onlinePaymentBlock');
     const afterStayBlock = document.getElementById('afterStayBlock');
     
-    prepaymentOption.addEventListener('click', () => {
-        prepaymentOption.classList.add('selected');
-        afterStayOption.classList.remove('selected');
-        const radio = prepaymentOption.querySelector('input[type="radio"]');
-        if (radio) radio.checked = true;
-        onlinePaymentBlock.style.display = 'block';
-        afterStayBlock.style.display = 'none';
-        updatePaymentText();
-    });
+    if (prepaymentOption) {
+        prepaymentOption.addEventListener('click', () => {
+            prepaymentOption.classList.add('selected');
+            if (afterStayOption) afterStayOption.classList.remove('selected');
+            const radio = prepaymentOption.querySelector('input[type="radio"]');
+            if (radio) radio.checked = true;
+            if (onlinePaymentBlock) onlinePaymentBlock.style.display = 'block';
+            if (afterStayBlock) afterStayBlock.style.display = 'none';
+            updatePaymentText();
+        });
+    }
     
-    afterStayOption.addEventListener('click', () => {
-        afterStayOption.classList.add('selected');
-        prepaymentOption.classList.remove('selected');
-        const radio = afterStayOption.querySelector('input[type="radio"]');
-        if (radio) radio.checked = true;
-        onlinePaymentBlock.style.display = 'none';
-        afterStayBlock.style.display = 'block';
-        updatePaymentText();
-    });
+    if (afterStayOption) {
+        afterStayOption.addEventListener('click', () => {
+            afterStayOption.classList.add('selected');
+            if (prepaymentOption) prepaymentOption.classList.remove('selected');
+            const radio = afterStayOption.querySelector('input[type="radio"]');
+            if (radio) radio.checked = true;
+            if (onlinePaymentBlock) onlinePaymentBlock.style.display = 'none';
+            if (afterStayBlock) afterStayBlock.style.display = 'block';
+            updatePaymentText();
+        });
+    }
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    updateSummary();
-    initTabs();
-    initCardSelector();
-    initPaymentOptions();
-    document.getElementById('submitBookingBtn').addEventListener('click', submitBooking);
-    
-    const paymentRadios = document.querySelectorAll('input[name="paymentType"]');
-    paymentRadios.forEach(radio => {
-        radio.addEventListener('change', updatePaymentText);
-    });
-});
 
 function loadSelectedServices() {
     const selectedServices = JSON.parse(localStorage.getItem('selectedServices') || '[]');
@@ -294,7 +330,7 @@ function displaySelectedServices() {
     const selectedServices = loadSelectedServices();
     const servicesContainer = document.getElementById('selectedServicesList');
     
-    if (!servicesContainer) return;
+    if (!servicesContainer) return 0;
     
     if (selectedServices.length === 0) {
         servicesContainer.innerHTML = '<p style="color: rgba(255,255,255,0.5);">Нет добавленных услуг</p>';
@@ -326,9 +362,31 @@ function updateTotalWithServices() {
     const servicesTotal = displaySelectedServices();
     const totalPrice = glampTotal + (servicesTotal || 0);
     
-    document.getElementById('basePrice').textContent = glampTotal.toLocaleString();
-    document.getElementById('totalPrice').textContent = totalPrice.toLocaleString();
-    document.getElementById('totalPay').textContent = totalPrice.toLocaleString();
+    const basePrice = document.getElementById('basePrice');
+    const totalPriceEl = document.getElementById('totalPrice');
+    const totalPay = document.getElementById('totalPay');
+    
+    if (basePrice) basePrice.textContent = glampTotal.toLocaleString();
+    if (totalPriceEl) totalPriceEl.textContent = totalPrice.toLocaleString();
+    if (totalPay) totalPay.textContent = totalPrice.toLocaleString();
     
     return totalPrice;
 }
+
+// Инициализация страницы
+document.addEventListener('DOMContentLoaded', () => {
+    updateSummary();
+    initTabs();
+    initCardSelector();
+    initPaymentOptions();
+    
+    const submitBtn = document.getElementById('submitBookingBtn');
+    if (submitBtn) {
+        submitBtn.addEventListener('click', submitBooking);
+    }
+    
+    const paymentRadios = document.querySelectorAll('input[name="paymentType"]');
+    paymentRadios.forEach(radio => {
+        radio.addEventListener('change', updatePaymentText);
+    });
+});

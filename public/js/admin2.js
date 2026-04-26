@@ -85,71 +85,117 @@ async function initCharts() {
     if (!ctx1 || !ctx2) return;
     
     try {
-        const response = await fetch('/api/charts-data');
-        const result = await response.json();
+        // Сначала получаем данные бронирований из БД
+        const bookingsRes = await fetch('/api/bookings');
+        const bookingsResult = await bookingsRes.json();
         
-        if (result.success && result.data) {
-            const months = ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'];
-            const monthlyData = new Array(12).fill(0);
-            
-            if (result.data.bookingsByMonth && result.data.bookingsByMonth.length > 0) {
-                result.data.bookingsByMonth.forEach(item => {
-                    const monthIndex = parseInt(item.month) - 1;
-                    if (monthIndex >= 0 && monthIndex < 12) {
-                        monthlyData[monthIndex] = parseInt(item.count);
-                    }
-                });
-            }
-            
-            if (bookingsChart) bookingsChart.destroy();
-            bookingsChart = new Chart(ctx1, {
-                type: 'line',
-                data: {
-                    labels: months,
-                    datasets: [{
-                        label: 'Бронирования',
-                        data: monthlyData,
-                        borderColor: '#a3e635',
-                        backgroundColor: 'rgba(163, 230, 53, 0.1)',
-                        borderWidth: 2,
-                        tension: 0.4,
-                        fill: true,
-                        pointBackgroundColor: '#a3e635',
-                        pointBorderColor: '#fff',
-                        pointRadius: 4
-                    }]
-                },
-                options: { 
-                    responsive: true, 
-                    maintainAspectRatio: true,
-                    plugins: { legend: { labels: { color: '#fff' } } },
-                    scales: {
-                        y: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#fff' } },
-                        x: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#fff' } }
-                    }
+        let monthlyData = new Array(12).fill(0);
+        
+        if (bookingsResult.success && bookingsResult.data) {
+            // Группируем бронирования по месяцам
+            bookingsResult.data.forEach(booking => {
+                if (booking.created_at) {
+                    const date = new Date(booking.created_at);
+                    const month = date.getMonth();
+                    monthlyData[month]++;
                 }
             });
-            
-            let glampNames = [];
-            let glampCounts = [];
-            
-            if (result.data.popularGlamps && result.data.popularGlamps.length > 0) {
-                glampNames = result.data.popularGlamps.map(g => g.name);
-                glampCounts = result.data.popularGlamps.map(g => parseInt(g.bookings_count));
+        }
+        
+        // График бронирований
+        const months = ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'];
+        
+        if (bookingsChart) bookingsChart.destroy();
+        bookingsChart = new Chart(ctx1, {
+            type: 'line',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: 'Бронирования',
+                    data: monthlyData,
+                    borderColor: '#a3e635',
+                    backgroundColor: 'rgba(163, 230, 53, 0.1)',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: '#a3e635',
+                    pointBorderColor: '#fff',
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: { legend: { labels: { color: '#fff' } } },
+                scales: {
+                    y: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#fff' } },
+                    x: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#fff' } }
+                }
             }
+        });
+        
+        // Получаем популярность домиков (группировка по glamp_id)
+        let popularityData = {};
+        
+        if (bookingsResult.success && bookingsResult.data) {
+            bookingsResult.data.forEach(booking => {
+                const glampId = booking.glamp_id;
+                if (popularityData[glampId]) {
+                    popularityData[glampId]++;
+                } else {
+                    popularityData[glampId] = 1;
+                }
+            });
+        }
+        
+        // Получаем названия домиков
+        const glampsRes = await fetch('/api/glamps');
+        const glampsResult = await glampsRes.json();
+        
+        let glampNames = [];
+        let glampCounts = [];
+        
+        if (glampsResult.success && glampsResult.data) {
+            // Создаём карту ID -> название
+            const glampMap = {};
+            glampsResult.data.forEach(g => {
+                glampMap[g.id] = g.name;
+            });
             
-            if (popularityChart) popularityChart.destroy();
+            // Заполняем данные для графика
+            for (const [id, count] of Object.entries(popularityData)) {
+                glampNames.push(glampMap[id] || id.substring(0, 8));
+                glampCounts.push(count);
+            }
+        }
+        
+        if (popularityChart) popularityChart.destroy();
+        
+        if (glampNames.length === 0) {
             popularityChart = new Chart(ctx2, {
                 type: 'pie',
                 data: {
-                    labels: glampNames.length ? glampNames : ['Нет данных'],
+                    labels: ['Нет данных'],
+                    datasets: [{ data: [1], backgroundColor: ['#a3e635'] }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { position: 'right', labels: { color: '#fff', font: { size: 11 } } } }
+                }
+            });
+        } else {
+            popularityChart = new Chart(ctx2, {
+                type: 'pie',
+                data: {
+                    labels: glampNames,
                     datasets: [{
-                        data: glampNames.length ? glampCounts : [1],
+                        data: glampCounts,
                         backgroundColor: ['#a3e635', '#84cc16', '#65a30d', '#4d7c0f', '#3f6212', '#22c55e', '#16a34a', '#15803d']
                     }]
                 },
-                options: { 
-                    responsive: true, 
+                options: {
+                    responsive: true,
                     maintainAspectRatio: true,
                     plugins: { legend: { position: 'right', labels: { color: '#fff', font: { size: 11 } } } }
                 }
@@ -157,6 +203,20 @@ async function initCharts() {
         }
     } catch (error) {
         console.error('Ошибка загрузки графиков:', error);
+        // Показываем графики-заглушки
+        if (bookingsChart) bookingsChart.destroy();
+        bookingsChart = new Chart(ctx1, {
+            type: 'line',
+            data: { labels: months, datasets: [{ label: 'Нет данных', data: [0,0,0,0,0,0,0,0,0,0,0,0], borderColor: '#a3e635' }] },
+            options: { responsive: true, maintainAspectRatio: true }
+        });
+        
+        if (popularityChart) popularityChart.destroy();
+        popularityChart = new Chart(ctx2, {
+            type: 'pie',
+            data: { labels: ['Нет бронирований'], datasets: [{ data: [1], backgroundColor: ['#a3e635'] }] },
+            options: { responsive: true, maintainAspectRatio: true }
+        });
     }
 }
 
@@ -324,16 +384,24 @@ function editGlamp(id) {
     const glamp = glamps.find(g => g.id === id);
     if (glamp) {
         document.getElementById('modalTitle').textContent = 'Редактировать домик';
-        document.getElementById('glampId').value = glamp.id;
+        document.getElementById('glampId').value = glamp.id || '';
         document.getElementById('glampName').value = glamp.name || '';
         document.getElementById('glampDescription').value = glamp.description || '';
         document.getElementById('glampPrice').value = glamp.price_per_night || '';
         document.getElementById('glampMaxGuests').value = glamp.max_guests || 2;
         document.getElementById('glampAmenities').value = (glamp.amenities || []).join(', ');
-        document.getElementById('glampCity').value = glamp.city || '';
-        document.getElementById('glampAddress').value = glamp.address || '';
-        document.getElementById('glampType').value = glamp.type || 'house';
-        document.getElementById('glampImage').value = glamp.image_url || glamp.image || '';
+        
+        // Проверяем существование элементов перед установкой значения
+        const cityInput = document.getElementById('glampCity');
+        const addressInput = document.getElementById('glampAddress');
+        const typeSelect = document.getElementById('glampType');
+        const imageInput = document.getElementById('glampImage');
+        
+        if (cityInput) cityInput.value = glamp.city || '';
+        if (addressInput) addressInput.value = glamp.address || '';
+        if (typeSelect) typeSelect.value = glamp.type || 'house';
+        if (imageInput) imageInput.value = glamp.image_url || glamp.image || '';
+        
         document.getElementById('glampModal').style.display = 'flex';
     }
 }

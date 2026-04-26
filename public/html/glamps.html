@@ -191,7 +191,7 @@
             background: #1a2a1a;
         }
 
-        /* КАРТОЧКИ*/
+        /* КАРТОЧКИ с анимациями */
         .glamps-section {
             padding: 60px 0;
             background: linear-gradient(rgba(13, 32, 16, 0.822),rgba(2, 22, 5, 0.822), rgba(14, 61, 0, 0.562));
@@ -207,7 +207,7 @@
             padding: 0 20px;
         }
 
-        /*  адаптируется под грид */
+        /* Анимация появления */
         .chalet-card-wrapper {
             display: flex;
             width: 100%;
@@ -215,6 +215,20 @@
             align-items: center;
             position: relative;
             margin: 0;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .chalet-card-wrapper.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Анимация при наведении */
+        .chalet-card-wrapper:hover {
+            transform: translateY(-10px) !important;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
         }
 
         .chalet-image-side {
@@ -223,6 +237,12 @@
             background-size: cover;
             background-position: center;
             border-radius: 0;
+            transition: transform 0.6s ease, filter 0.6s ease;
+        }
+
+        .chalet-card-wrapper:hover .chalet-image-side {
+            transform: scale(1.05);
+            filter: brightness(1.1);
         }
 
         .chalet-content-side {
@@ -235,6 +255,12 @@
             justify-content: center;
             color: white;
             font-family: 'Segoe UI', sans-serif;
+            transition: background-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .chalet-card-wrapper:hover .chalet-content-side {
+            background-color: #1a6b0a;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
         }
 
         .chalet-content-side h2 {
@@ -242,6 +268,12 @@
             font-weight: 300;
             margin-bottom: 20px;
             letter-spacing: 1px;
+            transition: transform 0.4s ease, letter-spacing 0.4s ease;
+        }
+
+        .chalet-card-wrapper:hover .chalet-content-side h2 {
+            transform: translateX(8px);
+            letter-spacing: 2px;
         }
 
         .chalet-description {
@@ -254,6 +286,11 @@
             font-weight: 300;
             color: rgba(255, 255, 255, 0.9);
             margin-bottom: 10px;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .chalet-card-wrapper:hover .chalet-description p {
+            color: rgba(255, 255, 255, 1);
         }
 
         .price-button-row {
@@ -270,6 +307,12 @@
             font-weight: 600;
             color: #ebebeb;
             margin: 0;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .chalet-card-wrapper:hover .price-per-night {
+            transform: scale(1.1);
+            color: #ffffff;
         }
 
         .price-per-night small {
@@ -287,21 +330,57 @@
             border-radius: 30px;
             font-size: 14px;
             font-weight: 300;
-            transition: 0.3s;
+            transition: all 0.3s ease;
             border: none;
             cursor: pointer;
             white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Эффект волны на кнопке */
+        .chalet-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .chalet-button:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .chalet-button:hover {
-            background-color: #050a06;
+            background-color: #0d2e06;
             color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            padding: 8px 30px;
         }
 
         .no-results {
             grid-column: span 2;
             text-align: center;
             padding: 4rem;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .no-results i {
@@ -602,7 +681,7 @@
                     <p class="footer-text">
                         У нас вас ждут уютные шатры с комфортабельными кроватями, своей террасой и всем необходимым для расслабляющего отдыха.
                     </p>
-                    <div class="copyright">@2025 Все права защищены.</div>
+                    <div class="copyright">@2026 Все права защищены.</div>
                 </div>
 
                 <div class="col-lg-3 footer-column">
@@ -687,6 +766,16 @@
                     document.body.style.overflow = '';
                 }
             }
+        });
+
+        // Анимация появления карточек при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.chalet-card-wrapper');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.add('visible');
+                }, index * 150);
+            });
         });
     </script>
 </body>

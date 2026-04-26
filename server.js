@@ -8,6 +8,17 @@ const cookieParser = require('cookie-parser');
 
 const app = express();
 const port = 3000;
+const helmet = require('helmet');
+
+
+app.use(helmet({
+    contentSecurityPolicy: false,
+    crossOriginEmbedderPolicy: false,
+    crossOriginOpenerPolicy: false,
+    crossOriginResourcePolicy: false
+}));
+
+
 
 // Секретный ключ для JWT
 const JWT_SECRET = 'glamptime_secret_key_2026';
@@ -30,7 +41,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Путь к папке с HTML файлами
 const htmlPath = path.join(__dirname, 'public', 'html');
 
-// ============= МАРШРУТЫ ДЛЯ СТРАНИЦ =============
 app.get('/', (req, res) => {
     res.sendFile(path.join(htmlPath, 'index.html'));
 });

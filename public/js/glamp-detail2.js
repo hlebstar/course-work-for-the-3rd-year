@@ -5,12 +5,12 @@ const glampsData = [
                 description: "Ваш уединенный уголок на опушке. Это шале — воплощение гармонии швейцарского уюта и русской природы. Просыпайтесь под пение птиц за окном, а вечером грейтесь у камина с чашкой травяного чая. Идеальное место, чтобы отключиться от суеты и насладиться тишиной и покоем.",
                 price_per_night: 8900,
                 max_guests: 2,
-                amenities: ["Камин", "Терраса", "WiFi", "Парковка"],
+                amenities: ["Мангал", "Терраса", "WiFi", "Парковка"],
                 images: [
-                    "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800",
-                    "https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?w=800",
-                    "https://images.unsplash.com/photo-1542718610-a1d656d1884c?w=800",
-                    "https://images.unsplash.com/photo-1445308394109-4ec2920981b1?w=800"
+                    "https://welcomekursk.ru/uploads/81a3416b9c945e9e4064d209930e1117.jpg",
+                    "https://avatars.mds.yandex.net/get-altay/11371852/2a0000018c88ff80e731578b6f6776a25bf9/XXL_height",
+                    "https://avatars.mds.yandex.net/i?id=3eb54f87da2f10b506a7fee74cced5d7_l-4577642-images-thumbs&n=13",
+                    "https://cdn.worldota.net/t/1024x768/extranet/3b/98/3b98b23c7c2be013e73b9f655c8ac191c0af70df.JPEG"
                 ],
                 location: { city: "Красный Двор", address: "" },
                 type: "house"
@@ -23,10 +23,10 @@ const glampsData = [
                 max_guests: 3,
                 amenities: ["Панорамный вид", "Кондиционер", "WiFi", "Лежак"],
                 images: [
-                    "https://images.unsplash.com/photo-1542718610-a1d656d1884c?w=800",
-                    "https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?w=800",
-                    "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800",
-                    "https://images.unsplash.com/photo-1445308394109-4ec2920981b1?w=800"
+                    "https://avatars.mds.yandex.net/get-altay/9724410/2a00000189a2c14aff7272401c3fa6a4d611/orig",
+                    "https://avatars.mds.yandex.net/get-altay/9724410/2a00000189a2c14aff7272401c3fa6a4d611/orig",
+                    "https://avatars.mds.yandex.net/get-altay/4454943/2a00000182a841c66f10a93067553b09b4e8/XXL_height",
+                    "https://hotelidea.ru/wp-content/uploads/2025/08/holidays-forest.jpg"
                 ],
                 location: { city: "Красный Двор", address: "" },
                 type: "tent"
@@ -37,12 +37,12 @@ const glampsData = [
                 description: "Настоящее приключение с комфортом. Просторная палатка с кроватью и всем необходимым для отдыха после дня, полного открытий. Слушайте шелест листьев и пение птиц, не отказываясь от уюта. Отличный выбор для тех, кто ищет легкий и атмосферный формат глэмпинга.",
                 price_per_night: 6800,
                 max_guests: 4,
-                amenities: ["Кухня", "Мангал", "Парковка", "WiFi"],
+                amenities: ["Кухня", "Мангал", "WiFi"],
                 images: [
-                    "https://images.unsplash.com/photo-1445308394109-4ec2920981b1?w=800",
-                    "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800",
-                    "https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?w=800",
-                    "https://images.unsplash.com/photo-1542718610-a1d656d1884c?w=800"
+                    "https://avatars.mds.yandex.net/i?id=236cd6d3c5bd3619a8a217d9b7425371_l-13280984-images-thumbs&n=13",
+                    "https://n.cdn.cdek.shopping/images/shopping/W2DKh0xhIz5N5LLo.jpg?v=1",
+                    "https://ir.ozone.ru/s3/multimedia-r/6555658659.jpg",
+                    "https://thumbs.dreamstime.com/b/inside-glamping-tent-luxury-tent-inside-inside-glamping-tent-252962730.jpg"
                 ],
                 location: { city: "Красный Двор", address: "" },
                 type: "house"
@@ -71,10 +71,10 @@ const glampsData = [
                 max_guests: 2,
                 amenities: ["Терраса", "WiFi", "Мангал"],
                 images: [
-                    "https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?w=800",
-                    "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800",
-                    "https://images.unsplash.com/photo-1542718610-a1d656d1884c?w=800",
-                    "https://images.unsplash.com/photo-1445308394109-4ec2920981b1?w=800"
+                    "https://tripinglamp.ru/wp-content/uploads/2025/05/lesnayagavan-naturalnyy-0-1_28.jpg",
+                    "https://avatars.mds.yandex.net/i?id=8f23be62c8510439e8ea22a64b314f4154389d53-6968661-images-thumbs&n=13",
+                    "https://tripinglamp.ru/wp-content/uploads/2025/05/lesnayagavan-naturalnyy-0-0_27.jpg",
+                    "https://avatars.mds.yandex.net/get-altay/14005436/2a00000192a9c646034b90546722f69221cf/orig"
                 ],
                 location: { city: "Красный Двор", address: "" },
                 type: "tent"

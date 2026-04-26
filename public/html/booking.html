@@ -131,7 +131,7 @@
         .form-title {
             font-size: 1.5rem;
             margin-bottom: 1.5rem;
-            color: #eff5ef;
+            color: #ffffff;
         }
 
         .booking-tabs {
@@ -145,7 +145,7 @@
             padding: 0.8rem;
             background: rgba(255,255,255,0.05);
             border-radius: 12px;
-            color: #eff5ef;
+            color: #ffffff;
             cursor: pointer;
             transition: 0.3s;
             border: 1px solid rgba(239, 245, 239, 0.2);
@@ -153,7 +153,7 @@
 
         .tab-btn.active {
             background: rgba(77, 153, 100, 0.3);
-            color: #eff5ef;
+            color: #ffffff;
             border-color: #7F9373;
         }
 
@@ -173,7 +173,7 @@
             display: block;
             margin-bottom: 0.5rem;
             font-size: 0.85rem;
-            color: #eff5ef;
+            color: #ffffff;
         }
 
         .form-group input, .form-group select {
@@ -182,16 +182,26 @@
             background: rgba(255,255,255,0.1);
             border: 1px solid rgba(239, 245, 239, 0.2);
             border-radius: 12px;
-            color: #eff5ef;
+            color: #ffffff;
             outline: none;
         }
 
         .form-group input::placeholder {
-            color: rgba(239, 245, 239, 0.5);
+            color: rgba(255, 255, 255, 0.5);
         }
 
         .form-group input:focus, .form-group select:focus {
             border-color: #7F9373;
+        }
+
+        /* Чёрный текст в селекте */
+        .form-group select {
+            color: #ffffff;
+        }
+
+        .form-group select option {
+            color: #000000;
+            background-color: #ffffff;
         }
 
         .form-row {
@@ -210,7 +220,7 @@
         .payment-title {
             font-size: 1.1rem;
             margin-bottom: 1rem;
-            color: #eff5ef;
+            color: #ffffff;
         }
 
         .payment-options {
@@ -229,7 +239,7 @@
             cursor: pointer;
             text-align: center;
             transition: 0.3s;
-            color: #eff5ef;
+            color: #ffffff;
         }
 
         .payment-option.selected {
@@ -258,7 +268,7 @@
             cursor: pointer;
             transition: 0.3s;
             border: 1px solid rgba(239, 245, 239, 0.2);
-            color: #eff5ef;
+            color: #ffffff;
         }
 
         .card-item.selected {
@@ -273,7 +283,7 @@
             margin-top: 0.5rem;
             text-align: center;
             font-size: 0.85rem;
-            color: #a8d8a8;
+            color: #ffffff;
         }
 
         .checkbox-group {
@@ -291,7 +301,46 @@
         .checkbox-group label {
             margin-bottom: 0;
             font-size: 0.8rem;
-            color: #eff5ef;
+            color: #ffffff;
+        }
+
+        /* Дополнительные услуги - белый цвет */
+        .summary-services {
+            margin-bottom: 1rem;
+        }
+
+        .summary-services h4 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+
+        .summary-services .service-item {
+            color: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            padding: 0.3rem 0;
+            font-size: 0.9rem;
+        }
+
+        .summary-services .service-item span {
+            color: #ffffff;
+        }
+
+        .summary-services .service-total {
+            color: #ffffff;
+            font-weight: bold;
+            padding-top: 0.5rem;
+            border-top: 1px solid rgba(239, 245, 239, 0.2);
+            margin-top: 0.3rem;
+        }
+
+        #selectedServicesList {
+            color: #ffffff;
+        }
+
+        #selectedServicesList div {
+            color: #ffffff;
         }
 
         /* Правая колонка */
@@ -308,7 +357,7 @@
         .summary-title {
             font-size: 1.3rem;
             margin-bottom: 1rem;
-            color: #eff5ef;
+            color: #ffffff;
         }
 
         .summary-dates {
@@ -316,26 +365,58 @@
             border-radius: 15px;
             padding: 1rem;
             margin-bottom: 1rem;
-            color: #eff5ef;
+            color: #ffffff;
+        }
+
+        .summary-dates p {
+            color: #ffffff;
+        }
+
+        .summary-dates span {
+            color: #ffffff;
         }
 
         .summary-glamp {
             border-bottom: 1px solid rgba(239, 245, 239, 0.1);
             padding-bottom: 1rem;
             margin-bottom: 1rem;
-            color: #eff5ef;
+            color: #ffffff;
+        }
+
+        .summary-glamp p {
+            color: #ffffff;
+        }
+
+        .summary-glamp strong {
+            color: #ffffff;
+        }
+
+        .summary-glamp span {
+            color: #ffffff;
         }
 
         .summary-price {
             margin-bottom: 1rem;
-            color: #eff5ef;
+            color: #ffffff;
+        }
+
+        .summary-price p {
+            color: #ffffff;
+        }
+
+        .summary-price span {
+            color: #ffffff;
         }
 
         .summary-total {
             border-top: 1px solid rgba(239, 245, 239, 0.1);
             padding-top: 1rem;
             margin-top: 1rem;
-            color: #eff5ef;
+            color: #ffffff;
+        }
+
+        .summary-total p {
+            color: #ffffff;
         }
 
         .summary-total .total-amount {
@@ -344,11 +425,19 @@
             font-weight: bold;
         }
 
+        #totalPrice {
+            color: #ffffff;
+        }
+
+        #paymentStatusText {
+            color: #ffffff;
+        }
+
         .btn-submit {
             width: 100%;
             padding: 1rem;
             background: #7F9373;
-            color: #eff5ef;
+            color: #ffffff;
             border: none;
             border-radius: 50px;
             font-weight: bold;
@@ -366,12 +455,12 @@
         .btn-back {
             display: inline-block;
             margin-top: 1rem;
-            color: rgba(239, 245, 239, 0.7);
+            color: rgba(255, 255, 255, 0.7);
             text-decoration: none;
         }
 
         .btn-back:hover {
-            color: #a8d8a8;
+            color: #ffffff;
         }
 
         @media (max-width: 768px) {
@@ -403,7 +492,7 @@
             
             .nav-menu a {
                 font-size: 18px;
-                color: #eff5ef;
+                color: #ffffff;
             }
             
             .booking-container {
@@ -479,11 +568,11 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label>Фамилия *</label>
-                                <input type="text" id="selfLastName" placeholder="Мария">
+                                <input type="text" id="selfLastName" placeholder="Петрова">
                             </div>
                             <div class="form-group">
                                 <label>Имя *</label>
-                                <input type="text" id="selfFirstName" placeholder="Петрова">
+                                <input type="text" id="selfFirstName" placeholder="Мария">
                             </div>
                         </div>
                         <div class="form-group">
@@ -511,7 +600,6 @@
                                     <option value="RU">🇷🇺 Россия</option>
                                     <option value="BY">🇧🇾 Беларусь</option>
                                     <option value="KZ">🇰🇿 Казахстан</option>
-                                    <option value="UA">🇺🇦 Украина</option>
                                     <option value="AM">🇦🇲 Армения</option>
                                     <option value="GE">🇬🇪 Грузия</option>
                                 </select>
@@ -582,19 +670,19 @@
                                     <span>Сбербанк</span>
                                 </div>
                                 <div class="card-item" data-card="tinkoff">
-                                    <span> Тинькофф</span>
+                                    <span>Тинькофф</span>
                                 </div>
                                 <div class="card-item" data-card="yandex">
-                                    <span> Яндекс.Деньги</span>
+                                    <span>Яндекс.Деньги</span>
                                 </div>
                                 <div class="card-item" data-card="visa">
-                                    <span> Visa</span>
+                                    <span>Visa</span>
                                 </div>
                                 <div class="card-item" data-card="mastercard">
-                                    <span> Mastercard</span>
+                                    <span>Mastercard</span>
                                 </div>
                                 <div class="card-item" data-card="mir">
-                                    <span> МИР</span>
+                                    <span>МИР</span>
                                 </div>
                             </div>
                             <input type="hidden" id="selectedCard" value="sber">
@@ -618,7 +706,7 @@
                     </div>
 
                     <div class="summary-services" id="servicesSection" style="margin-bottom: 1rem;">
-                        <h4 style="font-size: 1rem; margin-bottom: 0.5rem; color: #a8d8a8;">Дополнительные услуги:</h4>
+                        <h4>Дополнительные услуги:</h4>
                         <div id="selectedServicesList"></div>
                     </div>
                 </form>
@@ -648,7 +736,7 @@
                 </div>
 
                 <button type="button" class="btn-submit" id="submitBookingBtn">Забронировать</button>
-                <a href="/glamps.html" class="btn-back"> Назад к домикам</a>
+                <a href="/glamps.html" class="btn-back">← Назад к домикам</a>
             </div>
         </div>
     </div>

@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
+            --forest-dark: #0a0f0a;
             --accent-gold: #0a4d08;
             --glass-bg: rgba(255, 255, 255, 0.1);
             --glass-border: rgba(255, 255, 255, 0.2);
@@ -21,25 +22,35 @@
 
         body {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: linear-gradient(rgba(2, 114, 15, 0.5), rgba(8, 36, 1, 0.7));
+            background-color: var(--forest-dark);
             color: white;
             margin: 0;
             overflow-x: hidden;
         }
 
-        .navbar {
-            background: transparent !important;
-            padding: 2rem 0;
+        .top-header {
             position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            z-index: 10;
+            padding: 30px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
         }
 
-        .navbar-brand {
-            font-size: 1.5rem;
+        .logo {
+            color: white;
+            font-size: 22px;
             font-weight: 300;
-            letter-spacing: 1px;
-            color: white !important;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+        }
+
+        .logo i {
+            margin-left: 5px;
+            font-size: 18px;
         }
 
         .burger-menu {
@@ -47,8 +58,6 @@
             flex-direction: column;
             cursor: pointer;
             z-index: 20;
-            background: none;
-            border: none;
         }
 
         .burger-menu span {
@@ -69,18 +78,18 @@
         }
 
         .nav-menu a {
-            color: rgba(255, 255, 255, 0.8) !important;
-            font-size: 0.9rem;
-            margin: 0 15px;
-            transition: 0.3s;
+            color: rgba(255, 255, 255, 0.85);
             text-decoration: none;
+            font-size: 15px;
+            font-weight: 400;
+            transition: color 0.3s;
         }
 
-        .nav-menu a:hover {
-            color: white !important;
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: white;
         }
 
-        /* Hero секция */
         .contacts-header {
             height: 450px;
             background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/images/photo_2026-04-07_15-18-07.jpg');
@@ -321,7 +330,6 @@
             background: #8dc484a9;
         }
 
-        /* Карточка отзыва */
         .review-card {
             background: rgba(79, 126, 79, 0.295);
             border: 2px solid #929292;
@@ -460,105 +468,93 @@
             cursor: pointer;
         }
 
-        .main-footer {
+        footer {
             background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/images/photo_2026-04-07_18-07-30.jpg');
-            padding: 80px 0;
+            padding: 80px 0 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
             color: #ffffff;
-            position: relative;
-            z-index: 1;
         }
 
-        .footer-container {
-            display: flex;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 40px;
-            justify-content: space-between;
-            flex-wrap: wrap;
+        .footer-column {
+            padding: 0 30px;
+            border-right: 1px solid rgba(255, 255, 255, 0.3);
         }
 
-        .footer-col {
-            flex: 1;
-            padding: 0 40px;
-        }
-
-        .footer-col + .footer-col {
-            border-left: 1px solid rgba(255, 255, 255, 0.4);
+        .footer-column:last-child {
+            border-right: none;
         }
 
         .footer-logo {
-            font-family: 'Times New Roman', Times, serif;
-            font-size: 38px;
-            font-weight: 400;
+            font-size: 1.8rem;
+            font-weight: 300;
             margin-bottom: 25px;
+            display: block;
         }
 
-        .footer-description {
-            font-size: 14px;
+        .footer-text {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
             line-height: 1.5;
-            color: rgba(255, 255, 255, 0.8);
             margin-bottom: 30px;
-            max-width: 280px;
         }
 
-        .footer-copy {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .footer-heading {
-            font-size: 18px;
-            font-weight: 400;
+        .footer-title {
+            font-size: 1.2rem;
             margin-bottom: 25px;
+            text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        .footer-list {
+        .footer-links {
             list-style: none;
             padding: 0;
         }
 
-        .footer-list li {
-            margin-bottom: 15px;
+        .footer-links li {
+            margin-bottom: 12px;
         }
 
-        .footer-list a {
-            color: rgba(255, 255, 255, 0.9);
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
-            font-size: 18px;
             transition: 0.3s;
+            font-size: 1rem;
         }
 
-        .footer-list a:hover {
-            color: #ffffff;
-            opacity: 0.7;
+        .footer-links a:hover {
+            color: #fff;
+            padding-left: 5px;
         }
 
-        .search-box input {
-            width: 100%;
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.4);
+        .newsletter-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 4px;
-            padding: 10px 15px;
+            padding: 12px 15px;
             color: white;
-            font-size: 14px;
+            width: 100%;
             outline: none;
+            margin-top: 15px;
         }
 
-        .search-box input::placeholder {
+        .copyright {
+            margin-top: 50px;
+            font-size: 0.75rem;
             color: rgba(255, 255, 255, 0.4);
         }
 
         @media (max-width: 1024px) {
-            .footer-container { flex-wrap: wrap; }
-            .footer-col { flex: 50% 0 0; border-left: none !important; margin-bottom: 40px; }
+            .footer-column { border-right: none; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding: 30px 0; }
             .contacts-flex-container { flex-direction: column; }
             .contacts-map-block { height: 350px; }
         }
 
         @media (max-width: 768px) {
-            .navbar {
-                padding: 1.5rem 0;
+            .top-header {
+                padding: 20px 5%;
+                background: rgba(10, 15, 10, 0.8);
+                position: fixed;
+                backdrop-filter: blur(10px);
             }
             
             .burger-menu {
@@ -572,11 +568,12 @@
                 width: 280px;
                 height: 100vh;
                 background: rgba(10, 15, 10, 0.98);
+                backdrop-filter: blur(10px);
                 flex-direction: column;
                 padding: 80px 30px;
                 gap: 25px;
-                transition: 0.3s;
                 z-index: 15;
+                transition: 0.3s;
             }
             
             .nav-menu.active {
@@ -614,7 +611,6 @@
         }
 
         @media (max-width: 600px) {
-            .footer-col { flex: 100% 0 0; }
             .reviews-scroll-container { height: 500px; padding: 0 15px 0 25px; }
             .review-card {
                 padding: 1rem;
@@ -624,26 +620,22 @@
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="container">
-            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                <a class="navbar-brand" href="/">GlampTime <i class="fa-regular fa-clock"></i></a>
-                
-                <div class="burger-menu" id="burgerMenu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-                
-                <ul class="nav-menu" id="navMenu">
-                    <li class="nav-item"><a class="nav-link" href="/services.html">Услуги</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/glamps.html">Проживание</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/rasvlichenia.html">Развлечения</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/contact.html">Контакты</a></li>
-                </ul>
-            </div>
+    <header class="top-header">
+        <a class="logo" href="/">GlampTime <i class="fa-regular fa-clock"></i></a>
+        
+        <div class="burger-menu" id="burgerMenu">
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
-    </nav>
+        
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="/services.html">Услуги</a></li>
+            <li><a href="/glamps.html">Проживание</a></li>
+            <li><a href="/rasvlichenia.html">Развлечения</a></li>
+            <li><a href="/contact.html" class="active">Контакты</a></li>
+        </ul>
+    </header>
 
     <header class="contacts-header">
         <div class="hero-content">
@@ -763,42 +755,36 @@
         </div>
     </div>
 
-    <!-- Футер -->
-    <footer class="main-footer">
-        <div class="footer-container">
-            <div class="footer-col info-col">
-                <h2 class="footer-logo">GlampTime</h2>
-                <p class="footer-description">
-                    У нас вас ждут уютные шатры с комфортабельными кроватями, своей террасой и всем необходимым для расслабляющего отдыха.
-                </p>
-                <div class="footer-copy">@2026 Все права защищены.</div>
-            </div>
-
-            <div class="footer-col links-col">
-                <h4 class="footer-heading">-MENU</h4>
-                <ul class="footer-list">
-                    <li><a href="/about.html">О нас</a></li>
-                    <li><a href="/services.html">Услуги</a></li>
-                    <li><a href="/glamps.html">Проживание</a></li>
-                    <li><a href="/rasvlichenia.html">Развлечения</a></li>
-                    <li><a href="/contact.html">Контактные данные</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-col links-col">
-                <h4 class="footer-heading">-Follow us</h4>
-                <ul class="footer-list">
-                    <li><a href="#">Twitter</a></li>
-                    <li><a href="#">Instagram</a></li>
-                    <li><a href="#">Telegram</a></li>
-                    <li><a href="#">Facebook</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-col subscribe-col">
-                <h4 class="footer-heading">-Оставьте свою почту, для связи с нами:</h4>
-                <div class="search-box">
-                    <input type="text" placeholder="Ваш email...">
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 footer-column">
+                    <span class="footer-logo">GlampTime</span>
+                    <p class="footer-text">У нас вас ждут уютные шатры с комфортабельными кроватями, своей террасой и всем необходимым для расслабляющего отдыха.</p>
+                    <div class="copyright">@2026 Все права защищены.</div>
+                </div>
+                <div class="col-lg-3 footer-column">
+                    <h4 class="footer-title">-MENU</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">О нас</a></li>
+                        <li><a href="/services.html">Услуги</a></li>
+                        <li><a href="/glamps.html">Проживание</a></li>
+                        <li><a href="/rasvlichenia.html">Развлечения</a></li>
+                        <li><a href="/contact.html">Контактные данные</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 footer-column">
+                    <h4 class="footer-title">-Follow us</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">Telegram</a></li>
+                        <li><a href="#">Facebook</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 footer-column">
+                    <h4 class="footer-title">-Оставьте свою почту, для связи с нами:</h4>
+                    <input type="text" class="newsletter-input" placeholder="Ваш email...">
                 </div>
             </div>
         </div>
@@ -820,10 +806,12 @@
                     spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
                     spans[1].style.opacity = '0';
                     spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
+                    document.body.style.overflow = 'hidden';
                 } else {
                     spans[0].style.transform = 'none';
                     spans[1].style.opacity = '1';
                     spans[2].style.transform = 'none';
+                    document.body.style.overflow = '';
                 }
             });
         }
@@ -833,25 +821,31 @@
                 navMenu.classList.remove('active');
                 if (burgerMenu) burgerMenu.classList.remove('active');
                 const spans = burgerMenu.querySelectorAll('span');
-                if (spans) {
+                if (spans.length) {
                     spans[0].style.transform = 'none';
                     spans[1].style.opacity = '1';
                     spans[2].style.transform = 'none';
                 }
+                document.body.style.overflow = '';
             });
         });
         
         document.addEventListener('click', function(event) {
-            const isClickInsideNav = navMenu.contains(event.target);
-            const isClickOnBurger = burgerMenu && burgerMenu.contains(event.target);
-            
-            if (!isClickInsideNav && !isClickOnBurger && navMenu.classList.contains('active')) {
-                navMenu.classList.remove('active');
-                if (burgerMenu) burgerMenu.classList.remove('active');
-                const spans = burgerMenu.querySelectorAll('span');
-                spans[0].style.transform = 'none';
-                spans[1].style.opacity = '1';
-                spans[2].style.transform = 'none';
+            if (navMenu && navMenu.classList.contains('active')) {
+                const isClickInsideNav = navMenu.contains(event.target);
+                const isClickOnBurger = burgerMenu && burgerMenu.contains(event.target);
+                
+                if (!isClickInsideNav && !isClickOnBurger) {
+                    navMenu.classList.remove('active');
+                    if (burgerMenu) burgerMenu.classList.remove('active');
+                    const spans = burgerMenu.querySelectorAll('span');
+                    if (spans.length) {
+                        spans[0].style.transform = 'none';
+                        spans[1].style.opacity = '1';
+                        spans[2].style.transform = 'none';
+                    }
+                    document.body.style.overflow = '';
+                }
             }
         });
     </script>

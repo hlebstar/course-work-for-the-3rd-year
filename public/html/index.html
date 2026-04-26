@@ -110,7 +110,7 @@
             letter-spacing: 5px;
         }
 
-        /* Прозрачная форма бронирования */
+        /* Форма бронирования */
         .booking-container {
             background: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(10px);
@@ -127,15 +127,19 @@
             font-size: 1.5rem;
         }
 
-        .form-group-custom {
+        .booking-form .form-group-custom {
             background: rgba(255,255,255,0.05);
             border: 1px solid var(--glass-border);
             border-radius: 10px;
             padding: 10px 15px;
-            margin-bottom: 10px;
+            margin-bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
         }
 
-        .form-group-custom label {
+        .booking-form .form-group-custom label {
             display: block;
             font-size: 0.7rem;
             text-transform: uppercase;
@@ -143,32 +147,79 @@
             margin-bottom: 5px;
         }
 
-        .form-group-custom input, .form-group-custom select {
+        .booking-form .form-group-custom input,
+        .booking-form .form-group-custom select {
             background: transparent;
             border: none;
             color: white;
             width: 100%;
             outline: none;
+            padding: 0;
         }
 
-        .form-group-custom input[type="date"]::-webkit-calendar-picker-indicator {
+        .booking-form .form-group-custom select {
+            color: #ffffff;
+            background-color: transparent;
+            border-radius: 8px;
+            padding: 5px 0;
+            font-weight: 500;
+        }
+
+        .booking-form .form-group-custom select option {
+            color: #000000;
+            background-color: #ffffff;
+        }
+
+        .booking-form .form-group-custom input[type="date"]::-webkit-calendar-picker-indicator {
             filter: invert(1);
         }
 
-        .btn-search {
+        .booking-form .btn-search {
             background-color: #145507;
             color: #f4f7f4;
             border: none;
-            padding: 1rem;
+            padding: 0.75rem 1rem;
             border-radius: 10px;
             width: 100%;
-            height: 100%;
             font-weight: bold;
             transition: 0.3s;
+            height: 100%;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
         }
 
-        .btn-search:hover {
+        .booking-form .btn-search::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .booking-form .btn-search:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .booking-form .btn-search:hover {
             background-color: #245d38;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .booking-form .row {
+            align-items: stretch !important;
         }
 
         /* Секция преимуществ */
@@ -184,15 +235,31 @@
             border-radius: 15px;
             height: 100%;
             transition: 0.3s;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .feature-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.6s ease, transform 0.6s ease;
         }
 
         .feature-card:hover {
             background: var(--glass-bg);
+            transform: translateY(-8px) !important;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s ease, box-shadow 0.4s ease !important;
         }
 
         .feature-icon {
             font-size: 2.5rem;
             margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.2);
         }
 
         .about-section {
@@ -212,6 +279,16 @@
 
         .main-img-wrapper {
             position: relative;
+            overflow: hidden;
+            border-radius: 4px;
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .main-img-wrapper.visible {
+            opacity: 1;
+            transform: translateX(0);
         }
 
         .main-img {
@@ -219,10 +296,24 @@
             height: 500px;
             object-fit: cover;
             border-radius: 4px;
+            transition: transform 0.5s ease, filter 0.5s ease;
+        }
+
+        .main-img-wrapper:hover .main-img {
+            transform: scale(1.05);
+            filter: brightness(1.1);
         }
 
         .about-content {
             padding-top: 20px;
+            opacity: 0;
+            transform: translateX(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .about-content.visible {
+            opacity: 1;
+            transform: translateX(0);
         }
 
         .about-content h2 {
@@ -230,6 +321,11 @@
             font-weight: 300;
             color: #a3b899; 
             margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+
+        .about-content:hover h2 {
+            transform: translateX(5px);
         }
 
         .about-content p {
@@ -255,6 +351,22 @@
             border-radius: 4px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .mini-img.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .mini-img:hover {
+            transform: translateY(-8px) scale(1.02) !important;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+            border-color: var(--accent-gold);
         }
 
         .territory-section {
@@ -301,6 +413,11 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .swiper-slide:hover img {
+            transform: scale(1.02);
         }
 
         .nav-btn {
@@ -323,6 +440,7 @@
         .nav-btn:hover {
             background: rgba(255,255,255,0.2);
             border-color: #fff;
+            transform: translateY(-50%) scale(1.05);
         }
 
         .btn-prev { left: 20%; }
@@ -347,6 +465,14 @@
             max-width: 900px;
             margin: 0 auto;
             line-height: 1.6;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .description-content.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .description-content p {
@@ -524,6 +650,10 @@
                 width: 100%;
                 max-width: 300px;
             }
+
+            .booking-form .btn-search {
+                margin-top: 0;
+            }
         }
 
         @media (max-width: 480px) {
@@ -561,7 +691,7 @@
         
         <div class="booking-container">
             <h2>Забронировать онлайн</h2>
-            <form class="row g-3 align-items-end">
+            <form class="row g-3 booking-form">
                 <div class="col-md-3">
                     <div class="form-group-custom">
                         <label>Заезд</label>
@@ -596,13 +726,17 @@
 
     <div class="green-divider"></div>
 
+   
+
+    <div class="green-divider"></div>
+
     <section class="about-section">
         <div class="container">
             <div class="about-grid">
-                <div class="main-img-wrapper">
+                <div class="main-img-wrapper" data-animate>
                     <img src="/images/photo_2026-04-07_15-21-14.jpg" alt="Glamping houses" class="main-img">
                 </div>
-                <div class="about-content">
+                <div class="about-content" data-animate>
                     <h2>О нас</h2>
                     <p>
                         Это глэмпинг для тех, кто любит природу, но не готов отказываться от комфорта. 
@@ -616,9 +750,9 @@
                 </div>
             </div>
             <div class="mini-gallery">
-                <img src="/images/photo_2026-04-07_15-21-23.jpg" class="mini-img" alt="Interior">
-                <img src="/images/photo_2026-04-07_15-21-28.jpg" class="mini-img" alt="Tent night">
-                <img src="/images/photo_2026-04-07_15-21-50.jpg" class="mini-img" alt="Landscape">
+                <img src="/images/photo_2026-04-07_15-21-23.jpg" class="mini-img" data-animate alt="Interior">
+                <img src="/images/photo_2026-04-07_15-21-28.jpg" class="mini-img" data-animate alt="Tent night">
+                <img src="/images/photo_2026-04-07_15-21-50.jpg" class="mini-img" data-animate alt="Landscape">
             </div>
         </div>
     </section>
@@ -648,7 +782,7 @@
 
     <section class="description-section">
         <div class="container">
-            <div class="description-content">
+            <div class="description-content" data-animate>
                 <p><span class="first-letter">М</span>ы создали особенное пространство, где стираются границы между уютом дома и первозданной красотой природы. Здесь каждая деталь наполнена гармонией и спокойствием. Территория нашего глэмпинга — это по-настоящему ухоженный лесной участок, где бережно сохранен каждый уголок живой природы, но при этом создана вся необходимая инфраструктура для вашего комфорта.</p>
                 <p>Прогуляйтесь по живописным дорожкам, ведущим к уютным деревянным беседкам на самом берегу озера, проведите незабываемый вечер под мириадами звезд у теплого общего костровища, делитесь историями и жарьте ароматный зефир, или просто наслаждайтесь ничегонеделанием, укутавшись в плед на просторной веранде своего шатра. Здесь нет места суете и городскому шуму, только пение птиц, шелест листвы, свежий ветер и безграничный комфорт, который окружает вас с момента прибытия. Это место создано для того, чтобы вы могли перезагрузиться, обрести душевное равновесие и создать воспоминания, которые останутся с вами навсегда.</p>
             </div>
@@ -661,7 +795,7 @@
                 <div class="col-lg-3 footer-column">
                     <span class="footer-logo">GlampTime</span>
                     <p class="footer-text">У нас вас ждут уютные шатры с комфортабельными кроватями, своей террасой и всем необходимым для расслабляющего отдыха.</p>
-                    <div class="copyright">@2025 Все права защищены.</div>
+                    <div class="copyright">@2026 Все права защищены.</div>
                 </div>
                 <div class="col-lg-3 footer-column">
                     <h4 class="footer-title">-MENU</h4>
@@ -691,7 +825,6 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script src="/js/main.js"></script>
     <script>
         const burgerMenu = document.getElementById('burgerMenu');
         const navMenu = document.getElementById('navMenu');
@@ -716,7 +849,6 @@
             });
         }
         
-        // Закрытие меню при клике на ссылку
         document.querySelectorAll('.nav-menu a').forEach(link => {
             link.addEventListener('click', () => {
                 navMenu.classList.remove('active');
@@ -743,6 +875,7 @@
             }
         });
 
+        // Swiper
         const swiper = new Swiper(".mySwiper", {
             slidesPerView: 1.6, 
             centeredSlides: true,
@@ -756,6 +889,7 @@
             keyboard: { enabled: true },
         });
 
+        // Даты
         const today = new Date();
         const tomorrow = new Date(today);
         tomorrow.setDate(tomorrow.getDate() + 1);
@@ -772,7 +906,6 @@
             checkOutInput.value = tomorrow.toISOString().split('T')[0];
         }
 
-        // Функция сохранения данных бронирования
         function saveBookingData(checkIn, checkOut, guests) {
             const bookingData = {
                 checkIn: checkIn,
@@ -783,7 +916,6 @@
             localStorage.setItem('glampingBooking', JSON.stringify(bookingData));
         }
 
-        // Кнопка "Показать наличие"
         const showBtn = document.getElementById('showAvailabilityBtn');
         if (showBtn) {
             showBtn.addEventListener('click', function() {
@@ -805,6 +937,45 @@
                 window.location.href = '/glamps.html';
             });
         }
+
+        // Анимация появления элементов при скролле
+        function animateOnScroll() {
+            const elements = document.querySelectorAll('[data-animate]');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.classList.add('visible');
+                        }, index * 100);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+            
+            elements.forEach(el => observer.observe(el));
+        }
+
+        // Запуск анимаций при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            animateOnScroll();
+            
+            // Сразу показываем элементы, которые видны
+            setTimeout(() => {
+                const visibleElements = document.querySelectorAll('[data-animate]');
+                visibleElements.forEach((el, index) => {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top < window.innerHeight) {
+                        setTimeout(() => {
+                            el.classList.add('visible');
+                        }, index * 100);
+                    }
+                });
+            }, 100);
+        });
     </script>
 </body>
 </html>
